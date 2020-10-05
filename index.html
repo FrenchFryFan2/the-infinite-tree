@@ -178,9 +178,9 @@
 					<div v-for="data in layers[layer].tabFormat">
 						<div v-if="!Array.isArray(data)" v-bind:is="data" :layer= "layer"></div>
 						<div v-else-if="data.length==3" v-bind:style="(data[2] ? data[2] : {})" v-bind:is="data[0]" :layer= "layer" :data= "data[1]"></div>
-						<div v-else-if="data.length==2" v-bind:is="data[0]" :layer= "layer" :data= "data[1]">	
+						<div v-else-if="data.length==2" v-bind:is="data[0]" :layer= "layer" :data= "data[1]"></div>
 					</div>
-				</divs>
+				</div>
 			</div>
 		</div>
 	</div>
