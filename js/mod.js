@@ -21,7 +21,7 @@ const VERSION = {
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
-const = doNotCallTheseFunctionsEveryTick = ["blowUpEverything"];
+const doNotCallTheseFunctionsEveryTick = ["blowUpEverything"];
 
 function getStartPoints() {
     return new Decimal(modInfo.initialStartPoints);
