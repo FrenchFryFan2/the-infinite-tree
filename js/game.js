@@ -123,7 +123,7 @@ function layerDataReset(layer, keep = []) {
 
 function resetBuyables(layer){
 	if (layers[layer].buyables) 
-		player[layer].buyables = getStartBuyables(layer)
+		player[layer].buyables = getStartBuyables(layer);
 	player[layer].spentOnBuyables = new Decimal(0)
 }
 

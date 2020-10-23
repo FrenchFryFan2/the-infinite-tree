@@ -1,25 +1,27 @@
+"use strict";
+
 var app;
 
 function loadVue() {
-	// data = a function returning the content (actually HTML)
-	Vue.component('display-text', {
-		props: ['layer', 'data'],
+	// Data = a function returning the content (actually HTML)
+	Vue.component("display-text", {
+		props: ["layer", "data"],
 		template: `
 			<span class="instant" v-html="data"></span>
 		`
-	})
+	});
 
-// data = a function returning the content (actually HTML)
-	Vue.component('raw-html', {
-			props: ['layer', 'data'],
+// Data = a function returning the content (actually HTML)
+	Vue.component("raw-html", {
+			props: ["layer", "data"],
 			template: `
 				<span class="instant"  v-html="data"></span>
 			`
-		})
+		});
 
 	// Blank space, data = optional height in px or pair with width and height in px
-	Vue.component('blank', {
-		props: ['layer', 'data'],
+	Vue.component("blank", {
+		props: ["layer", "data"],
 		template: `
 			<div class = "instant">
 			<div class = "instant" v-if="!data" v-bind:style="{'width': '8px', 'height': '17px'}"></div>
@@ -27,19 +29,19 @@ function loadVue() {
 			<div class = "instant" v-else v-bind:style="{'width': '8px', 'height': 'data'}"><br></div>
 			</div>
 		`
-	})
+	});
 
 	// Displays an image, data is the URL
-	Vue.component('display-image', {
-		props: ['layer', 'data'],
+	Vue.component("display-image", {
+		props: ["layer", "data"],
 		template: `
 			<img class="instant" v-bind:src= "data" v-bind:alt= "data">
 		`
-	})
+	});
 		
-	// data = an array of Components to be displayed in a row
-	Vue.component('row', {
-		props: ['layer', 'data'],
+	// Data = an array of Components to be displayed in a row
+	Vue.component("row", {
+		props: ["layer", "data"],
 		template: `
 		<div class="upgTable instant" >
 			<div class="upgRow">
@@ -51,11 +53,11 @@ function loadVue() {
 			</div>
 		</div>
 		`
-	})
+	});
 
-	// data = an array of Components to be displayed in a column
-	Vue.component('column', {
-		props: ['layer', 'data'],
+	// Data = an array of Components to be displayed in a column
+	Vue.component("column", {
+		props: ["layer", "data"],
 		template: `
 		<div class="upgTable instant" >
 			<div class="upgCol">
@@ -67,27 +69,27 @@ function loadVue() {
 			</div>
 		</div>
 		`
-	})
+	});
 
 
 	// Data = width in px, by default fills the full area
-	Vue.component('h-line', {
-		props: ['layer', 'data'],
-			template:`
+	Vue.component("h-line", {
+		props: ["layer", "data"],
+			template: `
 				<hr class="instant" v-bind:style="data ? {'width': data} : {}" class="hl">
 			`
-		})
+		});
 
 	// Data = height in px, by default is bad
-	Vue.component('v-line', {
-		props: ['layer', 'data'],
+	Vue.component("v-line", {
+		props: ["layer", "data"],
 		template: `
 			<div class="instant" v-bind:style="data ? {'height': data} : {}" class="vl2"></div>
 		`
-	})
+	});
 
-	Vue.component('challenges', {
-		props: ['layer'],
+	Vue.component("challenges", {
+		props: ["layer"],
 		template: `
 		<div v-if="layers[layer].challenges" class="upgTable">
 			<div v-for="row in tmp[layer].challenges.rows" class="upgRow">
@@ -97,11 +99,11 @@ function loadVue() {
 			</div>
 		</div>
 		`
-	})
+	});
 
-	// data = id
-	Vue.component('challenge', {
-		props: ['layer', 'data'],
+	// Data = id
+	Vue.component("challenge", {
+		props: ["layer", "data"],
 		template: `
 		<div v-if="layers[layer].challenges && layers[layer].challenges[data]!== undefined && tmp[layer].challenges[data].unlocked && !(player.hideChallenges && hasChallenge(layer, [data]))" v-bind:class="{hChallenge: true, done: hasChallenge(layer, data), canComplete: player[layer].activeChallenge == data&&!hasChallenge(layer, data)&&canCompleteChallenge(layer, data)}">
 			<br><h3 v-html="tmp[layer].challenges[data].name"></h3><br><br>
@@ -112,10 +114,10 @@ function loadVue() {
 			<span v-if="tmp[layer].challenges[data].rewardEffect!==undefined">Currently: <span v-html="(tmp[layer].challenges[data].rewardDisplay) ? (tmp[layer].challenges[data].rewardDisplay) : format(tmp[layer].challenges[data].rewardEffect)"></span></span>
 		</div>
 		`
-	})
+	});
 
-	Vue.component('upgrades', {
-		props: ['layer'],
+	Vue.component("upgrades", {
+		props: ["layer"],
 		template: `
 		<div v-if="layers[layer].upgrades" class="upgTable">
 			<div v-for="row in layers[layer].upgrades.rows" class="upgRow">
@@ -126,11 +128,11 @@ function loadVue() {
 			<br>
 		</div>
 		`
-	})
+	});
 
-	// data = id
-	Vue.component('upgrade', {
-		props: ['layer', 'data'],
+	// Data = id
+	Vue.component("upgrade", {
+		props: ["layer", "data"],
 		template: `
 		<button v-if="layers[layer].upgrades && layers[layer].upgrades[data]!== undefined && tmp[layer].upgrades[data].unlocked" v-on:click="buyUpg(layer, data)" v-bind:class="{ [layer]: true, upg: true, bought: hasUpgrade(layer, data), locked: (!(canAffordUpgrade(layer, data))&&!hasUpgrade(layer, data)), can: (canAffordUpgrade(layer, data)&&!hasUpgrade(layer, data))}"
 			v-bind:style="[((!hasUpgrade(layer, data) && canAffordUpgrade(layer, data)) ? {'background-color': tmp[layer].color} : {}), tmp[layer].upgrades[data].style]">
@@ -140,10 +142,10 @@ function loadVue() {
 			<br><br>Cost: {{ formatWhole(tmp[layer].upgrades[data].cost) }} {{(layers[layer].upgrades[data].currencyDisplayName ? tmp[layer].upgrades[data].currencyDisplayName : tmp[layer].resource)}}
 		</button>
 		`
-	})
+	});
 
-	Vue.component('milestones', {
-		props: ['layer'],
+	Vue.component("milestones", {
+		props: ["layer"],
 		template: `
 		<div v-if="layers[layer].milestones">
 			<table>
@@ -154,29 +156,29 @@ function loadVue() {
 			<br>
 		</div>
 		`
-	})
+	});
 
-	// data = id
-	Vue.component('milestone', {
-		props: ['layer', 'data'],
+	// Data = id
+	Vue.component("milestone", {
+		props: ["layer", "data"],
 		template: `
 		<td v-if="layers[layer].milestones && layers[layer].milestones[data]!== undefined && milestoneShown(layer, data)" v-bind:style="[(!tmp[layer].milestones[data].unlocked) ? {'visibility': 'hidden'} : {}, tmp[layer].milestones[data].style]" v-bind:class="{milestone: !hasMilestone(layer, data), milestoneDone: hasMilestone(layer, data)}">
 			<h3 v-html="tmp[layer].milestones[data].requirementDescription"></h3><br>
 			<span v-html="tmp[layer].milestones[data].effectDescription"></span><br>
 		<span v-if="(tmp[layer].milestones[data].toggles)&&(hasMilestone(layer, data))" v-for="toggle in tmp[layer].milestones[data].toggles"><toggle :layer= "layer" :data= "toggle" v-bind:style="tmp[layer].componentStyles.toggle"></toggle>&nbsp;</span></td></tr>
 		`
-	})
+	});
 
-	Vue.component('toggle', {
-		props: ['layer', 'data'],
+	Vue.component("toggle", {
+		props: ["layer", "data"],
 		template: `
 		<button class="smallUpg can" v-bind:style="{'background-color': tmp[data[0]].color}" v-on:click="toggleAuto(data)">{{player[data[0]][data[1]]?"ON":"OFF"}}</button>
 		`
-	})
+	});
 
-	// data = function to return the text describing the reset before the amount gained (optional)
-	Vue.component('prestige-button', {
-		props: ['layer', 'data'],
+	// Data = function to return the text describing the reset before the amount gained (optional)
+	Vue.component("prestige-button", {
+		props: ["layer", "data"],
 		template: `
 		<button v-if="(tmp[layer].type !== 'none')" v-bind:class="{ [layer]: true, reset: true, locked: !tmp[layer].canReset, can: tmp[layer].canReset}"
 			v-bind:style="[tmp[layer].canReset ? {'background-color': tmp[layer].color} : {}, tmp[layer].componentStyles['prestige-button']]"
@@ -184,19 +186,19 @@ function loadVue() {
 		</button>
 		`
 	
-	})
+	});
 
 	// Displays the main resource for the layer
-	Vue.component('main-display', {
-		props: ['layer'],
+	Vue.component("main-display", {
+		props: ["layer"],
 		template: `
 		<div><span v-if="player[layer].points.lt('1e1000')">You have </span><h2 v-bind:style="{'color': tmp[layer].color, 'text-shadow': '0px 0px 10px' + tmp[layer].color}">{{formatWhole(player[layer].points)}}</h2> {{tmp[layer].resource}}<span v-if="tmp[layer].effectDescription">, {{tmp[layer].effectDescription}}</span><br><br></span>
 		`
-	})
+	});
 
 	// Displays the base resource for the layer, as well as the best and total values for the layer's currency, if tracked
-	Vue.component('resource-display', {
-		props: ['layer'],
+	Vue.component("resource-display", {
+		props: ["layer"],
 		template: `
 		<div style="margin-top: -13px">
 			<span v-if="tmp[layer].type=='normal' && tmp[layer].resetGain.lt(100) && player[layer].points.lt(1e3)"><br>You have {{formatWhole(tmp[layer].baseAmount)}} {{tmp[layer].baseResource}}</span>
@@ -205,11 +207,11 @@ function loadVue() {
 			<span v-if="player[layer].total != undefined">You have made a total of {{formatWhole(player[layer].total)}} {{tmp[layer].resource}}<br></span>
 		</div>
 		`
-	})
+	});
 
-	// data = button size, in px
-	Vue.component('buyables', {
-		props: ['layer', 'data'],
+	// Data = button size, in px
+	Vue.component("buyables", {
+		props: ["layer", "data"],
 		template: `
 		<div v-if="layers[layer].buyables" class="upgTable">
 			<respec-button v-if="tmp[layer].buyables.respec && !(layers[layer].buyables.showRespec !== undefined && tmp[layer].buyables.showRespec == false)" :layer = "layer" v-bind:style="[{'margin-bottom': '12px'}, tmp[layer].componentStyles['respec-button']]"></respec-button>
@@ -221,11 +223,11 @@ function loadVue() {
 			</div>
 		</div>
 	`
-	})
+	});
 
-	// data = id of buyable
-	Vue.component('buyable', {
-		props: ['layer', 'data', 'size'],
+	// Data = id of buyable
+	Vue.component("buyable", {
+		props: ["layer", "data", "size"],
 		template: `
 		<div v-if="layers[layer].buyables && layers[layer].buyables[data]!== undefined && tmp[layer].buyables[data].unlocked" style="display: grid">
 			<button v-bind:class="{ buyable: true, can: tmp[layer].buyables[data].canAfford, locked: !tmp[layer].buyables[data].canAfford}"
@@ -239,18 +241,18 @@ function loadVue() {
 			<sell-all :layer="layer" :data="data" v-bind:style="layers[layer].componentStyles['sell-all']" v-if="(layers[layer].buyables[data].sellAll)&& !(tmp[layer].buyables[data].canSellAll !== undefined && tmp[layer].buyables[data].canSellAll == false)"></sell-all>
 		</div>
 		`
-	})
+	});
 
-	Vue.component('respec-button', {
-		props: ['layer', 'data'],
+	Vue.component("respec-button", {
+		props: ["layer", "data"],
 		template: `
 			<button v-if="layers[layer].buyables && tmp[layer].buyables.respec && !(layers[layer].buyables.showRespec !== undefined && tmp[layer].buyables.showRespec == false)" v-on:click="respecBuyables(layer)" v-bind:class="{ longUpg: true, can: player[layer].unlocked, locked: !player[layer].unlocked }">{{tmp[layer].buyables.respecText ? tmp[layer].buyables.respecText : "Respec"}}</button>
 	`
-	})
+	});
 
-	// data = button size, in px
-	Vue.component('clickables', {
-		props: ['layer', 'data'],
+	// Data = button size, in px
+	Vue.component("clickables", {
+		props: ["layer", "data"],
 		template: `
 		<div v-if="layers[layer].clickables" class="upgTable">
 			<master-button v-if="tmp[layer].clickables.masterButtonPress && !(layers[layer].clickables.showMasterButton !== undefined && tmp[layer].clickables.showMasterButton == false)" :layer = "layer" v-bind:style="[{'margin-bottom': '12px'}, tmp[layer].componentStyles['master-button']]"></master-button>
@@ -262,11 +264,11 @@ function loadVue() {
 			</div>
 		</div>
 	`
-	})
+	});
 
-	// data = id of clickable
-	Vue.component('clickable', {
-		props: ['layer', 'data', 'size'],
+	// Data = id of clickable
+	Vue.component("clickable", {
+		props: ["layer", "data", "size"],
 		template: `
 		<button 
 			v-if="layers[layer].clickables && layers[layer].clickables[data]!== undefined && tmp[layer].clickables[data].unlocked" 
@@ -277,20 +279,20 @@ function loadVue() {
 			<span v-bind:style="{'white-space': 'pre-line'}" v-html="tmp[layer].clickables[data].display"></span>
 		</button>
 		`
-	})
+	});
 
-	Vue.component('master-button', {
-		props: ['layer', 'data'],
+	Vue.component("master-button", {
+		props: ["layer", "data"],
 		template: `
 		<button v-if="tmp[layer].clickables && tmp[layer].clickables.masterButtonPress && !(layers[layer].clickables.showMasterButton !== undefined && tmp[layer].clickables.showMasterButton == false)" v-on:click="layers[layer].clickables.masterButtonPress()" v-bind:class="{ longUpg: true, can: player[layer].unlocked, locked: !player[layer].unlocked }">{{tmp[layer].clickables.masterButtonText ? tmp[layer].clickables.masterButtonText : "Click me!"}}</button>
 	`
-	})
+	});
 
-	// data = button size, in px
-	Vue.component('microtabs', {
-		props: ['layer', 'data'],
+	// Data = button size, in px
+	Vue.component("microtabs", {
+		props: ["layer", "data"],
 		computed: {
-			currentTab() {return player.subtabs[layer][data]}
+			currentTab() { return player.subtabs[layer][data]; }
 		},
 		template: `
 		<div v-if="layers[layer].microtabs" :style="{'border-style': 'solid'}">
@@ -300,12 +302,12 @@ function loadVue() {
 			<column v-bind:style="tmp[layer].microtabs[data][player.subtabs[layer][data]].style" :layer="layer" :data="tmp[layer].microtabs[data][player.subtabs[layer][data]].content"></column>
 		</div>
 		`
-	})
+	});
 
 
-	// data = id of the bar
-	Vue.component('bar', {
-		props: ['layer', 'data'],
+	// Data = id of the bar
+	Vue.component("bar", {
+		props: ["layer", "data"],
 		template: `
 		<div v-if="tmp[layer].bars && tmp[layer].bars[data].unlocked" v-bind:style="{'position': 'relative'}"><div v-bind:style="[tmp[layer].bars[data].style, tmp[layer].bars[data].dims, {'display': 'table'}]">
 			<div class = "overlayTextContainer barBorder" v-bind:style="[tmp[layer].bars[data].borderStyle, tmp[layer].bars[data].dims]">
@@ -316,11 +318,11 @@ function loadVue() {
 			</div>
 		</div></div>
 		`
-	})
+	});
 
 
-	Vue.component('achievements', {
-		props: ['layer'],
+	Vue.component("achievements", {
+		props: ["layer"],
 		template: `
 		<div v-if="layers[layer].achievements" class="upgTable">
 			<div v-for="row in layers[layer].achievements.rows" class="upgRow">
@@ -331,11 +333,11 @@ function loadVue() {
 			<br>
 		</div>
 		`
-	})
+	});
 
-	// data = id
-	Vue.component('achievement', {
-		props: ['layer', 'data'],
+	// Data = id
+	Vue.component("achievement", {
+		props: ["layer", "data"],
 		template: `
 		<div v-if="layers[layer].achievements && layers[layer].achievements[data]!== undefined && tmp[layer].achievements[data].unlocked" v-bind:class="{ [layer]: true, achievement: true, locked: !hasAchievement(layer, data), bought: hasAchievement(layer, data)}"
 			v-bind:tooltip="
@@ -347,26 +349,26 @@ function loadVue() {
 			<span v-if= "tmp[layer].achievements[data].name"><br><h3 v-html="tmp[layer].achievements[data].name"></h3><br></span>
 		</div>
 		`
-	})
+	});
 
 
 	// These are for buyables, data is the id of the corresponding buyable
-	Vue.component('sell-one', {
-		props: ['layer', 'data'],
+	Vue.component("sell-one", {
+		props: ["layer", "data"],
 		template: `
 			<button v-if="layers[layer].buyables && layers[layer].buyables[data].sellOne && !(layers[layer].buyables[data].canSellOne !== undefined && tmp[layer].buyables[data].canSellOne == false)" v-on:click="layers[layer].buyables[data].sellOne()" v-bind:class="{ longUpg: true, can: player[layer].unlocked, locked: !player[layer].unlocked }">{{tmp[layer].buyables.sellOneText ? tmp[layer].buyables.sellOneText : "Sell One"}}</button>
 	`
-	})
-	Vue.component('sell-all', {
-		props: ['layer', 'data'],
+	});
+	Vue.component("sell-all", {
+		props: ["layer", "data"],
 		template: `
 			<button v-if="layers[layer].buyables && layers[layer].buyables[data].sellAll && !(layers[layer].buyables[data].canSellAll !== undefined && tmp[layer].buyables[data].canSellAll == false)" v-on:click="layers[layer].buyables[data].sellAll()" v-bind:class="{ longUpg: true, can: player[layer].unlocked, locked: !player[layer].unlocked }">{{tmp[layer].buyables.sellAllText ? tmp[layer].buyables.sellAllText : "Sell All"}}</button>
 	`
-	})
+	});
 
 	// NOT FOR USE IN STANDARD TAB FORMATTING
-	Vue.component('tab-buttons', {
-		props: ['layer', 'data', 'name'],
+	Vue.component("tab-buttons", {
+		props: ["layer", "data", "name"],
 		template: `
 			<div class="upgRow">
 				<div v-for="tab in Object.keys(data)">
@@ -374,10 +376,10 @@ function loadVue() {
 				</div>
 			</div>
 		`
-	})
+	});
 
-	Vue.component('layer-node', {
-		props: ['layer', 'abb', 'size'],
+	Vue.component("layer-node", {
+		props: ["layer", "abb", "size"],
 		template: `
 		<button v-if="nodeShown(layer)"
 			v-bind:id="layer"
@@ -404,7 +406,7 @@ function loadVue() {
 			{{abb}}
 		</button>
 		`
-	})
+	});
 
 
 	app = new Vue({
@@ -428,7 +430,7 @@ function loadVue() {
 			LAYERS,
 			hotkeys
 		},
-	})
+	});
 }
 
  
