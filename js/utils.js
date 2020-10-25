@@ -37,6 +37,23 @@ function format(decimal, precision=2) {
 	decimal = new Decimal(decimal)
 	if (isNaN(decimal.sign)||isNaN(decimal.layer)||isNaN(decimal.mag)) {
 		player.hasNaN = true;
+		player.autosave = false;
+		NaNalert = true;
+		error = new Error("An instance of NaN has been detected. If you can see this please contact the mod author.");
+		modal.show(
+			"An error has occured.",
+			`
+				<br/>
+				Details of error:<br/>
+				<h5 class="modal" style="max-width:100%"><pre style="text-align:left">${error.stack}</pre></h5>
+				<button class="mainButton" onclick="exportSave()">Export save to clipboard</button><br/>
+				Please visit one of these Discord servers at the sidebar along with the error details for help.<br/>
+				<button class="mainButton" onClick="window.open('https://discord.gg/wwQfgPa','_blank')">Jacorb's Main server</button>
+				<button class="mainButton" onClick="window.open('https://discord.gg/F3xveHV','_blank')">Acamaeda's TMT server</button>
+				
+			`
+		);
+		modal.buttonContent = ""
 		return "NaN"
 	}
 	if (decimal.sign<0) return "-"+format(decimal.neg(), precision)
@@ -662,12 +679,12 @@ function prestigeButtonText(layer)
 		return layers[layer].prestigeButtonText()
 }
 
-
-
-
-
 function isFunction(obj) {
 	return !!(obj && obj.constructor && obj.call && obj.apply);
-  };
+};
+
+function doDynamicInput(holder, input, targetText) {
+
+}
   
 document.title = modInfo.name

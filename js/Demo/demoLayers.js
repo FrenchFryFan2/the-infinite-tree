@@ -283,7 +283,7 @@ addLayer("c", {
                     ["blank", "5px"], // Height
                     ["raw-html", function() {return "<button onclick='console.log(`yeet`)'>'HI'</button>"}],
                     ["display-text",
-                        function() {return 'I have ' + format(player.points) + ' pointy points!'},
+                        function () { return 'I have ' + format(player.points) + ' pointy <strike>points</strike> candies!'},
                         {"color": "red", "font-size": "32px", "font-family": "Comic Sans MS"}],
                     "h-line", "milestones", "blank", "upgrades", "challenges"],
             },

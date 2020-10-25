@@ -30,6 +30,36 @@ td {
 	padding: 0
 }
 
+.mainInput {
+	background-color: rgba(0, 0, 0, 0.5);
+	color: var(--color);
+	font-family: "Inconsolata", monospace;
+	font-size: 18px;
+	padding: 5px 20px 5px 20px;
+	margin: 5px 5px 5px 5px;
+	border-radius: 20px;
+	border: 2px solid;
+	border-color: rgba(0, 0, 0, 0.125);
+	width: 350px;
+}
+
+.mainButton {
+	background-color: var(--color);
+	color: rgba(0, 0, 0, 0.5);
+	font-size: 18px;
+	cursor: pointer;
+	padding: 5px 20px 5px 20px;
+	margin: 5px 5px 5px 5px;
+	border-radius: 20px;
+	border: 2px solid;
+	border-color: rgba(0, 0, 0, 0.125);
+}
+
+.mainButton:hover {
+	transform: scale(1.1, 1.1);
+	box-shadow: 0px 0px 7px var(--color);
+}
+
 .upgTable {
 	display: flex !important;
 	flex-flow: column wrap;
@@ -596,4 +626,22 @@ button > * {
 
 .ghost {
 	visibility: hidden
+}
+
+.modal {
+	max-width: 60%;
+	background-color: var(--background);
+	color: var(--color);
+	padding: 10px;
+	border: 2px solid;
+	border-color: rgba(0, 0, 0, 0.125);
+	border-radius: 10px;
+}
+
+pre {
+	white-space: pre-wrap;
+	white-space: -moz-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	word-wrap: break-word;
 }

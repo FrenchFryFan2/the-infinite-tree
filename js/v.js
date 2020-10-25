@@ -426,7 +426,8 @@ function loadVue() {
 			keepGoing,
 			VERSION,
 			LAYERS,
-			hotkeys
+			hotkeys,
+			modal
 		},
 	})
 }

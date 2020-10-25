@@ -1,7 +1,7 @@
 let modInfo = {
 	name: "The Modding Tree",
 	id: "modbase",
-	pointsName: "points",
+	pointsName: "candies",
 	discordName: "",
 	discordLink: "",
 	changelogLink: "https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md",

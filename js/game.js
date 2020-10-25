@@ -192,20 +192,39 @@ function doReset(layer, force=false) {
 	updateTemp()
 }
 
-function resetRow(row) {
-	if (prompt('Are you sure you want to reset this row? It is highly recommended that you wait until the end of your current run before doing this! Type "I WANT TO RESET THIS" to confirm')!="I WANT TO RESET THIS") return
-	let pre_layers = ROW_LAYERS[row-1]
-	let layers = ROW_LAYERS[row]
-	let post_layers = ROW_LAYERS[row+1]
-	rowReset(row+1, post_layers[0])
-	doReset(pre_layers[0], true)
-	for (let layer in layers) {
-		player[layer].unlocked = false
-		if (player[layer].unlockOrder) player[layer].unlockOrder = 0
+function resetRow(row, confirm) {
+	if (confirm) {
+		let pre_layers = ROW_LAYERS[row - 1]
+		let layers = ROW_LAYERS[row]
+		let post_layers = ROW_LAYERS[row+1]
+		rowReset(row+1, post_layers[0])
+		doReset(pre_layers[0], true)
+		for (let layer in layers) {
+			player[layer].unlocked = false
+			if (player[layer].unlockOrder) player[layer].unlockOrder = 0
+		}
+		player.points = getStartPoints()
+		updateTemp();
+		resizeCanvas();
+		modal.hide();
+	} else {
+		modal.show(
+			"Are you sure you want to reset this row?",
+			`
+					This is a destructive process! It is highly recommended that you wait until the end of your current run before doing this!<br/>
+					Please type "I WANT TO RESET THIS" to continue. Case and space sensitive.
+					<div id="modalInputHolder">
+						<input id="modalInput" class="mainInput" style="width:180px" autocomplete="off"
+						onpaste="this.onchange();" oninput="this.onchange()" onkeypress="this.onchange()" onchange="{
+							if (document.getElementById('modalInput').value === 'I WANT TO RESET THIS')
+								document.getElementById('modalInputHolder').innerHTML =
+									'<button class=\\'mainButton\\' onclick=\\'resetRow(${row}, true)\\'>I WANT TO RESET THIS</button>'
+						}"/>
+					<div>
+				`,
+			"Nevermind"
+		)
 	}
-	player.points = getStartPoints()
-	updateTemp();
-	resizeCanvas();
 }
 
 function startChallenge(layer, x) {
@@ -323,16 +342,41 @@ function gameLoop(diff) {
 		clearInterval(interval);
 		player.autosave = false;
 		NaNalert = true;
-
-		alert("We have detected a corruption in your save. Please visit one of the discords in the info panel for help.")
+		modal.show(
+			"An error has occured.",
+			`
+				<br/>
+				Details of error:<br/>
+				<h5>${error.stack}</h5><br/>
+				Please visit one of the Discord servers at the sidebar for help.
+			`
+		);
 	}
 }
 
-function hardReset() {
-	if (!confirm("Are you sure you want to do this? You will lose all your progress!")) return
-	player = getStartPlayer()
-	save();
-	window.location.reload();
+function hardReset(confirm) {
+	if (confirm) {
+		player = getStartPlayer();
+		save();
+		window.location.reload();
+	} else {
+		modal.show(
+			"Are you sure you want to do a hard reset?",
+				`
+				This is a destructive process! You'll lose all of your progress if you continue to do this!<br/>
+				Please type "I understand the consequences, do it!" to continue. Case and space sensitive.
+				<div id="modalInputHolder">
+					<input id="modalInput" class="mainInput" style="width:333px" autocomplete="off" 
+					onpaste="this.onchange();" oninput="this.onchange()" onkeypress="this.onchange()" onchange="{
+						if (document.getElementById('modalInput').value === 'I understand the consequences, do it!')
+							document.getElementById('modalInputHolder').innerHTML =
+								'<button class=\\'mainButton\\' onclick=\\'hardReset(true)\\'>I understand the consequences, do it!</button>'
+					}"/>
+				<div>
+			`,
+			"Nevermind"
+		)
+	}
 }
 
 var ticking = false
