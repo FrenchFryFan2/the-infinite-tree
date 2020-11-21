@@ -52,10 +52,18 @@ function drawTree() {
 function drawTreeBranch(num1, data) { // taken from Antimatter Dimensions & adjusted slightly
 	let num2 = data
 	let color_id = 1
+	let lineDash = []
 
-	if (Array.isArray(data)){
+	if (Array.isArray(data)) {
 		num2 = data[0]
-		color_id = data[1]
+		if (Array.isArray(data[1])) {
+			lineDash = data[1]
+		} else {
+			color_id = data[1]
+		}
+		if (data.length == 3) {
+			lineDash = data[2]
+		}
 	}
 
 	if(typeof(color_id) == "number")
@@ -69,11 +77,12 @@ function drawTreeBranch(num1, data) { // taken from Antimatter Dimensions & adju
     let x1 = start.left + (start.width / 2) + document.body.scrollLeft;
     let y1 = start.top + (start.height / 2) + document.body.scrollTop;
     let x2 = end.left + (end.width / 2) + document.body.scrollLeft;
-    let y2 = end.top + (end.height / 2) + document.body.scrollTop;
-    ctx.lineWidth = 15;
-    ctx.beginPath();
-    ctx.strokeStyle = color_id
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
+	let y2 = end.top + (end.height / 2) + document.body.scrollTop;
+	ctx.lineWidth = 15;
+	ctx.setLineDash(lineDash);
+	ctx.beginPath();
+	ctx.strokeStyle = color_id
+	ctx.moveTo(x1, y1);
+	ctx.lineTo(x2, y2);
+	ctx.stroke();
 }

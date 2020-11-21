@@ -2,8 +2,8 @@ let modInfo = {
 	name: "The Infinite Tree",
 	id: "TheInfiniteTree",
 	author: "FrozenDude101",
-	pointsName: "points",
-	discordName: "FrozenDude101#2700",
+	pointsName: "P₀",
+	discordName: "",
 	discordLink: "",
 	changelogLink: "https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md",
 	initialStartPoints: new Decimal (10), // Used for hard resets and new players
@@ -19,7 +19,7 @@ let VERSION = {
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
-var doNotCallTheseFunctionsEveryTick = ["blowUpEverything"]
+var doNotCallTheseFunctionsEveryTick = []
 
 function getStartPoints(){
     return new Decimal(modInfo.initialStartPoints)
