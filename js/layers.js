@@ -1,75 +1,28 @@
-addLayer("1", {
-    name: "P₁",
-    resource: "P1",
-
-    symbol: "P₁",
-    row: 0,
-    color: "#FF8800",
-    branches: ["2", ["n-1", [15]]],
-    
-    startData() { return { unlocked:true, points: new Decimal(0) } },
-    layerShown() { return true },
-})
-
-addLayer("2", {
-    name: "P₂",
-    resource: "P₂",
-
-    symbol: "P₂",
-    row: 1,
-    color: "#FF8800",
-    branches: ["3"],
-    
-    startData() { return { unlocked:true, points: new Decimal(0) } },
-    layerShown() { return true },
-})
-
-addLayer("3", {
-    name: "P₃",
-    resource: "P₃",
-
-    symbol: "P₃",
-    row: 2,
-    color: "#FF8800",
-    branches: ["4"],
-    
-    startData() { return { unlocked:true, points: new Decimal(0) } },
-    layerShown() { return true },
-})
-
-addLayer("4", {
-    name: "P₄",
-    resource: "P₄",
-
-    symbol: "P₄",
-    row: 3,
-    color: "#FF8800",
-    
-    startData() { return { unlocked:true, points: new Decimal(0) } },
-    layerShown() { return true },
-})
-
-addLayer("n-1", {
-    name: "Pₙ₋₁",
-    resource: "Pₙ₋₁",
-
-    symbol: "Pₙ₋₁",
-    row: 2,
-    color: "#FF8800",
-    branches: ["n"],
-    
-    startData() { return { unlocked:true, points: new Decimal(0) } },
-    layerShown() { return true },
-})
-
-addLayer("n", {
-    name: "Pₙ",
-    resource: "Pₙ",
-
-    symbol: "Pₙ",
-    row: 3,
-    color: "#FF8800",
-    
-    startData() { return { unlocked:true, points: new Decimal(0) } },
-    layerShown() { return true },
+addLayer("p", {
+    name: "prestige", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "P", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    startData() { return {
+        unlocked: true,
+		points: new Decimal(0),
+    }},
+    color: "#4BDC13",
+    requires: new Decimal(10), // Can be a function that takes requirement increases into account
+    resource: "prestige points", // Name of prestige currency
+    baseResource: "points", // Name of resource prestige is based on
+    baseAmount() {return player.points}, // Get the current amount of baseResource
+    type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    exponent: 0.5, // Prestige currency exponent
+    gainMult() { // Calculate the multiplier for main currency from bonuses
+        mult = new Decimal(1)
+        return mult
+    },
+    gainExp() { // Calculate the exponent on main currency from bonuses
+        return new Decimal(1)
+    },
+    row: 0, // Row the layer is in on the tree (0 is the first row)
+    hotkeys: [
+        {key: "p", description: "Reset for prestige points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
+    layerShown(){return true}
 })
