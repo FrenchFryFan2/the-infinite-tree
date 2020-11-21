@@ -65,6 +65,9 @@ function drawTreeBranch(num1, data) { // taken from Antimatter Dimensions & adju
 			lineDash = data[2]
 		}
 	}
+	// [id color] was the original way to do it.
+	// [id color dash] [id color] and [id dash] are all compatible.
+	// - FrozenDude101
 
 	if(typeof(color_id) == "number")
 		color_id = colors_theme[color_id]
