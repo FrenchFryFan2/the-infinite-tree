@@ -1,8 +1,8 @@
 let modInfo = {
-	name: "The Infinite Tree",
-	id: "TheInfiniteTree",
-	author: "FrozenDude101",
-	pointsName: "P₀",
+	name: "The ??? Tree",
+	id: "mymod",
+	author: "nobody",
+	pointsName: "points",
 	discordName: "",
 	discordLink: "",
 	changelogLink: "https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md",
@@ -13,13 +13,13 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "T0.1",
-	name: "Testing",
+	num: "0.0",
+	name: "Literally nothing",
 }
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
-var doNotCallTheseFunctionsEveryTick = []
+var doNotCallTheseFunctionsEveryTick = ["blowUpEverything"]
 
 function getStartPoints(){
     return new Decimal(modInfo.initialStartPoints)
