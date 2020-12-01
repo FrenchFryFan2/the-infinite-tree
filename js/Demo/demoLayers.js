@@ -15,7 +15,6 @@ addLayer("c", {
             beep: false,
         }},
         color: "#4BDC13",
-        autoUpgrade: true,
         requires: new Decimal(10), // Can be a function that takes requirement increases into account
         resource: "lollipops", // Name of prestige currency
         baseResource: "candies", // Name of resource prestige is based on
@@ -24,10 +23,6 @@ addLayer("c", {
         exponent: 0.5, // Prestige currency exponent
         base: 5, // Only needed for static layers, base of the formula (b^(x^exp))
         roundUpCost: false, // True if the cost needs to be rounded up (use when baseResource is static?)
-
-        // For normal layers, gain beyond [softcap] points is put to the [softcapPower]th power
-        softcap: new Decimal(1e100), 
-        softcapPower: new Decimal(0.5), 
         canBuyMax() {}, // Only needed for static layers with buy max
         gainMult() { // Calculate the multiplier for main currency from bonuses
             mult = new Decimal(1)
@@ -83,8 +78,7 @@ addLayer("c", {
                 name: "Fun",
                 completionLimit: 3,
 			    challengeDescription() {return "Makes the game 0% harder<br>"+challengeCompletions(this.layer, this.id) + "/" + this.completionLimit + " completions"},
-                unlocked() { return player[this.layer].best.gt(0) },
-                goalDescription: 'Have 20 lollipops I guess',
+			    unlocked() { return player[this.layer].best.gt(0) },
                 goal: new Decimal("20"),
                 currencyDisplayName: "lollipops", // Use if using a nonstandard currency
                 currencyInternalName: "points", // Use if using a nonstandard currency
@@ -120,6 +114,11 @@ addLayer("c", {
                 effectDisplay() { return format(this.effect())+"x" }, // Add formatting to the effect
             },
             13: {
+                description: "Unlock a <b>secret subtab</b> and make this layer act if you unlocked it first.",
+                cost: new Decimal(69),
+                currencyDisplayName: "candies", // Use if using a nonstandard currency
+                currencyInternalName: "points", // Use if using a nonstandard currency
+                currencyLocation: "", // The object in player data that the currency is contained in
                 unlocked() { return (hasUpgrade(this.layer, 12))},
                 onPurchase() { // This function triggers when the upgrade is purchased
                     player[this.layer].unlockOrder = 0
@@ -134,9 +133,6 @@ addLayer("c", {
                         }
                     } // Otherwise use the default
                 },
-                canAfford(){return player.points.lte(7)},
-                pay(){player.points = player.points.add(7)},
-                fullDisplay: "Only buyable with less than 7 points, and gives you 7 more. Unlocks a secret subtab."
             },
             22: {
                 title: "This upgrade doesn't exist",
@@ -212,7 +208,7 @@ addLayer("c", {
         }, // Useful for if you gain secondary resources or have other interesting things happen to this layer when you reset it. You gain the currency after this function ends.
 
         hotkeys: [
-            {key: "c", description: "C: reset for lollipops or whatever", onPress(){if (canReset(this.layer)) doReset(this.layer)}, unlocked() {return player.points.gte(10)}},
+            {key: "c", description: "C: reset for lollipops or whatever", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
             {key: "ctrl+c", description: "Ctrl+c: respec things", onPress(){if (player[this.layer].unlocked) respecBuyables(this.layer)}},
         ],
         increaseUnlockOrder: [], // Array of layer names to have their order increased when this one is first unlocked

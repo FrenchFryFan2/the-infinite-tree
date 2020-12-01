@@ -107,7 +107,8 @@ var systemComponents = {
 		<br>
 		<span v-if="canGenPoints()"  class="overlayThing">({{format(getPointGen())}}/sec)</span>
 		<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>
-	</div>
+	  <infobox layer="none" data="story"></infobox>
+  </div>
 	`
     },
 
@@ -121,7 +122,12 @@ var systemComponents = {
             <br>
             Made by {{modInfo.author}}	
         </span>
-        <br>
+        <br><br>
+        <b> People who helped: </b> <br>
+        unpingabot#0245 <br>
+        thepaperpilot#1210 <br>
+        💜Emi💜#5662 <br>
+        
         The Modding Tree {{TMT_VERSION.tmtNum}} by Acamaeda
         <br>
         The Prestige Tree made by Jacorb and Aarex
@@ -135,7 +141,7 @@ var systemComponents = {
         <br><br>
         Time Played: {{ formatTime(player.timePlayed) }}<br><br>
         <h3>Hotkeys</h3><br>
-        <span v-for="key in hotkeys" v-if="player[key.layer].unlocked && tmp[key.layer].hotkeys[key.id].unlocked"><br>{{key.description}}</span></div>
+        <span v-for="key in hotkeys" v-if="player[key.layer].unlocked"><br>{{key.description}}</span></div>
     `
     },
 

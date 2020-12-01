@@ -94,14 +94,9 @@ You can make almost any value dynamic by using a function in its place, includin
 
 - roundUpCost: **optional**. a bool, which is true if the resource cost needs to be rounded up. (use if the base resource is a "static" currency.)
 
-- gainMult(), gainExp(): **optional**. Functions that calculate the multiplier and exponent on resource gain from upgrades and boosts and such. Plug in any bonuses here.
-
-- softcap, softcapPower: **optional**. For normal layers, gain beyond [softcap] points is put to the [softcapPower]th power
-    Default for softcap is e1e7, and for power is 0.5.
-
-## Other prestige-related features
-
 - canBuyMax(): **sometimes required**. required for static layers, function used to determine if buying max is permitted.
+
+- gainMult(), gainExp(): **optional**. Functions that calculate the multiplier and exponent on resource gain from upgrades and boosts and such. Plug in any bonuses here.
 
 - onPrestige(gain): **optional**. A function that triggers when this layer prestiges, just before you gain the currency.  Can be used to have secondary resource gain on prestige, or to recalculate things or whatnot.
 
@@ -136,9 +131,7 @@ You can make almost any value dynamic by using a function in its place, includin
 
 - update(diff): **optional**. This function is called every game tick. Use it for any passive resource production or time-based things. `diff` is the time since the last tick. 
 
-- autoUpgrade: **optional**, a boolean value, if true, the game will attempt to buy this layer's upgrades every tick. Defaults to false.
-
-- automate(): **optional**. This function is called every game tick, after production. Use it to activate automation things that aren't otherwise supported. 
+- automate(): **optional**. This function is called every game tick, after production. Use it to activate automation things other than prestige, if appropriate. 
 
 - resetsNothing: **optional**. Returns true if this layer shouldn't trigger any resets when you prestige.
 

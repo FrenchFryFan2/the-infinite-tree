@@ -1,20 +1,20 @@
 let modInfo = {
-	name: "The ??? Tree",
-	id: "mymod",
-	author: "nobody",
-	pointsName: "points",
+	name: "The Umbrella Tree",
+	id: "TUAT",
+	author: "Five Hargreeves#9676 and Holy Broly#0530",
+	pointsName: "Power Points",
 	discordName: "",
 	discordLink: "",
 	changelogLink: "https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md",
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
+	initialStartPoints: new Decimal (0), // Used for hard resets and new players
 	
 	offlineLimit: 1,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "3.0",
+	name: "Allisons Rumour",
 }
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
@@ -36,7 +36,13 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(1)
-	return gain
+  if (hasUpgrade("s", 11)) gain = gain.times(3);
+	if (hasUpgrade("s", 14)) gain = gain.times(upgradeEffect("s", 14));
+	if (hasUpgrade("a", 12)) gain = gain.times(upgradeEffect("a", 12));
+  if (hasUpgrade("a", 22)) gain = gain.pow(2);
+  if (hasUpgrade("r", 12)) gain = gain.times(upgradeEffect("r", 12));
+  if (hasUpgrade("r", 13)) gain = gain.times(upgradeEffect("r", 13));
+  return gain
 }
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
@@ -49,7 +55,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e280000000"))
+	return
 }
 
 
@@ -58,10 +64,5 @@ function isEndgame() {
 
 // You can change this if you have things that can be messed up by long tick lengths
 function maxTickLength() {
-	return(3600) // Default is 1 hour which is just arbitrarily large
-}
-
-// Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
-// you can cap their current resources with this.
-function fixOldSave(oldVersion){
+	return(3600000) // Default is 1 hour which is just arbitrarily large
 }

@@ -1,6 +1,6 @@
 // ************ Number formatting ************
 
-function exponentialFormat(num, precision, mantissa = true) {
+function exponentialFormat(num, precision) {
 	let e = num.log10().floor()
 	let m = num.div(Decimal.pow(10, e))
 	if(m.toStringWithDecimalPlaces(precision) == 10) {
@@ -8,15 +8,13 @@ function exponentialFormat(num, precision, mantissa = true) {
 		e = e.add(1)
 	}
 	e = (e.gte(10000) ? commaFormat(e, 0) : e.toStringWithDecimalPlaces(0))
-	if (mantissa)
-		return m.toStringWithDecimalPlaces(precision)+"e"+e
-		else return "e"+e
-	}
+	return m.toStringWithDecimalPlaces(precision)+"e"+e
+}
 
 function commaFormat(num, precision) {
 	if (num === null || num === undefined) return "NaN"
 	if (num.mag < 0.001) return (0).toFixed(precision)
-	return num.toStringWithDecimalPlaces(precision).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+	return num.toStringWithDecimalPlaces(precision).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
 
@@ -36,7 +34,7 @@ function sumValues(x) {
 	return x.reduce((a, b) => Decimal.add(a, b))
 }
 
-function format(decimal, precision=2,) {
+function format(decimal, precision=2) {
 	decimal = new Decimal(decimal)
 	if (isNaN(decimal.sign)||isNaN(decimal.layer)||isNaN(decimal.mag)) {
 		player.hasNaN = true;
@@ -48,9 +46,7 @@ function format(decimal, precision=2,) {
 		var slog = decimal.slog()
 		if (slog.gte(1e6)) return "F" + format(slog.floor())
 		else return Decimal.pow(10, slog.sub(slog.floor())).toStringWithDecimalPlaces(3) + "F" + commaFormat(slog.floor(), 0)
-	}
-	else if (decimal.gte("1e100000")) return exponentialFormat(decimal, 0, false)
-	else if (decimal.gte("1e1000")) return exponentialFormat(decimal, 0)
+	} else if (decimal.gte("1e1000")) return exponentialFormat(decimal, 0)
 	else if (decimal.gte(1e9)) return exponentialFormat(decimal, precision)
 	else if (decimal.gte(1e3)) return commaFormat(decimal, 0)
 	else return regularFormat(decimal, precision)
@@ -119,8 +115,17 @@ function getStartPlayer() {
 
 	playerdata.infoboxes = {}
 	for (layer in layers){
-		playerdata[layer] = getStartLayerData(layer)
-
+		playerdata[layer] = {}
+		if (layers[layer].startData) 
+			playerdata[layer] = layers[layer].startData()
+		else playerdata[layer].unlocked = true
+		playerdata[layer].buyables = getStartBuyables(layer)
+		if(playerdata[layer].clickables == undefined) playerdata[layer].clickables = getStartClickables(layer)
+		playerdata[layer].spentOnBuyables = new Decimal(0)
+		playerdata[layer].upgrades = []
+		playerdata[layer].milestones = []
+		playerdata[layer].achievements = []
+		playerdata[layer].challenges = getStartChallenges(layer)
 		if (layers[layer].tabFormat && !Array.isArray(layers[layer].tabFormat)) {
 			playerdata.subtabs[layer] = {}
 			playerdata.subtabs[layer].mainTabs = Object.keys(layers[layer].tabFormat)[0]
@@ -135,28 +140,8 @@ function getStartPlayer() {
 			for (item in layers[layer].infoboxes)
 				playerdata.infoboxes[layer][item] = false
 		}
-	
 	}
 	return playerdata
-}
-
-function getStartLayerData(layer){
-	layerdata = {}
-	if (layers[layer].startData) 
-		layerdata = layers[layer].startData()
-
-	if (layerdata.unlocked === undefined) layerdata.unlocked = true
-	if (layerdata.total === undefined) layerdata.total = new Decimal(0)
-	if (layerdata.best === undefined) layerdata.best = new Decimal(0)
-
-	layerdata.buyables = getStartBuyables(layer)
-	if(layerdata.clickables == undefined) layerdata.clickables = getStartClickables(layer)
-	layerdata.spentOnBuyables = new Decimal(0)
-	layerdata.upgrades = []
-	layerdata.milestones = []
-	layerdata.achievements = []
-	layerdata.challenges = getStartChallenges(layer)
-	return layerdata
 }
 
 
@@ -164,7 +149,7 @@ function getStartBuyables(layer){
 	let data = {}
 	if (layers[layer].buyables) {
 		for (id in layers[layer].buyables)
-			if (isPlainObject(layers[layer].buyables[id]))
+			if (!isNaN(id))
 				data[id] = new Decimal(0)
 	}
 	return data
@@ -174,7 +159,7 @@ function getStartClickables(layer){
 	let data = {}
 	if (layers[layer].clickables) {
 		for (id in layers[layer].clickables)
-			if (isPlainObject(layers[layer].clickables[id]))
+			if (!isNaN(id))
 				data[id] = ""
 	}
 	return data
@@ -184,7 +169,7 @@ function getStartChallenges(layer){
 	let data = {}
 	if (layers[layer].challenges) {
 		for (id in layers[layer].challenges)
-			if (isPlainObject(layers[layer].challenges[id]))
+			if (!isNaN(id))
 				data[id] = 0
 	}
 	return data
@@ -228,8 +213,8 @@ function fixData(defaultData, newData) {
 			else
 				newData[item] = new Decimal(newData[item])
 		}
-		else if ((!!defaultData[item]) && (typeof defaultData[item] === "object")) {
-			if (newData[item] === undefined || (typeof defaultData[item] !== "object"))
+		else if ((!!defaultData[item]) && (defaultData[item].constructor === Object)) {
+			if (newData[item] === undefined || (defaultData[item].constructor !== Object))
 				newData[item] = defaultData[item]
 			else
 				fixData(defaultData[item], newData[item])
@@ -316,7 +301,6 @@ function importSave(imported=undefined, forced=false) {
 		player = tempPlr;
 		player.versionType = modInfo.id
 		fixSave()	
-		versionCheck()
 		save()
 		window.location.reload()
 	} catch(e) {
@@ -333,10 +317,7 @@ function versionCheck() {
 	}
 	
 	if (setVersion) {
-		if (player.versionType == modInfo.id && VERSION.num > player.version) {
-			player.keepGoing = false
-			if (fixOldSave) fixOldSave(player.version)
-		} 
+		if (player.versionType == modInfo.id && VERSION.num > player.version) player.keepGoing = false
 		player.versionType = getStartPlayer().versionType
 		player.version = VERSION.num
 		player.beta = VERSION.beta
@@ -454,7 +435,6 @@ function respecBuyables(layer) {
 
 function canAffordUpgrade(layer, id) {
 	let upg = tmp[layer].upgrades[id]
-	if (tmp[layer].upgrades[id].canAfford !== undefined) return tmp[layer].upgrades[id].canAfford
 	let cost = tmp[layer].upgrades[id].cost
 	return canAffordPurchase(layer, upg, cost) 
 }
@@ -544,39 +524,31 @@ function buyUpgrade(layer, id) {
 }
 
 function buyUpg(layer, id) {
-	if (!tmp[layer].upgrades || !tmp[layer].upgrades[id]) return
-	let upg = tmp[layer].upgrades[id]
 	if (!player[layer].unlocked) return
 	if (!tmp[layer].upgrades[id].unlocked) return
 	if (player[layer].upgrades.includes(id)) return
-	if (upg.canAfford === false) return
-	let pay = layers[layer].upgrades[id].pay
-	if (pay !== undefined)
-		pay()
-	else 
-		{
-		let cost = tmp[layer].upgrades[id].cost
+	let upg = tmp[layer].upgrades[id]
+	let cost = tmp[layer].upgrades[id].cost
 
-		if (upg.currencyInternalName){
-			let name = upg.currencyInternalName
-			if (upg.currencyLocation){
-				if (upg.currencyLocation[name].lt(cost)) return
-				upg.currencyLocation[name] = upg.currencyLocation[name].sub(cost)
-			}
-			else if (upg.currencyLayer){
-				let lr = upg.currencyLayer
-				if (player[lr][name].lt(cost)) return
-				player[lr][name] = player[lr][name].sub(cost)
-			}
-			else {
-				if (player[name].lt(cost)) return
-				player[name] = player[name].sub(cost)
-			}
+	if (upg.currencyInternalName){
+		let name = upg.currencyInternalName
+		if (upg.currencyLocation){
+			if (upg.currencyLocation[name].lt(cost)) return
+			upg.currencyLocation[name] = upg.currencyLocation[name].sub(cost)
+		}
+		else if (upg.currencyLayer){
+			let lr = upg.currencyLayer
+			if (player[lr][name].lt(cost)) return
+			player[lr][name] = player[lr][name].sub(cost)
 		}
 		else {
-			if (player[layer].points.lt(cost)) return
-			player[layer].points = player[layer].points.sub(cost)	
+			if (player[name].lt(cost)) return
+			player[name] = player[name].sub(cost)
 		}
+	}
+	else {
+		if (player[layer].points.lt(cost)) return
+		player[layer].points = player[layer].points.sub(cost)	
 	}
 	player[layer].upgrades.push(id);
 	if (upg.onPurchase != undefined)
@@ -722,7 +694,7 @@ function updateMilestones(layer){
 
 function updateAchievements(layer){
 	for (id in layers[layer].achievements){
-		if (isPlainObject(layers[layer].achievements[id]) && !(player[layer].achievements.includes(id)) && layers[layer].achievements[id].done()) {
+		if (!isNaN(id) && !(player[layer].achievements.includes(id)) && layers[layer].achievements[id].done()) {
 			player[layer].achievements.push(id)
 			if (layers[layer].achievements[id].onComplete) layers[layer].achievements[id].onComplete()
 		}
@@ -789,9 +761,5 @@ function prestigeButtonText(layer)
 function isFunction(obj) {
 	return !!(obj && obj.constructor && obj.call && obj.apply);
   };
-
-function isPlainObject(obj) {
-	return (!!obj) && (obj.constructor === Object)
-}
-
+  
 document.title = modInfo.name

@@ -1,7 +1,7 @@
 * {
 	transition-duration: 0.5s;
 	text-align: center;
-	font-family: "Inconsolata", monospace;
+	font-family: 'Syne Mono', monospace;
 	font-weight: bold;
 	table-align: center;
 	margin: auto;
@@ -639,15 +639,15 @@ button > * {
 .story {
     width: 600px;
     max-width: 95%;
-    border-bottom: solid 4px;
+    border-bottom: solid 2.5px;
     border-radius: 8px;
-    margin-bottom: 8px;
-    text-align: left;
+    margin-bottom: 10px;
+    text-align: middle;
 }
 
 .story-title {
-    text-align: left;
-    font-size: 24px;
+    text-align: middle;
+    font-size: 30px;
     color: black;
     cursor: pointer;
     border: none;
@@ -657,17 +657,16 @@ button > * {
 
 .story-toggle {
     border: none;
-    background: black;
-    color: white;
-    font-size: 20px;
+    color: black;
+    font-size: 25px;
     pointer-events: none;
     width: 1em;
     display: inline-block;
 }
 
 .story-text {
-	padding: 2px;
-    border: solid 4px;
+	padding: 4px;
+    border: solid 8px;
     border-color: inherit;
     border-radius: inherit;
     border-top-left-radius: 0;
