@@ -1,8 +1,8 @@
 let modInfo = {
-	name: "The ??? Tree",
+	name: "The Alphabetical Tree",
 	id: "mymod",
-	author: "nobody",
-	pointsName: "points",
+	author: "Five Hargreeves#9676",
+	pointsName: "Alphabetics",
 	discordName: "",
 	discordLink: "",
 	changelogLink: "https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md",
@@ -13,8 +13,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "1.0",
+	name: "A is for Ability",
 }
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
@@ -36,6 +36,8 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(1)
+  if (hasUpgrade("a", 11)) gain = gain.times(upgradeEffect("a", 11));
+    gain = gain.mul(buyableEffect(this.layer, 11))
 	return gain
 }
 

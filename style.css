@@ -61,14 +61,14 @@ h1, h2, h3, b, input {
 	font-family: "Lucida Console", "Courier New", monospace
 }
 
-
+   
 
 .treeNode {
 	height: 100px;
 	width: 100px;
 	border: var(--hqProperty1);
 	border-color: rgba(0, 0, 0, 0.125);
-	border-radius: 50%;
+	border-radius: 20%;
 	box-shadow: var(--hqProperty2a), var(--hqProperty2b);
 	font-size: 40px;
 	font-family: "Lucida Console", "Courier New", monospace;
@@ -260,7 +260,7 @@ h1, h2, h3, b, input {
 	border-radius: 25%;
 	border: 2px solid;
 	border-color: rgba(0, 0, 0, 0.125);
-	font-size: 10px;
+	font-size: 11.5px;
 }
 
 .upgBig {
