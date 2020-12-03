@@ -13,6 +13,7 @@ addLayer("b", {
     return new Decimal(player.b.points)
       .add(1)
       .log(7)
+      .add(1)
       .times(2);
   },
   effectDescription() {

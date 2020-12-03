@@ -35,7 +35,7 @@ function canGenPoints() {
 function getPointGen() {
   if (!canGenPoints()) return new Decimal(0);
 
-  let gain = new Decimal(1).times(layers[("a", "b")].effect().add(1));
+   let gain = new Decimal(1).times(layers["a"].effect().add(1)).times(layers["b"].effect().add(1));
   if (hasUpgrade("a", 11)) gain = gain.times(upgradeEffect("a", 11));
   if (hasUpgrade("a", 13)) gain = gain.times(upgradeEffect("a", 13));
   gain = gain.mul(buyableEffect("a", 11));

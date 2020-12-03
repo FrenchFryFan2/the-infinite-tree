@@ -21,7 +21,7 @@ addLayer("a", {
           "prestige-button",
           "",
           function() {
-            return hasUpgrade("a", 21) ? { display: "none" } : {};
+            return hasUpgrade("a", 23) ? { display: "none" } : {};
           }
         ],
         "blank",
@@ -41,7 +41,7 @@ addLayer("a", {
           "prestige-button",
           "",
           function() {
-            return hasUpgrade("a", 21) ? { display: "none" } : {};
+            return hasUpgrade("a", 23) ? { display: "none" } : {};
           }
         ],
         "blank",
@@ -58,7 +58,7 @@ addLayer("a", {
           "prestige-button",
           "",
           function() {
-            return hasUpgrade("a", 21) ? { display: "none" } : {};
+            return hasUpgrade("a", 23) ? { display: "none" } : {};
           }
         ],
         "blank",
@@ -69,7 +69,8 @@ addLayer("a", {
   effect() {
     return new Decimal(player.a.points)
       .add(1)
-      .log(7)
+      .log(15)
+      .add(0.245)
       .times(2);
   },
   effectDescription() {
@@ -112,7 +113,7 @@ addLayer("a", {
     0: {
       toggles: ["auto"],
       requirementDescription: "10,000,000 Abilities",
-      effectDescription: "Auto Abilities Upgrades",
+      effectDescription: "Auto Abilities Upgrades (NOT WORKING)",
       done() {
         return player.a.best.gte(10000000);
       }
@@ -161,7 +162,7 @@ addLayer("a", {
       description: "Multiply Ability Gain by Point Gain",
       cost: new Decimal(5),
       effect() {
-        if (hasUpgrade("a", 23))
+        if (hasUpgrade("a", 22))
           return player.points
             .add(1)
             .log(6)
@@ -247,7 +248,7 @@ addLayer("a", {
     11: {
       title: "<b>Are</b><br>",
       cost() {
-        if (hasUpgrade("a", 22))
+        if (hasUpgrade("a", 21))
           return new Decimal(8).pow(getBuyableAmount(this.layer, 11)).times(10);
         else
           return new Decimal(9).pow(getBuyableAmount(this.layer, 11)).times(13);
@@ -285,7 +286,7 @@ addLayer("a", {
         return new Decimal(player.a.points).gte(this.cost());
       },
       unlocked() {
-        return hasUpgrade("a", 23);
+        return hasUpgrade("a", 22);
       },
       display() {
         return `<b>Multiply your Ability gain\n Cost:</b> ${this.cost().round()} Abilities\n <b>Amount:</b> ${getBuyableAmount(
