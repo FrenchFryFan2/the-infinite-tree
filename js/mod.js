@@ -1,6 +1,6 @@
 let modInfo = {
   name: "The Alphabetical Tree",
-  id: "mymod",
+  id: "alphabet",
   author: "Five Hargreeves#9676",
   pointsName: "Alphabetics",
   discordName: "",
@@ -14,8 +14,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-  num: "1.0",
-  name: "A is for Ability"
+  num: "2.0",
+  name: "B is for Barcode"
 };
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
@@ -35,10 +35,10 @@ function canGenPoints() {
 function getPointGen() {
   if (!canGenPoints()) return new Decimal(0);
 
-  let gain = new Decimal(1).times(layers["a"].effect().add(1));
+  let gain = new Decimal(1).times(layers[("a", "b")].effect().add(1));
   if (hasUpgrade("a", 11)) gain = gain.times(upgradeEffect("a", 11));
   if (hasUpgrade("a", 13)) gain = gain.times(upgradeEffect("a", 13));
-  gain = gain.mul(buyableEffect(this.layer, 11));
+  gain = gain.mul(buyableEffect("a", 11));
   if (inChallenge("a", 11)) gain = gain.pow(0.5);
   if (hasChallenge("a", 11)) gain = gain.pow(1.2);
   return gain;

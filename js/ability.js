@@ -10,7 +10,7 @@ addLayer("a", {
     };
   },
   nodeStyle: {
-    background: "linear-gradient(to bottom right, #e8bab3, white", // red, orange, yellow, green, blue, indigo, violet
+    background: "linear-gradient(to bottom right, #e8a095, white", // red, orange, yellow, green, blue, indigo, violet
     "background-origin": "border-box"
   },
   tabFormat: {
@@ -25,8 +25,9 @@ addLayer("a", {
           }
         ],
         "blank",
-        "upgrades",
-        "milestones"
+        "milestones",
+        "blank",
+        "upgrades"
       ]
     },
 
@@ -78,14 +79,14 @@ addLayer("a", {
   },
   passiveGeneration() {
     let gain = 0;
-    if (hasUpgrade("a", 17)) {
+    if (hasUpgrade("a", 23)) {
       gain = 1;
     } else if (hasUpgrade("a", 15)) {
       gain = 0.5;
     }
     return gain;
   },
-  color: "#e8bab3",
+  color: "#e8a095",
   requires: new Decimal(10), // Can be a function that takes requirement increases into account
   resource: "Abilities", // Name of prestige currency
   baseResource: "points", // Name of resource prestige is based on
@@ -96,20 +97,35 @@ addLayer("a", {
   exponent: 0.5, // Prestige currency exponent
   gainMult() {
     // Calculate the multiplier for main currency from bonuses
-    mult = new Decimal(1);
-    if (hasUpgrade("a", 11)) mult = mult.times(upgradeEffect("a", 12));
-    mult = mult.mul(buyableEffect(this.layer, 11));
+    mult = new Decimal(1).times(layers["b"].effect().add(1));
+    if (hasUpgrade("a", 12)) mult = mult.times(upgradeEffect("a", 12));
+    if (hasUpgrade("b", 11)) mult = mult.times(2);
+    mult = mult.mul(buyableEffect(this.layer, 12));
+    if (hasUpgrade("b", 13)) mult = mult.pow(1.2);
     return mult;
   },
   gainExp() {
     // Calculate the exponent on main currency from bonuses
     return new Decimal(1);
   },
+  autoUpgrade() {
+    return hasMilestone("a", 0)
+  },
+  milestones: {
+    0: {
+      toggles: ["auto"],
+      requirementDescription: "10,000,000 Abilities",
+      effectDescription: "Auto Abilities Upgrades",
+      done() {
+        return player.a.best.gte(10000000);
+      }
+    }
+  },
   challenges: {
     rows: 1,
     cols: 1,
     11: {
-      name: "Endgame V1",
+      name: "Ark",
       challengeDescription: "Point gain is tetrated ^0.5",
       goal: new Decimal(200000),
       doReset: true,
@@ -151,13 +167,13 @@ addLayer("a", {
         if (hasUpgrade("a", 23))
           return player.points
             .add(1)
-            .log(10)
+            .log(6)
+            .times(1.5)
             .max(1);
         else
           return player.points
             .add(1)
-            .log(6)
-            .times(1.5)
+            .log(10)
             .max(1);
       },
       effectDisplay() {
@@ -185,26 +201,27 @@ addLayer("a", {
       description: "Gain 50% of Ability Gain Per Second",
       cost: new Decimal(100)
     },
+
     21: {
-      title: "App",
-      description:
-        "Lose the Ability to Prestige, but Gain 100% of Ability Gain Per Second",
+      title: "Alt",
+      description: "Make <b>Are</b>'s Cost Scale Slower",
       cost: new Decimal(10000),
       unlocked() {
         return hasUpgrade("a", 15);
       }
     },
     22: {
-      title: "Alt",
-      description: "Make <b>Are</b>'s Cost Scale Slower",
+      title: "Ask",
+      description: "<b>At</b> Uses a Better Formula and Unlock a New Buyable.",
       cost: new Decimal(20000),
       unlocked() {
         return hasUpgrade("a", 21);
       }
     },
     23: {
-      title: "Ask",
-      description: "<b>At</b> Uses a Better Formula and Unlock a New Buyable.",
+      title: "App",
+      description:
+        "Lose the Ability to Prestige, but Gain 100% of Ability Gain Per Second",
       cost: new Decimal(50000),
       unlocked() {
         return hasUpgrade("a", 22);
@@ -220,7 +237,7 @@ addLayer("a", {
     },
     25: {
       title: "An",
-      description: "Unlock Challenges",
+      description: "Unlock Challenges and Unlock the Next Layer",
       cost: new Decimal(1000000),
       unlocked() {
         return hasUpgrade("a", 24);
@@ -290,18 +307,38 @@ addLayer("a", {
       effect() {
         return new Decimal(1.5).pow(getBuyableAmount(this.layer, 12));
       }
+    },
+    13: {
+      title: "<b>Ant</b><br>",
+      cost() {
+        return new Decimal(8).pow(getBuyableAmount(this.layer, 13)).times(14);
+      },
+      canAfford() {
+        return new Decimal(player.a.points).gte(this.cost());
+      },
+      unlocked() {
+        return hasUpgrade("b", 24);
+      },
+      display() {
+        return `<b>Multiply your Barcode gain\n Cost:</b> ${this.cost().round()} Abilities\n <b>Amount:</b> ${getBuyableAmount(
+          this.layer,
+          13
+        )}\n <b>Effect:</b> x${this.effect().round()} Barcodes`;
+      },
+      buy() {
+        player.a.points = new Decimal(player.a.points).sub(this.cost());
+        setBuyableAmount(
+          this.layer,
+          13,
+          new Decimal(getBuyableAmount(this.layer, 13)).add(1)
+        );
+      },
+      effect() {
+        return new Decimal(1.5).pow(getBuyableAmount(this.layer, 13));
+      }
     }
   },
   row: 0, // Row the layer is in on the tree (0 is the first row)
-  hotkeys: [
-    {
-      key: "a",
-      description: "a: Reset for Ability points",
-      onPress() {
-        if (canReset(this.layer)) doReset(this.layer);
-      }
-    }
-  ],
   layerShown() {
     return true;
   }

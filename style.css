@@ -1,7 +1,7 @@
 * {
 	transition-duration: 0.5s;
 	text-align: center;
-	font-family: "Inconsolata", monospace;
+	font-family: "Varela Round", monospace;
 	font-weight: bold;
 	table-align: center;
 	margin: auto;
@@ -58,7 +58,7 @@ td {
 
 h1, h2, h3, b, input {
 	display: inline;
-	font-family: "Lucida Console", "Courier New", monospace
+	font-family: "Varela Round", "Courier New", monospace
 }
 
    
@@ -68,10 +68,10 @@ h1, h2, h3, b, input {
 	width: 100px;
 	border: var(--hqProperty1);
 	border-color: rgba(0, 0, 0, 0.125);
-	border-radius: 25%;
+	border-radius: 20%;
 	box-shadow: var(--hqProperty2a), var(--hqProperty2b);
 	font-size: 40px;
-	font-family: "Lucida Console", "Courier New", monospace;
+	font-family: "Varela Round", "Courier New", monospace;
 	color: rgba(0, 0, 0, 0.5);
 	text-shadow: var(--hqProperty3);
 	padding: 0;
@@ -86,11 +86,11 @@ h1, h2, h3, b, input {
 	border-radius: 33%;
 	box-shadow: var(--hqProperty2a), var(--hqProperty2b);
 	font-size: 40px;
-	font-family: "Lucida Console", "Courier New", monospace;
+	font-family: "Varela Round", "Courier New", monospace;
 	color: rgba(0, 0, 0, 0.5);
 	text-shadow: var(--hqProperty3);
 	padding: 0;
-
+  color: white
 }
 
 
