@@ -33,7 +33,7 @@ addLayer("b", {
         "main-display",
         ["prestige-button", ""],
         function() {
-          return hasUpgrade("a", 21) ? { display: "none" } : {};
+          return hasUpgrade("b", 23) ? { display: "none" } : {};
         },
         "blank",
         "milestones",
