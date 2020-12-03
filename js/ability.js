@@ -108,9 +108,6 @@ addLayer("a", {
     // Calculate the exponent on main currency from bonuses
     return new Decimal(1);
   },
-  autoUpgrade() {
-    return hasMilestone("a", 0)
-  },
   milestones: {
     0: {
       toggles: ["auto"],
