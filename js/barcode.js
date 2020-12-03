@@ -1,10 +1,12 @@
 addLayer("b", {
+  branches: ["a"],
   name: "Barcode", // This is optional, only used in a few places, If absent it just uses the layer id.
   symbol: "B", // This appears on the layer's node. Default is the id with the first letter capitalized
   position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
   startData() {
     return {
       unlocked: true,
+      unlocked2: new Decimal(0),
       points: new Decimal(0),
       best: new Decimal(0)
     };
@@ -12,8 +14,8 @@ addLayer("b", {
   effect() {
     return new Decimal(player.b.points)
       .add(1)
-      .log(7)
-      .add(1)
+      .log(14)
+      .add(0.5)
       .times(2);
   },
   effectDescription() {
@@ -48,6 +50,8 @@ addLayer("b", {
   resetsNothing() {
     return hasMilestone("b", 0);
   },
+  onPrestige(){player.points=new Decimal(0),
+  player.a.points=new Decimal(0)},
   color: "#ffffff",
   requires: new Decimal(1000000), // Can be a function that takes requirement increases into account
   resource: "Barcode", // Name of prestige currency
@@ -161,17 +165,17 @@ addLayer("b", {
     23: {
       title: "Bad",
       description: "<b>Bond</b> Uses a Better Formula",
-      cost: new Decimal(1000)
+      cost: new Decimal(10000)
     },
     24: {
       title: "Baby",
       description: "Unlock a new Ability Buyable",
-      cost: new Decimal(2500)
+      cost: new Decimal(25000)
     },
     25: {
       title: "Bake",
       description: "Square Ability Gain",
-      cost: new Decimal(10000)
+      cost: new Decimal(100000)
     }
   },
   buyables: {
@@ -189,10 +193,10 @@ addLayer("b", {
         return hasUpgrade("b", 21);
       },
       display() {
-        return `<b>Multiply your Barcode gain\n Cost:</b> ${this.cost().round()} Barcodes\n <b>Amount:</b> ${getBuyableAmount(
+        return `<b>Multiply your Barcode gain\n Cost:</b> ${format(this.cost().round())} Barcodes\n <b>Amount:</b> ${getBuyableAmount(
           this.layer,
           11
-        )}\n <b>Effect:</b> x${this.effect().round()} Barcodes`;
+        )}\n <b>Effect:</b> x${format(this.effect().round())} Barcodes`;
       },
       buy() {
         player.b.points = new Decimal(player.b.points).sub(this.cost());
@@ -209,6 +213,6 @@ addLayer("b", {
   },
   row: 1, // Row the layer is in on the tree (0 is the first row)
   layerShown() {
-    return hasUpgrade("a", 25);
+    return player.b.unlocked2.gte(1);
   }
 });

@@ -125,7 +125,7 @@ addLayer("a", {
     11: {
       name: "Ark",
       challengeDescription: "Point gain is tetrated ^0.5",
-      goal: new Decimal(200000),
+      goal: new Decimal(50000),
       doReset: true,
       rewardDescription: "Point Gain is Raised ^1.2",
       unlocked() {
@@ -237,6 +237,9 @@ addLayer("a", {
       title: "An",
       description: "Unlock Challenges and Unlock the Next Layer",
       cost: new Decimal(1000000),
+      onPurchase() {
+        return (player.b.unlocked2 = player.b.unlocked2.add(1));
+      },
       unlocked() {
         return hasUpgrade("a", 24);
       }
@@ -260,7 +263,7 @@ addLayer("a", {
         return hasUpgrade("a", 14);
       },
       display() {
-        return `<b>Multiply your Point gain\n Cost:</b> ${this.cost().round()} Abilities\n <b>Amount:</b> ${getBuyableAmount(
+        return `<b>Multiply your Point gain\n Cost:</b> ${format(this.cost().round())} Abilities\n <b>Amount:</b> ${getBuyableAmount(
           this.layer,
           11
         )}\n <b>Effect:</b> x${this.effect().round()} Points`;
@@ -289,7 +292,7 @@ addLayer("a", {
         return hasUpgrade("a", 22);
       },
       display() {
-        return `<b>Multiply your Ability gain\n Cost:</b> ${this.cost().round()} Abilities\n <b>Amount:</b> ${getBuyableAmount(
+        return `<b>Multiply your Ability gain\n Cost:</b> ${format(this.cost().round())} Abilities\n <b>Amount:</b> ${getBuyableAmount(
           this.layer,
           12
         )}\n <b>Effect:</b> x${this.effect().round()} Abilities`;
@@ -318,7 +321,7 @@ addLayer("a", {
         return hasUpgrade("b", 24);
       },
       display() {
-        return `<b>Multiply your Barcode gain\n Cost:</b> ${this.cost().round()} Abilities\n <b>Amount:</b> ${getBuyableAmount(
+        return `<b>Multiply your Barcode gain\n Cost:</b> ${format(this.cost().round())} Abilities\n <b>Amount:</b> ${getBuyableAmount(
           this.layer,
           13
         )}\n <b>Effect:</b> x${this.effect().round()} Barcodes`;
