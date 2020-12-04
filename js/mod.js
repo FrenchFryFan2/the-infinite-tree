@@ -1,12 +1,12 @@
 let modInfo = {
-	name: "The ??? Tree",
+	name: "1 Million Zeroes NG- Tree",
 	id: "mymod",
-	author: "nobody",
-	pointsName: "points",
+	author: "unpingabot#0245 & The Nefarious DDT#7391",
+	pointsName: "Zeroes",
 	discordName: "",
 	discordLink: "",
 	changelogLink: "https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md",
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
+	initialStartPoints: new Decimal (0), // Used for hard resets and new players
 	
 	offlineLimit: 1,  // In hours
 }
@@ -30,12 +30,26 @@ function canGenPoints(){
 	return true
 }
 
+function softcapStart() {
+  return new Decimal(10000)
+}
+
+function softcapPower() {
+  return new Decimal(1)
+}
 // Calculate points/sec!
 function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
 	let gain = new Decimal(1)
+  gain = gain.mul(buyableEffect("tree-tab", 11))
+  gain = gain.mul(buyableEffect("tree-tab", 12))
+  gain = gain.mul(buyableEffect("tree-tab", 21))
+  gain = gain.mul(hasUpgrade("o", 11) ? 2 : 1)
+  gain = gain.mul(hasAchievement("a", 14) ? 3 : 1)
+  gain = gain.mul(hasAchievement("a", 15) ? 3 : 1)
+  if (gain.gte(10000)) gain = gain.pow(new Decimal(0.5).pow(softcapPower())).times(softcapStart().pow(new Decimal(1).sub(new Decimal(0.5).pow(softcapPower()))))
 	return gain
 }
 
@@ -45,6 +59,7 @@ function addedPlayerData() { return {
 
 // Display extra things at the top of the page
 var displayThings = [
+  function() {if (isNerdMode()) {return "Nerd Mode Active"}}
 ]
 
 // Determines when the game "ends"
@@ -64,4 +79,21 @@ function maxTickLength() {
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
 // you can cap their current resources with this.
 function fixOldSave(oldVersion){
+}
+
+var controlDown = false
+var shiftDown = false
+
+window.addEventListener('keydown', function(event) {
+	if (event.keyCode == 16) shiftDown = true;
+	if (event.keyCode == 17) controlDown = true;
+}, false);
+
+window.addEventListener('keyup', function(event) {
+	if (event.keyCode == 16) shiftDown = false;
+	if (event.keyCode == 17) controlDown = false;
+}, false);
+
+function isNerdMode() {
+  return shiftDown || player.nerdMode
 }
