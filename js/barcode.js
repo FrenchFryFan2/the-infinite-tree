@@ -33,7 +33,7 @@ addLayer("b", {
         "main-display",
         ["prestige-button", ""],
         function() {
-          return hasUpgrade("b", 23) ? { display: "none" } : {};
+          return hasUpgrade("b", 22) ? { display: "none" } : {};
         },
         "blank",
         "milestones",
@@ -50,8 +50,9 @@ addLayer("b", {
   resetsNothing() {
     return hasMilestone("b", 0);
   },
-  onPrestige(){player.points=new Decimal(0),
-  player.a.points=new Decimal(0)},
+  onPrestige() {
+    (player.points = new Decimal(0)), (player.a.points = new Decimal(0));
+  },
   color: "#ffffff",
   requires: new Decimal(1000000), // Can be a function that takes requirement increases into account
   resource: "Barcode", // Name of prestige currency
@@ -193,7 +194,9 @@ addLayer("b", {
         return hasUpgrade("b", 21);
       },
       display() {
-        return `<b>Multiply your Barcode gain\n Cost:</b> ${format(this.cost().round())} Barcodes\n <b>Amount:</b> ${getBuyableAmount(
+        return `<b>Multiply your Barcode gain\n Cost:</b> ${format(
+          this.cost().round()
+        )} Barcodes\n <b>Amount:</b> ${getBuyableAmount(
           this.layer,
           11
         )}\n <b>Effect:</b> x${format(this.effect().round())} Barcodes`;
