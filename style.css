@@ -61,18 +61,17 @@ h1, h2, h3, b, input {
 	font-family: "Lucida Console", "Courier New", monospace
 }
 
-
-
 .treeNode {
-	height: 100px;
-	width: 100px;
+	height: 80px;
+	width: 80px;
 	border: var(--hqProperty1);
 	border-color: rgba(0, 0, 0, 0.125);
-	border-radius: 50%;
+	border-radius: 10%;
 	box-shadow: var(--hqProperty2a), var(--hqProperty2b);
+  text-opacity: 1;
 	font-size: 40px;
 	font-family: "Lucida Console", "Courier New", monospace;
-	color: rgba(0, 0, 0, 0.5);
+	color: rgba(0, 0, 0, 1);
 	text-shadow: var(--hqProperty3);
 	padding: 0;
 }
@@ -95,8 +94,8 @@ h1, h2, h3, b, input {
 
 
 .smallNode {
-	height: 60px;
-	width: 60px;
+	height: 50px;
+	width: 50px;
 	font-size: 30px;
 }
 

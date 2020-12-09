@@ -101,9 +101,9 @@ var systemComponents = {
 			<br>Reach {{formatWhole(ENDGAME)}} to beat the game!<br>
 		</span>
 		<br>
-		<span v-if="player.points.lt('1e1000')"  class="overlayThing">You have </span>
+		<span v-if="player.points.lt('1e1000')"  class="overlayThing"></span>
 		<h2  class="overlayThing" id="points">{{format(player.points)}}</h2>
-		<span v-if="player.points.lt('1e1e6')"  class="overlayThing"> {{modInfo.pointsName}}</span>
+		<span v-if="player.points.lt('1e1e6')"  class="overlayThing"> {{modInfo.pointsName}}</span> (<h2 class="overlayThing">{{format(player.bf.points.add(player.c.points).add(player.d.points).add(player.m.points).add(player.s.points))}}/{{player.bh.maxPollen()}}</h2> Pollen)
 		<br>
 		<span v-if="canGenPoints()"  class="overlayThing">({{format(getPointGen())}}/sec)</span>
 		<div v-for="thing in tmp.displayThings" class="overlayThing"><span v-if="thing" v-html="thing"></span></div>

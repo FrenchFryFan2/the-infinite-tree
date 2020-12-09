@@ -1,12 +1,12 @@
 let modInfo = {
-	name: "The ??? Tree",
+	name: "The Bee Swarm Tree",
 	id: "mymod",
-	author: "nobody",
-	pointsName: "points",
+	author: "Five Hargreeves#9676 and TheMKeyHolder#6674",
+	pointsName: "Honey",
 	discordName: "",
 	discordLink: "",
 	changelogLink: "https://github.com/Acamaeda/The-Modding-Tree/blob/master/changelog.md",
-	initialStartPoints: new Decimal (10), // Used for hard resets and new players
+  initialStartPoints: new Decimal (0), // Used for hard resets and new players
 	
 	offlineLimit: 1,  // In hours
 }
@@ -27,7 +27,7 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return true
+	return false // true
 }
 
 // Calculate points/sec!
