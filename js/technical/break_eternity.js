@@ -2001,57 +2001,33 @@
     //Tetration/tetrate: The result of exponentiating 'this' to 'this' 'height' times in a row.  https://en.wikipedia.org/wiki/Tetration
     //If payload != 1, then this is 'iterated exponentiation', the result of exping (payload) to base (this) (height) times. https://andydude.github.io/tetration/archives/tetration2/ident.html
     //Works with negative and positive real heights.
-    Decimal.prototype.tetrate = function(height = 2, payload = FC_NN(1, 0, 1)) {
-      if (height === Number.POSITIVE_INFINITY)
-      {
-        //Formula for infinite height power tower.
-        var negln = Decimal.ln(this).neg();
-        return negln.lambertw().div(negln);
+    Decimal.prototype.tetrate = function(height = 2) {
+      x = new Decimal(this)
+      height = new Decimal(height)
+      let x1 = x.tetration(height.floor())
+      let x2 = 0
+      let x3 = x.tetration(height.ceil())
+      while(x1.lt(new Decimal("1eee9"))) {
+        x2 = x2+1
+        x1 = x.tetration(height.floor().add(x2))
       }
-      
-      if (height < 0)
-      {
-        return Decimal.iteratedlog(payload, this, -height);
+      while(x1.gt(new Decimal(0.000001))) {
+        x1 = x1.add(1).log10()
       }
-      
-      payload = D(payload);
-      var oldheight = height;
-      height = Math.trunc(height);
-      var fracheight = oldheight-height;
-     
-      if (fracheight !== 0)
-      {
-        if (payload.eq(Decimal.dOne))
-        {
-          ++height;
-          payload = new Decimal(fracheight);
-        }
-        else
-        {
-          if (this.eq(10))
-          {
-            payload = payload.layeradd10(fracheight);
-          }
-          else
-          {
-            payload = payload.layeradd(fracheight, this);
-          }
-        }
-      }
-      
-      for (var i = 0; i < height; ++i)
-      {
-        payload = this.pow(payload);
-        //bail if we're NaN
-        if (!isFinite(payload.layer) || !isFinite(payload.mag)) { return payload; }
-        //shortcut 
-        if (payload.layer - this.layer > 3) { return FC_NN(payload.sign, payload.layer + (height - i - 1), payload.mag); }
-        //give up after 100 iterations if nothing is happening
-        if (i > 100) { return payload; }
-      }
-      return payload;
+      x1 = x1.times(new Decimal(10).ln().pow(height.minus(height.floor())))
+      while(x1 < new Decimal("1eee9")) x1 = new Decimal(10).pow(x1).minus(1)
+      while(x1.gt(x3)) x1 = x1.log10().div(x.log10())
+      return x1
     }
-    
+
+    Decimal.prototype.tetration = function(height = 2) {
+      let x = new Decimal(this)
+      let x1 = new Decimal(1)
+      let i = 0
+      for(i = 0; i < height;i++) x1 = x.pow(x1)
+      return x1
+    }
+
     //iteratedexp/iterated exponentiation: - all cases handled in tetrate, so just call it
     Decimal.prototype.iteratedexp = function(height = 2, payload = FC_NN(1, 0, 1)) {
       return this.tetrate(height, payload);
