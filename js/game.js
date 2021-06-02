@@ -330,7 +330,6 @@ function autobuyUpgrades(layer){
 function gameLoop(diff) {
 	if (isEndgame() || gameEnded) gameEnded = 1
 
-	if (isNaN(diff)) diff = 0
 	if (gameEnded && !player.keepGoing) {
 		diff = 0
 		player.tab = "gameEnded"
@@ -405,6 +404,9 @@ var interval = setInterval(function() {
 	ticking = true
 	let now = Date.now()
 	let diff = (now - player.time) / 1e3
+	if (isNaN(diff) || diff < 0) {
+		diff = 0
+	}
 	let trueDiff = diff
 	if (player.offTime !== undefined) {
 		if (player.offTime.remain > modInfo.offlineLimit * 3600) player.offTime.remain = modInfo.offlineLimit * 3600
