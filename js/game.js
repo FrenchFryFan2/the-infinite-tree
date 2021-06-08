@@ -127,15 +127,15 @@ function canReset(layer)
 }
 
 function rowReset(row, layer) {
-	for (lr in ROW_LAYERS[row]){
-		if(layers[lr].doReset) {
-
-			Vue.set(player[lr], "activeChallenge", null) // Exit challenges on any row reset on an equal or higher row
-			run(layers[lr].doReset, layers[lr], layer)
-		}
-		else
-			if(tmp[layer].row > tmp[lr].row && row !== "side" && !isNaN(row)) layerDataReset(lr)
-	}
+    for (lr in ROW_LAYERS[row]){
+        if(layers[lr].doReset) {
+                        
+            if(layers[lr].row!="side") player[lr].activeChallenge = null // Exit challenges on any row reset on an equal or higher row
+            run(layers[lr].doReset, layers[lr], layer)
+        }
+        else
+            if(tmp[layer].row > tmp[lr].row && row !== "side" && !isNaN(row)) layerDataReset(lr)
+    }
 }
 
 function layerDataReset(layer, keep = []) {
