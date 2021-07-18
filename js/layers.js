@@ -63,7 +63,7 @@ addLayer("g", {
     hotkeys: [
         {key: "g", description: "G: Reset for types of googols", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return hasUpgrade("i", 11)},
+    layerShown(){return true},
     upgrades: {},
     milestones: {
         0: {
