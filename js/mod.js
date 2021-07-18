@@ -1,5 +1,5 @@
 let modInfo = {
-	name: "The ??? Tree",
+	name: "The Illion Tree",
 	id: "mymod",
 	author: "nobody",
 	pointsName: "points",
@@ -39,6 +39,7 @@ function canGenPoints(){
 
 // Calculate points/sec!
 function getPointGen() {
+	if (hasUpgrade('i', 11)) gain = gain.exp(1.005)
 	if(!canGenPoints())
 		return new Decimal(0)
 
