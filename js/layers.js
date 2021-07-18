@@ -66,7 +66,9 @@ addLayer("g", {
     baseResource: "illions", // Name of resource prestige is based on
     baseAmount() {return player.i.points}, // Get the current amount of baseResource
     type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    base: new Decimal(10),
+    base() {
+	    new Decimal(10)
+    },
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
         return mult
@@ -82,19 +84,24 @@ addLayer("g", {
     upgrades: {},
     milestones: {
         0: {
-            requirementDescription: "1 type of googol",
+            requirementDescription: "1 type of googol (Googol)",
             effectDescription: "Nothing currently.",
             done() { return player.g.points.gte(1) }
         },
 	1: {
-            requirementDescription: "2 types of googol",
+            requirementDescription: "2 types of googol (Googolchime)",
             effectDescription: "Nothing currently.",
             done() { return player.g.points.gte(2) }
         },
 	2: {
-            requirementDescription: "3 types of googol",
+            requirementDescription: "3 types of googol (Googoltoll)",
             effectDescription: "Nothing currently.",
             done() { return player.g.points.gte(3) }
+        },
+	3: {
+            requirementDescription: "4 types of googol (Googolgong)",
+            effectDescription: "Nothing currently.",
+            done() { return player.g.points.gte(4) }
         }
     }
 })
