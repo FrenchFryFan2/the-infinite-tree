@@ -28,7 +28,7 @@ addLayer("i", {
 	    11: {
 		    title: "More Points",
                     description: "Triple your point gain.",
-                    cost: new Decimal(5),
+                    cost: new Decimal(1),
 		    effect() {
                         return new Decimal(3)
 		    },
@@ -36,9 +36,17 @@ addLayer("i", {
 	    12: {
 		    title: "More and More Points",
                     description: "Cube your point gain by 3.",
-                    cost: new Decimal(10),
+                    cost: new Decimal(5),
 		    effect() {
                         return new Decimal(3)
+		    },
+	    },
+	    13: {
+		    title: "More and More Points Again?",
+                    description: "Cube your point gain by 2.",
+                    cost: new Decimal(20),
+		    effect() {
+                        return new Decimal(2)
 		    },
 	    }
     }
@@ -54,7 +62,7 @@ addLayer("g", {
     }},
     color: "#1291b5",
     requires: new Decimal(100), // Can be a function that takes requirement increases into account
-    resource: "types of googols", // Name of prestige currency
+    resource: "types of googol", // Name of prestige currency
     baseResource: "illions", // Name of resource prestige is based on
     baseAmount() {return player.i.points}, // Get the current amount of baseResource
     type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
@@ -68,15 +76,25 @@ addLayer("g", {
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
-        {key: "g", description: "G: Reset for types of googols", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+        {key: "g", description: "G: Reset for types of googol", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){return true},
     upgrades: {},
     milestones: {
         0: {
-            requirementDescription: "1 types of googol",
+            requirementDescription: "1 type of googol",
             effectDescription: "Nothing currently.",
             done() { return player.g.points.gte(1) }
+        },
+	1: {
+            requirementDescription: "2 types of googol",
+            effectDescription: "Nothing currently.",
+            done() { return player.g.points.gte(2) }
+        },
+	2: {
+            requirementDescription: "3 types of googol",
+            effectDescription: "Nothing currently.",
+            done() { return player.g.points.gte(3) }
         }
     }
 })
