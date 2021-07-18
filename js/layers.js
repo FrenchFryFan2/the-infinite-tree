@@ -24,5 +24,12 @@ addLayer("i", {
     hotkeys: [
         {key: "i", description: "I: Reset for illions", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return true}
+    layerShown(){return true},
+    upgrades: {
+	    11: {
+		    name: "To the thousand!",
+                    description: "Exponentialize your point gain by 1.005.",
+                    cost: new Decimal(1)
+	    }
+    }
 })
