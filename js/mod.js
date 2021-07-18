@@ -18,10 +18,11 @@ let VERSION = {
 }
 
 let changelog = `
-                    <h1>Changelog:</h1>
+                    <h1>Changelog:</h1><br>
                     <h3>v0.1.1 - Upgrading Update</h3><br>
-                    - Added 2 more illions upgrade<br>- Added 4 types of googol milestones<br>
-	                <h3>v0.1 - Basic Illions</h3><br>
+                    - Added 2 more illions upgrade<br>
+		    - Added 4 types of googol milestones<br><br>
+	            <h3>v0.1 - Basic Illions</h3><br>
 		            - Added illions<br>
                     - Added types of googol<br>
                     - Added first illion upgrade
