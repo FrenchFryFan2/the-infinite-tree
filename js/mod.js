@@ -43,7 +43,7 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(1)
-	if (hasUpgrade('i', 11)) gain = gain.exp(1.005)
+	if (hasUpgrade('i', 11)) gain = gain.exp(Math.log2(player[this.layer].points + 2))
 	return gain
 }
 
