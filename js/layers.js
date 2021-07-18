@@ -27,9 +27,9 @@ addLayer("i", {
     layerShown(){return true},
     upgrades: {
 	    11: {
-		    name: "To the thousand!",
-                    description: "Exponentialize your point gain by 1.005.",
-                    cost: new Decimal(1)
+		    name: "To the thousands!",
+                    description: "Exponentialize your point gain based on points.",
+                    cost: new Decimal(10)
 	    }
     }
 })
