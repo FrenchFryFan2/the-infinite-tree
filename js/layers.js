@@ -51,7 +51,7 @@ addLayer("g", {
     baseResource: "illions", // Name of resource prestige is based on
     baseAmount() {return player.i.points}, // Get the current amount of baseResource
     type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.01, // Prestige currency exponent
+    exponent: 0.5, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
         return mult
@@ -63,7 +63,7 @@ addLayer("g", {
     hotkeys: [
         {key: "g", description: "G: Reset for types of googols", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return true},
+    layerShown(){return hasUpgrade("i", 11)},
     upgrades: {},
     milestones: {
         0: {
