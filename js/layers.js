@@ -31,7 +31,7 @@ addLayer("i", {
                     description: "Multiply your point gain based on points.",
                     cost: new Decimal(10),
 		    effect() {
-                        return Math.sqrt(player.points)
+                        return new Decimal(1) + Math.sqrt(player.points)
 		    },
 		    effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
 	    }
