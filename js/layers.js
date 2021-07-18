@@ -26,13 +26,20 @@ addLayer("i", {
     layerShown(){return true},
     upgrades: {
 	    11: {
-		    title: "To the thousands!",
-                    description: "Multiply your point gain based on points.",
+		    title: "More Points",
+                    description: "Triple your point gain.",
                     cost: new Decimal(5),
 		    effect() {
-                        return new Decimal(1) + Math.sqrt(player.points)
+                        return new Decimal(3)
 		    },
-		    effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
+	    },
+	    12: {
+		    title: "More and More Points",
+                    description: "Cube your point gain by 3.",
+                    cost: new Decimal(5),
+		    effect() {
+                        return new Decimal(3).cube(1)
+		    },
 	    }
     }
 })
