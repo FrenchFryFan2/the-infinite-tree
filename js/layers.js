@@ -31,7 +31,7 @@ addLayer("i", {
                     description: "Exponentialize your point gain based on points.",
                     cost: new Decimal(10),
 		    effect() {
-                        return Math.log2(player[this.layer].points + 2)
+                        return Math.log2(player.points + 2)
 		    },
 		    effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
 	    }
