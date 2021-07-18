@@ -26,9 +26,9 @@ addLayer("i", {
     layerShown(){return true},
     upgrades: {
 	    11: {
-		    name: "To the thousands!",
+		    title: "To the thousands!",
                     description: "Multiply your point gain based on points.",
-                    cost: new Decimal(10),
+                    cost: new Decimal(5),
 		    effect() {
                         return new Decimal(1) + Math.sqrt(player.points)
 		    },
@@ -51,7 +51,7 @@ addLayer("g", {
     baseResource: "illions", // Name of resource prestige is based on
     baseAmount() {return player.i.points}, // Get the current amount of baseResource
     type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.1, // Prestige currency exponent
+    exponent: 0.01, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
         return mult
@@ -64,6 +64,13 @@ addLayer("g", {
         {key: "g", description: "G: Reset for types of googols", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){return true},
-    upgrades: {}
+    upgrades: {},
+    milestones: {
+        0: {
+            requirementDescription: "1 types of googol",
+            effectDescription: "Nothing currently.",
+            done() { return player.g.points.gte(1) }
+        }
+    }
 })
 
