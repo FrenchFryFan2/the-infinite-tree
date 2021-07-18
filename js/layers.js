@@ -61,7 +61,7 @@ addLayer("g", {
 		points: new Decimal(0),
     }},
     color: "#1291b5",
-    requires: new Decimal(100), // Can be a function that takes requirement increases into account
+    requires: new Decimal(32), // Can be a function that takes requirement increases into account
     resource: "types of googol", // Name of prestige currency
     baseResource: "illions", // Name of resource prestige is based on
     baseAmount() {return player.i.points}, // Get the current amount of baseResource
