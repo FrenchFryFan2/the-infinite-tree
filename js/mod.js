@@ -13,13 +13,19 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1",
-	name: "Basic Illions",
+	num: "0.1.1",
+	name: "Upgrading Update",
 }
 
-let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.1</h3><br>
-		- Added illions and types of googols.`
+let changelog = `
+                    <h1>Changelog:</h1>
+                    <h3>v0.1.1 - Upgrading Update</h3><br>
+                    - Added 2 more illions upgrade<br>- Added 4 types of googol milestones<br>
+	                <h3>v0.1 - Basic Illions</h3><br>
+		            - Added illions<br>
+                    - Added types of googol<br>
+                    - Added first illion upgrade
+                `
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
