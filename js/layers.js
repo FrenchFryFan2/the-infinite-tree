@@ -28,10 +28,10 @@ addLayer("i", {
     upgrades: {
 	    11: {
 		    name: "To the thousands!",
-                    description: "Exponentialize your point gain based on points.",
+                    description: "Multiply your point gain based on points.",
                     cost: new Decimal(10),
 		    effect() {
-                        return Math.log2(player.points + 2)
+                        return 1 + Math.log2(player.points + 2)
 		    },
 		    effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
 	    }
