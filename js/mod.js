@@ -13,12 +13,14 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1.1",
-	name: "Upgrading Update",
+	num: "0.1.2",
+	name: "",
 }
 
 let changelog = `
-                    <h1>Changelog:</h1><br>
+                    <h1>Changelog:</h1><br><br>
+		    <h3>v0.1.2<h3><br>
+		    - Fixed G layer cost a bit<br><br>
                     <h3>v0.1.1 - Upgrading Update</h3><br>
                     - Added 2 more illions upgrade<br>
 		    - Added 4 types of googol milestones<br><br>
