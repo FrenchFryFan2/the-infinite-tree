@@ -43,10 +43,10 @@ addLayer("i", {
 	    },
 	    13: {
 		    title: "More and More Points Again?",
-                    description: "Cube your point gain by 2.",
+                    description: "Cube your point gain by 1.25.",
                     cost: new Decimal(20),
 		    effect() {
-                        return new Decimal(2)
+                        return new Decimal(1.25)
 		    },
 	    }
     }
@@ -57,7 +57,7 @@ addLayer("g", {
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     branches: ["i"],
     startData() { return {
-        unlocked: layers.i.points >= 100,
+        unlocked: layers.i.points.gte(100),
 		points: new Decimal(0),
     }},
     color: "#1291b5",
@@ -66,7 +66,7 @@ addLayer("g", {
     baseResource: "illions", // Name of resource prestige is based on
     baseAmount() {return player.i.points}, // Get the current amount of baseResource
     type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.1,
+    exponent: 0.5,
     base: new Decimal(10),
     roundUpCost: true,
     gainMult() { // Calculate the multiplier for main currency from bonuses
@@ -80,7 +80,7 @@ addLayer("g", {
     hotkeys: [
         {key: "g", description: "G: Reset for types of googol", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return true},
+    layerShown(){return layer.i.points.gte(20)},
     upgrades: {},
     milestones: {
         0: {
