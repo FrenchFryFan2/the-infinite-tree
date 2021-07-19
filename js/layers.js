@@ -14,7 +14,7 @@ addLayer("i", {
     exponent: 0.5, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
-        if (hasMilestone("g", 1)) mult = mult.times(Math.sqrt(player.points))
+        if (hasMilestone("g", 1)) mult = mult.times(Math.log2(player.points + 3))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -44,10 +44,10 @@ addLayer("i", {
 	    },
 	    13: {
 		    title: "More and More Points Again?",
-                    description: "Cube your point gain by 1.05.",
+                    description: "Cube your point gain by 1.25.",
                     cost: new Decimal(20),
 		    effect() {
-                        return new Decimal(1.05)
+                        return new Decimal(1.25)
 		    },
 	    }
     }
@@ -67,7 +67,7 @@ addLayer("g", {
     baseResource: "illions", // Name of resource prestige is based on
     baseAmount() {return player.i.points}, // Get the current amount of baseResource
     type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.5,
+    exponent: 0.1,
     base: new Decimal(10),
     roundUpCost: true,
     gainMult() { // Calculate the multiplier for main currency from bonuses
@@ -75,13 +75,13 @@ addLayer("g", {
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
-        return new Decimal(10)
+        return new Decimal(0.1)
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
         {key: "g", description: "G: Reset for types of googol", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return player.i.points.gte(20)},
+    layerShown(){return true},
     upgrades: {},
     milestones: {
         0: {
