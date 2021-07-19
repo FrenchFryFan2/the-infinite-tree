@@ -14,7 +14,7 @@ addLayer("i", {
     exponent: 0.5, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
-        if (hasMilestone("g", 1)) mult = mult.times(player.points)
+        if (hasMilestone("g", 1)) mult = mult.times(Math.sqrt(player.points))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -81,7 +81,7 @@ addLayer("g", {
     hotkeys: [
         {key: "g", description: "G: Reset for types of googol", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return player.i.points >= 20},
+    layerShown(){return player.i.points.gte(20)},
     upgrades: {},
     milestones: {
         0: {
