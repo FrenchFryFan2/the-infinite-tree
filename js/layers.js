@@ -44,10 +44,10 @@ addLayer("i", {
 	    },
 	    13: {
 		    title: "More and More Points Again?",
-                    description: "Cube your point gain by 1.25.",
+                    description: "Cube your point gain by 1.05.",
                     cost: new Decimal(20),
 		    effect() {
-                        return new Decimal(1.25)
+                        return new Decimal(1.05)
 		    },
 	    }
     }
@@ -75,7 +75,7 @@ addLayer("g", {
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
-        return new Decimal(1)
+        return new Decimal(10)
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
