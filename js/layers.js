@@ -57,7 +57,7 @@ addLayer("g", {
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     branches: ["i"],
     startData() { return {
-        unlocked: layers.i.points >= 100,
+        unlocked: player.i.points.gte(100),
 		points: new Decimal(0),
     }},
     color: "#1291b5",
@@ -80,7 +80,7 @@ addLayer("g", {
     hotkeys: [
         {key: "g", description: "G: Reset for types of googol", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return layer.i.points >= 20},
+    layerShown(){return player.i.points.gte(20)},
     upgrades: {},
     milestones: {
         0: {
