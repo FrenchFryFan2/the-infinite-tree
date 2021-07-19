@@ -67,7 +67,7 @@ addLayer("g", {
     baseResource: "illions", // Name of resource prestige is based on
     baseAmount() {return player.i.points}, // Get the current amount of baseResource
     type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.1,
+    exponent: 0.05,
     base: new Decimal(10),
     roundUpCost: true,
     gainMult() { // Calculate the multiplier for main currency from bonuses
@@ -75,7 +75,7 @@ addLayer("g", {
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
-        return new Decimal(0.5)
+        return new Decimal(1)
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
