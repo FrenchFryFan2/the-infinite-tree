@@ -13,15 +13,18 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1.2",
-	name: "",
+	num: "0.1.2.1",
+	name: "The Balancing Update",
 }
 
 let changelog = `
                     <h1>Changelog:</h1><br><br>
-		    <h3>v0.1.2<h3><br>
+	            v0.1.2.1 -- The Balancing Update<br>
+		    - Balanced the illion upgrade 3<br>
+		    - Balanced the G layer first milestone<br><br>
+		    <h4>v0.1.2</h4><br>
 		    - Fixed G layer cost a bit<br><br>
-                    <h3>v0.1.1 - Upgrading Update</h3><br>
+                    <h4>v0.1.1 - Upgrading Update</h4><br>
                     - Added 2 more illions upgrade<br>
 		    - Added 4 types of googol milestones<br><br>
 	            <h3>v0.1 - Basic Illions</h3><br>
@@ -54,7 +57,7 @@ function getPointGen() {
 	if (hasUpgrade('i', 11)) gain = gain.times(upgradeEffect('i', 11))
 	if (hasUpgrade('i', 12)) gain = gain.cube(upgradeEffect('i', 12))
 	if (hasUpgrade('i', 13)) gain = gain.cube(upgradeEffect('i', 13))
-	if (hasMilestone("g", 0)) gain = gain.times(Math.log2(player.i.points + 3))
+	if (hasMilestone("g", 0)) gain = gain.times(Math.sqrt(Math.log2(player.i.points + 3)))
 	return gain
 }
 
