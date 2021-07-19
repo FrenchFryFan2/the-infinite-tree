@@ -19,7 +19,7 @@ let VERSION = {
 
 let changelog = `
                     <h1>Changelog:</h1><br><br>
-	            v0.1.2.1 -- The Balancing Update<br>
+	            <h5>v0.1.2.1 -- The Balancing Update</h5><br>
 		    - Balanced the illion upgrade 3<br>
 		    - Balanced the G layer first milestone<br><br>
 		    <h4>v0.1.2</h4><br>
