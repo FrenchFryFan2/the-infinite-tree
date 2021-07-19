@@ -52,7 +52,7 @@ function getPointGen() {
 	if (hasUpgrade('i', 11)) gain = gain.times(upgradeEffect('i', 11))
 	if (hasUpgrade('i', 12)) gain = gain.cube(upgradeEffect('i', 12))
 	if (hasUpgrade('i', 13)) gain = gain.cube(upgradeEffect('i', 13))
-	if (hasMilestone("g", 0)) gain = gain.times(player.i.points)
+	if (hasMilestone("g", 0)) gain = gain.times(Math.sqrt(player.i.points))
 	return gain
 }
 
