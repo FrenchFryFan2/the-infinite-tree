@@ -14,6 +14,7 @@ addLayer("i", {
     exponent: 0.5, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
+        if (hasMilestone("g", 1)) mult = mult.times(player.points)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -80,25 +81,25 @@ addLayer("g", {
     hotkeys: [
         {key: "g", description: "G: Reset for types of googol", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return player.i.points >= 100},
+    layerShown(){return player.i.points >= 20},
     upgrades: {},
     milestones: {
         0: {
             requirementDescription: "1 type of googol (Googol)",
-            effectDescription: "Nothing currently.",
+            effectDescription: "Boost your point gain based on illions.",
             done() { return player.g.points.gte(1) }
         },
-	1: {
+	    1: {
             requirementDescription: "2 types of googol (Googolchime)",
-            effectDescription: "Nothing currently.",
+            effectDescription: "Boost your illion gain based on points.",
             done() { return player.g.points.gte(2) }
         },
-	2: {
+	    2: {
             requirementDescription: "3 types of googol (Googoltoll)",
             effectDescription: "Nothing currently.",
             done() { return player.g.points.gte(3) }
         },
-	3: {
+	    3: {
             requirementDescription: "4 types of googol (Googolgong)",
             effectDescription: "Nothing currently.",
             done() { return player.g.points.gte(4) }
