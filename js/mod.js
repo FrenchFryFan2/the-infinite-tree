@@ -13,21 +13,25 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1.2.1",
-	name: "The Balancing Update",
+	num: "0.1.3",
+	name: "The Googol\"bang\" Update",
 }
 
 let changelog = `
                     <h1>Changelog:</h1><br><br>
-	            <h5>v0.1.2.1: The Balancing Update</h5><br>
-		    <h6>- Balanced the I upgrade 3<br>
-		    - Balanced the G layer first milestone</h6><br><br>
-		    <h4>v0.1.2</h4><br>
-		    <h5>- Fixed G layer cost a bit</h5><br><br>
-                    <h4>v0.1.1: Upgrading Update</h4><br>
+		            <h4>v0.1.3: The Googol"bang" Update<h4>
+                    <h5>- Added the GB layer.<br>
+                    - Added 1 more I layer upgrade.
+                    - Added 2 G layer upgrades.</h5><br><br>
+	                <h5>v0.1.2.1: The Balancing Update</h5>
+                    <h6>- Balanced the I upgrade 3<br>
+		            - Balanced the G layer first milestone</h6><br><br>
+		            <h4>v0.1.2</h4>
+		            <h5>- Fixed G layer cost a bit</h5><br><br>
+                    <h4>v0.1.1: Upgrading Update</h4>
                     <h5>- Added 2 more I layer upgrade<br>
-		    - Added 4 G layer milestones</h5><br><br>
-	            <h3>v0.1: Basic Illions</h3><br>
+		            - Added 4 G layer milestones</h5><br><br>
+	                <h3>v0.1: Basic Illions</h3><br>
 		            - Added 2 layers<br>
                     - Added first I layer upgrade
                 `
