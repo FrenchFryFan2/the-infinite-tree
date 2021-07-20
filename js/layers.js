@@ -112,12 +112,12 @@ addLayer("g", {
     upgrades: {
         11: {
             title: "Googolteen",
-            description: "Multiply the first layer's first upgrade effect by 1.5.",
+            description: "Multiply the I layer first upgrade effect by 1.5.",
             cost: new Decimal(2)
         },
         12: {
             title: "Googolbell",
-            description: "Unlock 1 new first layer upgrade.",
+            description: "Unlock 1 new I layer upgrade.",
             cost: new Decimal(3)
         }
     },
