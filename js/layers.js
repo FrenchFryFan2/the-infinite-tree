@@ -76,7 +76,7 @@ addLayer("g", {
     branches: ["i"],
     startData() { 
         return {
-            unlocked: layers.i.points >= 100,
+            unlocked: layers.i.points >= 32,
 		    points: new Decimal(0),
         }
     },
@@ -145,3 +145,49 @@ addLayer("g", {
     }
 })
 
+addLayer("gb", {
+    symbol: "GB", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    branches: ["i"],
+    startData() { 
+        return {
+            unlocked: layers.i.points >= 32,
+		    points: new Decimal(0),
+        }
+    },
+    color: "#15B76C",
+    requires: new Decimal(32), // Can be a function that takes requirement increases into account
+    resource: "googolbangs", // Name of prestige currency
+    baseResource: "illions", // Name of resource prestige is based on
+    baseAmount() {
+        return player.i.points
+    }, // Get the current amount of baseResource
+    type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    exponent: 0.5,
+    base: new Decimal(10),
+    roundUpCost: true,
+    gainMult() { // Calculate the multiplier for main currency from bonuses
+        mult = new Decimal(1)
+        return mult
+    },
+    gainExp() { // Calculate the exponent on main currency from bonuses
+        return new Decimal(0.5)
+    },
+    row: 1, // Row the layer is in on the tree (0 is the first row)
+    hotkeys: [
+        {
+            key: ["shift", "g"], 
+            description: "GB: Reset for googolbangs", 
+            onPress() {
+                if (canReset(this.layer)) doReset(this.layer)
+            }
+        },
+    ],
+    layerShown(){return hasUpgrade("i", 21)},
+    effect() {
+        return player.gb.points.add(1).pow(1.15)
+    },
+    effectDescription() {
+        return "which boosts point production by " + format(tmp.gb.effect) + "x"
+    }
+})
