@@ -36,7 +36,7 @@ addLayer("i", {
 	    },
 	    12: {
 		    title: "More and More Points",
-                    description: "Cube your point gain by 3.",
+                    description: "Cube your point gain.",
                     cost: new Decimal(5),
 		    effect() {
                         return new Decimal(3)
@@ -44,7 +44,7 @@ addLayer("i", {
 	    },
 	    13: {
 		    title: "More and More Points Again?",
-                    description: "Square your point gain by 1.5.",
+                    description: "Square your point gain.",
                     cost: new Decimal(20),
 		    effect() {
                         return new Decimal(1.5)
