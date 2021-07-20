@@ -19,15 +19,15 @@ let VERSION = {
 
 let changelog = `
                     <h1>Changelog:</h1><br><br>
-	            <h5>v0.1.2.1 -- The Balancing Update</h5><br>
+	            <h5>v0.1.2.1: The Balancing Update</h5><br>
 		    - Balanced the illion upgrade 3<br>
 		    - Balanced the G layer first milestone<br><br>
 		    <h4>v0.1.2</h4><br>
 		    - Fixed G layer cost a bit<br><br>
-                    <h4>v0.1.1 - Upgrading Update</h4><br>
+                    <h4>v0.1.1: Upgrading Update</h4><br>
                     - Added 2 more illions upgrade<br>
 		    - Added 4 types of googol milestones<br><br>
-	            <h3>v0.1 - Basic Illions</h3><br>
+	            <h3>v0.1: Basic Illions</h3><br>
 		            - Added illions<br>
                     - Added types of googol<br>
                     - Added first illion upgrade
