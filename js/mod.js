@@ -60,7 +60,7 @@ function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
-	let gain = new Decimal(1).times(tmp.gb.effect)
+	let gain = new Decimal(1).times(tmp.gb.effect).times(tmp.m.effect)
 	if (hasUpgrade('i', 11)) gain = gain.times(upgradeEffect('i', 11))
 	if (hasUpgrade('i', 12)) gain = gain.cube()
 	if (hasUpgrade('i', 13)) gain = gain.sqr()
@@ -75,12 +75,11 @@ function addedPlayerData() { return {
 }}
 
 // Display extra things at the top of the page
-var displayThings = [
-]
+var displayThings = ["Current endgame: 15 types of googols"]
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.g.points.gte(new Decimal(10))
+	return player.g.points.gte(new Decimal(15))
 }
 
 
