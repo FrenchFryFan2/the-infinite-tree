@@ -64,7 +64,7 @@ addLayer("i", {
             description: "Boost your point gain based on points.",
             cost: new Decimal(100),
             effect() {
-                return Math.sqrt(Math.sqrt(Math.sqrt(player.points)))
+                return Math.sqrt(Math.sqrt(Math.sqrt(player.points))) + 1
             },
             effectDisplay() {
                 return format(upgradeEffect(this.layer, this.id)) + "x"
@@ -78,7 +78,7 @@ addLayer("i", {
             description: "Boost your illion gain based on illions.",
             cost: new Decimal(250),
             effect() {
-                return Math.sqrt(Math.sqrt(Math.sqrt(player[this.layer].points)))
+                return Math.sqrt(Math.sqrt(Math.sqrt(player[this.layer].points))) + 1
             },
             effectDisplay() {
                 return format(upgradeEffect(this.layer, this.id)) + "x"
