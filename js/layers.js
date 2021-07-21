@@ -19,6 +19,7 @@ addLayer("i", {
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
         if (hasMilestone("g", 11)) mult = mult.times(Math.sqrt(Math.log2(player.points + 3)))
+        if (hasUpgrade(this.layer, 21)) mult = mult.times(upgradeEffect(this.layer, 21))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
