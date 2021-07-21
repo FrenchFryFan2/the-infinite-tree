@@ -46,7 +46,7 @@ addLayer("i", {
                 return effect
             },
             effectDisplay() {
-                return format(upgradeEffect(this.layer, this.id))+"x"
+                return format(upgradeEffect(this.layer, this.id)) + "x"
             }
 	    },
 	    12: {
@@ -59,7 +59,35 @@ addLayer("i", {
             description: "Square your point gain.",
             cost: new Decimal(20)
 	    },
+        14: {
+            title: "Advanced Illions",
+            description: "Boost your point gain based on points.",
+            cost: new Decimal(100),
+            effect() {
+                return Math.sqrt(Math.sqrt(Math.sqrt(player.points)))
+            },
+            effectDisplay() {
+                return format(upgradeEffect(this.layer, this.id)) + "x"
+            },
+            unlocked() {
+                return hasMilestone("g", 1)
+            }
+        },
         21: {
+            title: "Too Much Illions!",
+            description: "Boost your illion gain based on illions.",
+            cost: new Decimal(250),
+            effect() {
+                return Math.sqrt(Math.sqrt(Math.sqrt(player[this.layer].points)))
+            },
+            effectDisplay() {
+                return format(upgradeEffect(this.layer, this.id)) + "x"
+            },
+            unlocked() {
+                return hasMilestone("g", 1)
+            }
+        },
+        22: {
             title: "Unlock the New Layers!",
             description: "Unlock a new layer.",
             cost: new Decimal(1000),
@@ -67,6 +95,12 @@ addLayer("i", {
                 return hasUpgrade("g", 12)
             }
         }
+    },
+    doReset(resettingLayer) {
+        let keep = []
+        if (hasMilestone("g", 1) && resettingLayer == "g") keep.push("upgrades")
+        if (hasMilestone("g", 1) && resettingLayer == "gb") keep.push("upgrades")
+        if (layers[resettingLayer].row > this.row) layerDataReset("i", keep)
     }
 })
 
@@ -129,7 +163,7 @@ addLayer("g", {
         },
 	    1: {
             requirementDescription: "2 types of googol (Googolchime)",
-            effectDescription: "Boost your illion gain based on points.",
+            effectDescription: "Boost your illion gain based on points, your upgrades doesn't reset when prestige and unlock 2 more I layer upgrades!",
             done() { return player.g.points.gte(2) }
         },
 	    2: {
