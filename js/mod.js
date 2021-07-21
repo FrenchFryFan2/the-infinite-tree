@@ -13,24 +13,26 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1.3.1",
-	name: "The Googol\"bang\" Update",
+	num: "0.1.4",
+	name: "The \"Real\" Upgrading Update?",
 }
 
 let changelog = `
                     <h1>Changelog:</h1><br><br>
+		            <h4>v0.1.4</h4>
+		            <h5>- Added 2 more I layer upgrades.</h5><br><br>
                     <h5>v0.1.3.1</h5>
                     <h6>- Fixed the cost amount of G layer.</h6><br><br>
 		            <h4>v0.1.3: The Googol"bang" Update</h4>
                     <h5>- Added the GB layer.<br>
-                    - Added 1 more I layer upgrade.
+                    - Added 1 more I layer upgrade.<br>
                     - Added 2 G layer upgrades.</h5><br><br>
 	                <h5>v0.1.2.1: The Balancing Update</h5>
                     <h6>- Balanced the I upgrade 3.<br>
 		            - Balanced the G layer first milestone.</h6><br><br>
 		            <h4>v0.1.2</h4>
 		            <h5>- Fixed G layer cost a bit.</h5><br><br>
-                    <h4>v0.1.1: Upgrading Update</h4>
+                    <h4>v0.1.1: The Upgrading Update</h4>
                     <h5>- Added 2 more I layer upgrade<br>
 		            - Added 4 G layer milestones.</h5><br><br>
 	                <h3>v0.1: Basic Illions</h3><br>
@@ -62,6 +64,8 @@ function getPointGen() {
 	if (hasUpgrade('i', 11)) gain = gain.times(upgradeEffect('i', 11))
 	if (hasUpgrade('i', 12)) gain = gain.cube()
 	if (hasUpgrade('i', 13)) gain = gain.sqr()
+	if (hasUpgrade('i', 14)) gain = gain.times(upgradeEffect('i', 14))
+	if (hasUpgrade('i', 21)) gain = gain.times(upgradeEffect('i', 21))
 	if (hasMilestone("g", 0)) gain = gain.times(Math.sqrt(Math.log2(player.i.points + 3)))
 	return gain
 }
