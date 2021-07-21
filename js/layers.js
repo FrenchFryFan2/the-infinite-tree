@@ -289,7 +289,7 @@ addLayer("m", {
         return true
     },
     effect() {
-        return player.gb.points.add(1).times(2)
+        return player.m.points.add(1).times(2)
     },
     effectDescription() {
         return "which boosts point production by " + format(tmp.m.effect) + "x"
