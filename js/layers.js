@@ -217,7 +217,7 @@ addLayer("gb", {
             }
         },
     ],
-    layerShown(){return hasUpgrade("i", 21)},
+    layerShown(){return hasUpgrade("i", 22)},
     effect() {
         return player.gb.points.add(1).pow(1.15)
     },
