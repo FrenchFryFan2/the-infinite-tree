@@ -13,12 +13,17 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1.4",
-	name: "The \"Real\" Upgrading Update?",
+	num: "0.2",
+	name: "1 More Layer!",
 }
 
 let changelog = `
                     <h1>Changelog:</h1><br><br>
+					<h3>v0.2: 1 More Layer!</h3><br>
+					- Added 1 more layer.<br>
+					- Endgame is now 15 types of googols.<br>
+					- Added extra text in the top that shows the endgame.<br>
+					- Added 1 GB layer upgrade.<br><br>
 		            <h4>v0.1.4</h4>
 		            <h5>- Added 2 more I layer upgrades.</h5><br><br>
                     <h5>v0.1.3.1</h5>

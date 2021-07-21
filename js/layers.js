@@ -209,7 +209,9 @@ addLayer("gb", {
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
-        return new Decimal(0.5)
+        let exp = new Decimal(0.5)
+        if (hasUpgrade(this.layer, 11)) exp = exp.times(upgradeEffect(this.layer, 11))
+        return exp
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
@@ -229,6 +231,19 @@ addLayer("gb", {
     },
     effectDescription() {
         return "which boosts point production by " + format(tmp.gb.effect) + "x"
+    },
+    upgrades: {
+        11: {
+            title: "Cost Divider",
+            description: "Divides googolbang cost based on your points.",
+            cost: new Decimal(10),
+            effect() {
+                return Math.sqrt(Math.sqrt(Math.sqrt(Math.sqrt(Math.sqrt(Math.log2(player.points + 3))))))
+            },
+            effectDisplay() {
+                return format(upgradeEffect(this.layer, this.id)) + "x"
+            }
+        }
     }
 })
 
