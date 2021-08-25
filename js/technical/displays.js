@@ -166,6 +166,10 @@ function updateTabFormat(layer) {
 	let tab = player.subtabs[layer]?.mainTabs
 	if (isFunction(layers[layer].tabFormat)) {
 		Vue.set(temp[layer], 'tabFormat', layers[layer].tabFormat())
+		if (isPlainObject(layers[layer].tabFormat()) && !tab) {
+			player.subtabs[layer].mainTabs = Object.keys(temp[layer].tabFormat)[0]
+			return updateTabFormat(layer)
+		}
 	}
 	else if (Array.isArray(layers[layer].tabFormat)) {
 		Vue.set(temp[layer], 'tabFormat', constructTabFormat(layer))
