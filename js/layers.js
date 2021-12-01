@@ -24,5 +24,12 @@ addLayer("g", {
     hotkeys: [
         {key: "g", description: "G: Reset for games", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return true}
+    layerShown(){return true},
+    upgrades:{
+        11:{
+            title:"Pong",
+            description:"Pong is a very know game, while also being very old. Start gamers generation.",
+            cost: new Decimal(1)
+        }
+    }
 })
