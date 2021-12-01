@@ -28,7 +28,7 @@ addLayer("g", {
     upgrades:{
         11:{
             title:"Pong",
-            description:"Pong is a very know game, while also being very old. Start gamers generation.",
+            description:"Pong is a very know game, while also being very old. Double gamers generation.",
             cost: new Decimal(1)
         }
     }
