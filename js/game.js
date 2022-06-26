@@ -8,6 +8,7 @@ let gameInfo = {
 	discordName: "",
 	discordLink: "",
 	initialStartPoints: new Decimal (10), // Used for hard resets and new players
+	githackBranch: "",
 	offlineLimit: 1,  // In hours
 }
 
