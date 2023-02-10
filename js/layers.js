@@ -1,5 +1,5 @@
-﻿addLayer("时间", {
-    name: "时间", // This is optional, only used in a few places, If absent it just uses the layer id.
+﻿addLayer("注册", {
+	name: "账号", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "注册", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
@@ -8,7 +8,7 @@
     }},
     color: "#FFFF6F",
     requires: new Decimal(10), // Can be a function that takes requirement increases into account
-    resource: "时间", // Name of prestige currency
+    resource: "账号", // Name of prestige currency
     baseResource: "time", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
@@ -22,7 +22,7 @@
     },
     row: 0, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
-        {key: "时间", description: "时间: Reset for prestige points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+        {key: "账号", description: "账号: Reset for prestige points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){return true},
 		upgrades: {
@@ -32,8 +32,8 @@
 		cost: new Decimal(0),
 		},
 		12:{
-		title: "java?",
-		description: "你可以买一些咖啡来熬夜玩游戏树 (睡眠时长 12 小时> 9 小时).",
+		title: "游戏公告",
+		description: "注意:近日服务器遭受到不明的DDOS间断性攻击。",
 		cost: new Decimal(5),
 		unlocked(){
 			return hasUpgrade("时间",11)

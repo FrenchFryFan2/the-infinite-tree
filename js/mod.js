@@ -1,8 +1,8 @@
 ﻿let modInfo = {
 	name: "The GA Tree",
 	id: "mymod",
-	author: "nobody",
-	pointsName: "points",
+	author: "Cloud_Player_Beast",
+	pointsName: "时间",
 	modFiles: ["layers.js", "tree.js"],
 
 	discordName: "",
