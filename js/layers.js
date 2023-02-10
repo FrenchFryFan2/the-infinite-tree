@@ -1,6 +1,6 @@
-addLayer("$", {
-    name: "$", // This is optional, only used in a few places, If absent it just uses the layer id.
-    symbol: "R-$", // This appears on the layer's node. Default is the id with the first letter capitalized
+﻿addLayer("时间", {
+    name: "时间", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "注册", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
         unlocked: true,
@@ -8,7 +8,7 @@ addLayer("$", {
     }},
     color: "#FFFF6F",
     requires: new Decimal(10), // Can be a function that takes requirement increases into account
-    resource: "$", // Name of prestige currency
+    resource: "时间", // Name of prestige currency
     baseResource: "time", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
@@ -22,13 +22,13 @@ addLayer("$", {
     },
     row: 0, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
-        {key: "$", description: "$: Reset for prestige points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+        {key: "时间", description: "时间: Reset for prestige points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){return true},
 		upgrades: {
 		11:{
-		title: "开始",
-		description: "你找到一款免费的增量游戏",
+		title: "aall.space",
+		description: "Galactic_Era 全球同服",
 		cost: new Decimal(0),
 		},
 		12:{
@@ -36,7 +36,7 @@ addLayer("$", {
 		description: "你可以买一些咖啡来熬夜玩游戏树 (睡眠时长 12 小时> 9 小时).",
 		cost: new Decimal(5),
 		unlocked(){
-			return hasUpgrade("$",11)
+			return hasUpgrade("时间",11)
 		},
 		},
 		13:{
@@ -44,7 +44,7 @@ addLayer("$", {
 		description: "你可以买一张床来提升你的睡眠质量 (睡眠时长 9 小时> 6 小时).",
 		cost: new Decimal(20),
 		unlocked(){
-			return hasUpgrade("$",12)
+			return hasUpgrade("时间",12)
 		},
 		},
 		14:{
@@ -52,7 +52,7 @@ addLayer("$", {
 		description: "你可以买一些肾上腺素来缩短睡眠市场 (睡眠时长 6 小时> 3 小时).",
 		cost: new Decimal(200),
 		unlocked(){
-			return hasUpgrade("$",13)
+			return hasUpgrade("时间",13)
 		},
 		},
 		21:{
@@ -60,20 +60,20 @@ addLayer("$", {
 		description: "你可以解锁一个里程碑",
 		cost: new Decimal(50),
 		unlocked(){
-		return hasUpgrade("$",12)
+		return hasUpgrade("时间",12)
 		},
 		},
 		},
 		milestones: {
 		0: {
-        requirementDescription: "75$",
-        effectDescription: "每秒获得1%的$",
-		unlocked(){return hasUpgrade("$",21)},
+        requirementDescription: "75时间",
+        effectDescription: "每秒获得1%的时间",
+		unlocked(){return hasUpgrade("时间",21)},
         done() {
-		return player.$.points.gte(75) && hasUpgrade("$",21)},
+		return player.时间.points.gte(75) && hasUpgrade("时间",21)},
 		},
 		},
-		passiveGeneration() { return hasMilestone("$", 0)?0.05:0 },
+		passiveGeneration() { return hasMilestone("时间", 0)?0.05:0 },
 })
 
 
@@ -157,7 +157,7 @@ addLayer("w", {
 		},
 		clickables: {
 		11: {
-        display() {return "10原木 -> 3$"},
+        display() {return "10原木 -> 3时间"},
 		cost: new Decimal(10),
 		unlocked(){
 		return hasUpgrade("w",15)
@@ -169,7 +169,7 @@ addLayer("w", {
 		},
 		onClick(){
 		player.w.points = player.w.points.sub(10)
-		player.$.points = player.$.points.add(3)
+		player.时间.points = player.时间.points.add(3)
 		},
 		},
 		},

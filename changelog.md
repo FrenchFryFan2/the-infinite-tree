@@ -1,5 +1,8 @@
 # The Modding Tree changelog:
 
+# v2.6.5.2 - 7/13/22
+- Fixed offline production more.
+
 # v2.6.5.1 - 7/13/21
 - Fixed offline production more.
 

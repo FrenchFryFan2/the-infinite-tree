@@ -1,5 +1,5 @@
-let modInfo = {
-	name: "The ??? Tree",
+﻿let modInfo = {
+	name: "The GA Tree",
 	id: "mymod",
 	author: "nobody",
 	pointsName: "points",
@@ -13,12 +13,14 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
+	num: "0.1",
 	name: "Literally nothing",
 }
 
 let changelog = `<h1>更新日志:</h1><br>
 <h2>虚拟与现实？</h2><br>
+	<h3>v0.1.3.3</h3><br>
+		- GA
 	<h3>v0.1.3.2</h3><br>
 		- “w”升级11&12指数+0.5
 	<h3>v0.1.3.1</h3><br>
