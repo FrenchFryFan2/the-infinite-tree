@@ -20,17 +20,17 @@ addLayer("c", {
         color: "#4BDC13",
         requires: new Decimal(10), // Can be a function that takes requirement increases into account
         resource: "lollipops", // Name of prestige currency
+        singular: "lollipop",
         baseResource: "points", // Name of resource prestige is based on
         baseAmount() {return player.points}, // Get the current amount of baseResource
         type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
         exponent: 0.5, // Prestige currency exponent
-        base: 5, // Only needed for static layers, base of the formula (b^(x^exp))
         roundUpCost: false, // True if the cost needs to be rounded up (use when baseResource is static?)
 
         // For normal layers, gain beyond [softcap] points is put to the [softcapPower]th power
         softcap: new Decimal(1e100), 
         softcapPower: new Decimal(0.5), 
-        canBuyMax() {}, // Only needed for static layers with buy max
+        canBuyMax: true, // Only needed for non-normal layers with buy max
         gainMult() { // Calculate the multiplier for main currency from bonuses
             mult = new Decimal(1)
             if (hasUpgrade(this.layer, 166)) mult = mult.times(2) // These upgrades don't exist

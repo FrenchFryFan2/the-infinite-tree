@@ -208,9 +208,12 @@ function prestigeNotify(layer) {
 		}
 	}
 	if (tmp[layer].autoPrestige || tmp[layer].passiveGeneration) return false
-	else if (tmp[layer].type == "static") return tmp[layer].canReset
-	else if (tmp[layer].type == "normal") return (tmp[layer].canReset && (tmp[layer].resetGain.gte(player[layer].points.div(10))))
-	else return false
+
+	let type = PRESTIGE_TYPES[tmp[layer].type]
+	if (type === undefined) return false
+	if (type.total === true) return tmp[layer].canReset
+	if (type.total === false) return (tmp[layer].canReset && (tmp[layer].resetGain.gte(player[layer].points.div(10))))
+	return false
 }
 
 function notifyLayer(name) {
@@ -340,17 +343,22 @@ function isPlainObject(obj) {
 	return (!!obj) && (obj.constructor === Object)
 }
 
-document.title = modInfo.name
+document.title = gameInfo.name
 
-// Converts a string value to whatever it's supposed to be
+// Converts an input value to whatever it's supposed to be
 function toValue(value, oldValue) {
 	if (oldValue instanceof Decimal) {
 		value = new Decimal (value)
-		if (checkDecimalNaN(value)) return decimalZero
+		if (checkDecimalNaN(value)) return oldValue
+		return value
+	}
+	if (typeof oldValue === 'string' ) {
+		value = value.toString()
 		return value
 	}
 	if (!isNaN(oldValue)) 
-		return parseFloat(value) || 0
+		value = parseFloat(value)
+		if (isNaN(value)) return oldValue
 	return value
 }
 

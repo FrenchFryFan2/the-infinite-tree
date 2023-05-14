@@ -1,3 +1,9 @@
+// Makes things grammatically correct
+function pluralize (value, singular, plural) {
+    value = new Decimal(value)
+    if (value.eq(decimalOne)) return singular
+    return plural
+}
 
 function exponentialFormat(num, precision, mantissa = true) {
     let e = num.log10().floor()
@@ -41,7 +47,7 @@ function sumValues(x) {
 }
 
 function format(decimal, precision = 2, small) {
-    small = small || modInfo.allowSmall
+    small = small || gameInfo.allowSmall
     decimal = new Decimal(decimal)
     if (isNaN(decimal.sign) || isNaN(decimal.layer) || isNaN(decimal.mag)) {
         player.hasNaN = true;
