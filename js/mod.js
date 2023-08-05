@@ -1,8 +1,8 @@
 let modInfo = {
-	name: "Click n Win",
+	name: "Tıkla ve Kazan",
 	id: "mymod",
 	author: "TheGreatHoho",
-	pointsName: "Wins",
+	pointsName: "Kazanma",
 	modFiles: ["layers.js", "tree.js"],
 
 	discordName: "",
