@@ -1,5 +1,5 @@
 let modInfo = {
-	name: "Tıkla ve Kazan",
+	name: "bot",
 	id: "mymod",
 	author: "TheGreatHoho",
 	pointsName: "Kazanma",
