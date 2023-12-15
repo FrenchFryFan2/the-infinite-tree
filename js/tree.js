@@ -13,6 +13,7 @@ var layoutInfo = {
 addNode("blank", {
     layerShown: "ghost",
 }, 
+
 )
 
 
@@ -20,4 +21,6 @@ addLayer("tree-tab", {
     tabFormat: [["tree", function() {return (layoutInfo.treeLayout ? layoutInfo.treeLayout : TREE_LAYERS)}]],
     previousTab: "",
     leftTab: true,
+    
 })
+

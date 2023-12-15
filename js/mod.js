@@ -1,8 +1,8 @@
 let modInfo = {
-	name: "bot",
+	name: "Click n Win",
 	id: "mymod",
 	author: "TheGreatHoho",
-	pointsName: "Kazanma",
+	pointsName: "points",
 	modFiles: ["layers.js", "tree.js"],
 
 	discordName: "",
@@ -13,14 +13,17 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "0.01",
+	name: "First Update",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.0</h3><br>
-		- Added things.<br>
-		- Added stuff.`
+	<h3>v0.01</h3><br>
+		- Added the main 9 upgrades.<br>
+		- Added 5 win milestones. (More on way)<br>
+		- Added magical field, a place where you can buy items.<br>
+		- Added a challenge.<br>
+		- Added two rows of achievements.`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
@@ -41,8 +44,16 @@ function canGenPoints(){
 function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
+	
 
 	let gain = new Decimal(1)
+	if (hasUpgrade('w', 11)) gain = gain.times(upgradeEffect('w',11))
+	if (hasUpgrade('w', 21)) gain = gain.times(4)
+	if (hasUpgrade('w', 31)) gain = gain.times(8)
+	if (hasUpgrade('w', 12)) gain = gain.times(upgradeEffect('w', 12))
+	if (hasUpgrade('w', 22)) gain = gain.times(upgradeEffect('w', 22))
+	if (hasUpgrade('w', 32)) gain = gain.times(upgradeEffect('w', 32))
+	if (hasAchievement('A',23)) gain = gain.times(achievementEffect('A',23))
 	return gain
 }
 
@@ -77,3 +88,8 @@ function maxTickLength() {
 // you can cap their current resources with this.
 function fixOldSave(oldVersion){
 }
+
+function calculatetimeplayed() {
+	return Math.log10(Math.log10(Math.sqrt(player.timePlayed)) + 10) 
+}
+
