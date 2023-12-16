@@ -20,10 +20,10 @@ let VERSION = {
 let changelog = `<h1>Changelog:</h1><br>
 	<h3>v0.01</h3><br>
 		- Added the main 9 upgrades.<br>
-		- Added 5 win milestones. (More on way)<br>
+		- Added 4 win milestones.<br>
 		- Added magical field, a place where you can buy items.<br>
-		- Added a challenge.<br>
-		- Added two rows of achievements.`
+		- Added 3 challenges. (2nd one may not be doable at the moment.)<br>
+		- Added two (and a half) rows of achievements.`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
@@ -54,9 +54,19 @@ function getPointGen() {
 	if (hasUpgrade('w', 22)) gain = gain.times(upgradeEffect('w', 22))
 	if (hasUpgrade('w', 32)) gain = gain.times(upgradeEffect('w', 32))
 	if (hasAchievement('A',23)) gain = gain.times(achievementEffect('A',23))
+	if (inChallenge("m",13)) {
+		if(hasUpgrade("w",11))gain = gain.div(100)	
+		if(hasUpgrade("w",12))gain = gain.div(100)
+		if(hasUpgrade("w",13))gain = gain.div(100)
+		if(hasUpgrade("w",21))gain = gain.div(100)
+		if(hasUpgrade("w",22))gain = gain.div(100)
+		if(hasUpgrade("w",23))gain = gain.div(100)
+		if(hasUpgrade("w",31))gain = gain.div(100)
+		if(hasUpgrade("w",32))gain = gain.div(100)
+		if(hasUpgrade("w",33))gain = gain.div(100)
+	}
 	return gain
 }
- q
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
 }}
