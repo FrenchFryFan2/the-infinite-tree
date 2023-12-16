@@ -56,7 +56,7 @@ function getPointGen() {
 	if (hasAchievement('A',23)) gain = gain.times(achievementEffect('A',23))
 	return gain
 }
-
+ q
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
 }}

@@ -128,7 +128,7 @@ addLayer("A", {
         name: "There is no turning back",
         tooltip() {
           return `Play for 1 hour.<br>
-                  <h5>You gain a extremely small boost to point generation based on time played.<h5>` + "Currently: x" + format(calculatetimeplayed())
+                  <h5>You gain an extremely small boost to point generation based on time played.<h5>` + "Currently: x" + format(calculatetimeplayed())
         },
         done() {
           if (player.timePlayed > 3600)
@@ -143,12 +143,15 @@ addLayer("A", {
             "margin": "0.5px"
           }
         },
+        effect() {
+          return calculatetimeplayed()
+        }
     },
     24: {
       name: "I am BETTER!",
       tooltip: "Make the accelerator stronger than super and ultra accelerators.",
       done() {
-        if (getBuyableAmount("m",21) > 10)
+        if (getBuyableAmount('m', 12) > 10)
         return player.points.gte(0)
       },
       style() {
@@ -204,8 +207,17 @@ addLayer("A", {
 
 ),
 addLayer("w", {
-Max() {
-  if (hasMilestone(this.layer,5))  {return true}
+  automate(){
+    if (hasMilestone("w",3)) {
+      buyUpgrade(this.layer,"11"), buyUpgrade(this.layer,"12"),  buyUpgrade(this.layer,"13"),  buyUpgrade(this.layer,"21"),  buyUpgrade(this.layer,"22"),  buyUpgrade(this.layer,"23")
+    };
+    if (hasMilestone("w",4)) {
+      buyUpgrade(this.layer,"31"), buyUpgrade(this.layer,"32"),  buyUpgrade(this.layer,"33")
+    }
+  
+  },
+canBuyMax() {
+  if(hasMilestone(this.layer,5)) return true
 },
 milestones: {
     1: {
@@ -223,9 +235,9 @@ milestones: {
 
     },
     2: {
-      requirementDescription: "Win the game total of 300 times.",
+      requirementDescription: "Win the game total of 400 times.",
       effectDescription: "Make the ultra accelerator upgrade 50 wins cheaper.",
-      done() { return player.w.points.gte(300) },
+      done() { return player.w.points.gte(400) },
       style: { "width": "450px",
       "height": " 105px",
       "border-radius": "10px",
@@ -238,9 +250,12 @@ milestones: {
 
     },
     3: {
-      requirementDescription: "Win the game total of 400 times.",
+      requirementDescription: "Win the game total of 600 times.",
       effectDescription: "You unlock an autobuyer for the first two rows of upgrades.",
-      done() { return player.w.points.gte(400) },
+      done() { return player.w.points.gte(600) },
+      onComplete() {
+        player.w.points.add(67)
+      },
       style: { "width": "450px",
       "height": " 105px",
       "border-radius": "10px",
@@ -253,9 +268,12 @@ milestones: {
 
     },
     4: {
-      requirementDescription: "Win the game total of 500 times.",
+      requirementDescription: "Win the game total of 800 times.",
       effectDescription: "Autobuyer now works for the third row of upgrades.",
-      done() { return player.w.points.gte(500) },
+      done() { return player.w.points.gte(800) },
+      onComplete() {
+        player.w.points.add(720)
+      },
       style: { "width": "450px",
       "height": " 105px",
       "border-radius": "10px",
@@ -268,9 +286,9 @@ milestones: {
 
     },
     5: {
-      requirementDescription: "Win the game total of 850 times.",
+      requirementDescription: "Win the game total of 900 times.",
       effectDescription: "Unlock the ability to max win.",
-      done() { return player.w.points.gte(850) },
+      done() { return player.w.points.gte(900) },
       style: { "width": "450px",
       "height": " 105px",
       "border-radius": "10px",
@@ -285,7 +303,7 @@ milestones: {
     6: {
       requirementDescription: "Win the game total of ??? times.",
       effectDescription: "Unlock auto-win.",
-      done() { return player.w.points.gte(999) },
+      done() { return player.w.points.gte(9999) },
       style: { "width": "450px",
       "height": " 105px",
       "border-radius": "10px",
@@ -321,15 +339,6 @@ doReset(w) {
 
   // Stage 5, add back in the specific subfeatures you saved earlier
   player[this.layer].upgrades.push(keptUpgrades)
-},
-automate(){
-  if (hasMilestone("w",3)) {
-    buyUpgrade(this.layer,"11"), buyUpgrade(this.layer,"12"),  buyUpgrade(this.layer,"13"),  buyUpgrade(this.layer,"21"),  buyUpgrade(this.layer,"22"),  buyUpgrade(this.layer,"23")
-  };
-  if (hasMilestone("w",4)) {
-    buyUpgrade(this.layer,"31"), buyUpgrade(this.layer,"32"),  buyUpgrade(this.layer,"33")
-  }
-
 },
     name: "win", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "W", // This appears on the layer's node. Default is the id with the first letter capitalized
@@ -686,7 +695,7 @@ addLayer("m", {
         challengeDescription: "You try to get rid of your boosters to reach the voice.",
         canComplete: function() {return player.w.points.gte(100)},
         goalDescription: "Reach 100 wins to complete the challenge.",
-        rewardDescription: "Boosters effect the magical shard gain with a heavily reduced effect.",
+        rewardDescription: "Boosters effect the magical shard gain with heavily reduced effect.",
         rewardEffect() {
           let effect = new Decimal(1)
           if (hasUpgrade("w",11)) effect = effect.mul(upgradeEffect("w",11))
@@ -748,7 +757,7 @@ addLayer("m", {
               
             }
             else {
-              let PowerI = new Decimal(1.8)
+              let PowerI = new Decimal(2.1)
               let Calculation = new Decimal(1).mul(Decimal.pow(PowerI, x.pow(1)))
               if (getBuyableAmount('m',61) > 0) {
                 Calculation = Calculation.divide(buyableEffect('m',61))
@@ -884,11 +893,11 @@ addLayer("m", {
             cost(x) {
               let PowerI = new Decimal(10)
               
-              let Calculation = new Decimal(1).mul(Math.pow(PowerI,(x.add(x.add(10)))))
+              let Calculation = new Decimal(1).mul(Math.pow(PowerI,(x.add(x.add(12)))))
               return Calculation;
             },
             display() {
-              return `Makes items that cost magical sharp cheaper.<br>
+              return `Makes items that cost magical shard cheaper.<br>
               x${format(tmp[this.layer].buyables[this.id].effect)} Cheaper </b><br>
           <h1>${format(tmp[this.layer].buyables[this.id].cost)} Points</h1>
           <br> ${format(getBuyableAmount('m',61))} /15 Bought`
@@ -912,7 +921,7 @@ addLayer("m", {
               setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             effect(x) {
-              let Effect = x.mul(1.5)
+              let Effect = new Decimal(1.1).pow(x)
               return Effect;
             },
             unlocked() {
@@ -925,12 +934,12 @@ addLayer("m", {
             cost(x) {
               let PowerI = new Decimal(10)
               
-              let Calculation = new Decimal(1).mul(Math.pow(PowerI,(x.add(x.add(10)))))
+              let Calculation = new Decimal(1).mul(Math.pow(PowerI,(x.add(x.add(12))))).mul(x.mul(2).add(1))
               return Calculation;
             },
             display() {
-              return `Increases magical sharp gain.<br>
-              x${format(tmp[this.layer].buyables[this.id].effect)} to Magical Sharp Gain </b><br>
+              return `Increases magical shard gain.<br>
+              x${format(tmp[this.layer].buyables[this.id].effect)} to Magical Shard Gain </b><br>
           <h1>${format(tmp[this.layer].buyables[this.id].cost)} Points</h1>
           <br> ${format(getBuyableAmount('m',61))} /15 Bought`
             },
