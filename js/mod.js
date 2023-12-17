@@ -13,17 +13,23 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.01",
+	num: "0.02",
 	name: "First Update",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.01</h3><br>
+         <br><br>
+         <h3>v0.02</h3><br>
+		- Added 3 more upgrades.<br>
+		- Added one more milestone.<br>
+		- Added one more challenge. (They all work now)<br>
+		<br><br>
+		<h3>v0.01</h3><br>
 		- Added the main 9 upgrades.<br>
 		- Added 4 win milestones.<br>
 		- Added magical field, a place where you can buy items.<br>
 		- Added 3 challenges. (2nd one may not be doable at the moment.)<br>
-		- Added two (and a half) rows of achievements.`
+		- Added two and a half rows of achievements.`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
