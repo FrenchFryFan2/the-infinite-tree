@@ -27,6 +27,7 @@ addLayer("A", {
             "margin": "0.5px"
           }
         },
+        image: "youwin.png"
     },
     12: {
       name: "Boosting to the Max!",
@@ -205,7 +206,7 @@ addLayer("A", {
       },
     },
     32: {
-      name: "Who needs them?",
+      name: "Who needs boosters?",
       tooltip: "Reach 1000 wins without any boosters.",
       done() {
           if (!hasUpgrade("w",11)){
@@ -228,11 +229,11 @@ addLayer("A", {
       },
     },
     33: {
-      name: "Hmmm maybe this will work",
-      tooltip: "Beat challenge 'Desperation'.",
+      name: "What am I gonna do with all of these?",
+      tooltip: "Reach 10k wins.",
       done() {
         
-        return player.w.points.gte(3213123210)
+        return player.w.points.gte(10000)
       },
       style() {
         return {
@@ -307,6 +308,7 @@ addLayer("A", {
 ),
 
 addLayer("w", {
+displayRow: 2,
 autoUpgrade() {
 
   if (player.w.auto == true)
@@ -384,9 +386,9 @@ milestones: {
 
     },
     5: {
-      requirementDescription: "Win the game total of ??? times.",
+      requirementDescription: "Win the game total of 10000 times.",
       effectDescription: "Unlock passive magical shard generation.",
-      done() { return player.w.points.gte(9999) },
+      done() { return player.w.points.gte(10000) },
       style: { "width": "450px",
       "height": " 105px",
       "border-radius": "10px",
@@ -443,7 +445,7 @@ doReset(w) {
         if (hasUpgrade('w', 13)) mult = mult.divide(upgradeEffect('w', 13))
         if (hasUpgrade('w', 23)) mult = mult.divide(upgradeEffect('w', 23))
         if (hasUpgrade('w', 33)) mult = mult.divide(upgradeEffect('w', 33))
-        if (!inChallenge("m",13)) {if (hasChallenge("m", 12) == 1) mult = mult.divide(challengeEffect("m",12))}
+        if (!inChallenge("m",13) && !inChallenge("m",12) && !inChallenge("m",11) && !inChallenge("m",21)) {if (hasChallenge("m", 12) == 1) mult = mult.divide(challengeEffect("m",12))}
         
         return mult
     },
@@ -455,9 +457,18 @@ doReset(w) {
     hotkeys: [
         {key: "w", description: "W: Win the game!", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
+    infoboxes: {
+      Firstbox: {
+          title: "Strange Yet Familliar...",
+          body() { return "You find yourself in middle of nothingness. You are filled with a strange yet familliar feeling. In front of you there is a button, glowing in the darkness. 'Click n Win' it says. You hesitate but can't help yourself from clicking it. A yellow text appears in the sky(even though it's hard to tell if it's the sky.) Finally, you decide to keep clicking this button until you figure out a way to escape this place." },
+          
+      },
+    },
     tabFormat: {
       "Main": {
           content: [
+            ["infobox",["Firstbox"]],
+            "blank",
             "main-display",
             "prestige-button",
             "blank",
@@ -542,10 +553,10 @@ doReset(w) {
             },
             effect() {
               if (getBuyableAmount("m",12) > 0) {
-                return player[this.layer].points.add(1).pow(getBuyableAmount("m",12).divide(11).add(0.5))
+                return player[this.layer].points.add(1).pow(getBuyableAmount("m",12).divide(11).add(0.5)).mul(upgradeEffect(this.layer,24))
                 
               } else {
-                return player[this.layer].points.add(1).pow(0.5)
+                return player[this.layer].points.add(1).pow(0.5).mul(upgradeEffect(this.layer,24))
               }
                 
             },
@@ -566,28 +577,31 @@ doReset(w) {
             description: "Makes it easier to win. (Based on how many points you have)",
             cost: new Decimal(5),
             effect() {
-                return Math.log10(Math.sqrt(Math.sqrt(player.points.add(1)))) + 1
+                return Math.log10(Math.sqrt(Math.sqrt(player.points.add(1)))) + 1 + +upgradeEffect(this.layer,34)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "÷"},
         },
         14: {
-          title: "???",
-          description: "idk",
-          cost: new Decimal(10),
+          title: "Empowerer",
+          description: "Empowers your production based on your magical shards.",
+          cost: new Decimal(15),
           effect() {
-              return "bot"
+            if (hasUpgrade(this.layer,this.id)) {
+              return Math.log(player.m.points)
+            }
+            else {
+              return 0
+            }
           },
-          effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "÷"},
+          effectDisplay(){ return format(upgradeEffect(this.layer, this.id)) + "x"},
           unlocked() {
-            return false
-          }
-//          unlocked() {
-//          if (hasChallenge("m",13)) {
-//            return true
-//           } else {
-//              return false
-//          }
-//       }
+            if (hasChallenge("m",13)) {
+               return true
+              } else {
+               return false
+            }
+         }
+         
         },
         21: {
             title: "Super Booster",
@@ -651,7 +665,7 @@ doReset(w) {
                 
             },
             effect() {
-                return player[this.layer].points.add(1).pow(0.8)
+                return player[this.layer].points.add(1).pow(0.8).mul(upgradeEffect(this.layer,24))
             },
             effectDisplay() {
               if (inChallenge("m",12)) {
@@ -688,7 +702,7 @@ doReset(w) {
                 }
             },
             effect() {
-                return Math.log10(player.points.add(1)) + 1
+                return Math.log10(player.points.add(1)) + 1 + +upgradeEffect(this.layer,34)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "÷" },
             unlocked() {
@@ -704,6 +718,34 @@ doReset(w) {
               }
                 
             },
+        },
+        24: {
+          title: "Mighty Empowerer",
+          description: "Empowers your accelerators based on your wins.",
+          cost() {
+            if (getBuyableAmount('m',21) > 0 ) {
+                return new Decimal(89).minus(buyableEffect('m',21))
+            } else {
+                return new Decimal(89)  
+            }
+        },
+          effect() {
+            if (hasUpgrade(this.layer,this.id)) {
+              return (player.w.points).pow(0.3)
+            }
+            else {
+              return 1
+            }
+          },
+          effectDisplay() { return "" + format(upgradeEffect(this.layer, this.id)) + "x"},
+          unlocked() {
+            if (hasChallenge("m",13)) {
+               return true
+              } else {
+               return false
+            }
+         }
+         
         },
         31: {
             title: "Ultra Booster",
@@ -741,7 +783,7 @@ doReset(w) {
               
             },
             effect() {
-                return player[this.layer].points.add(1).pow(1.45)
+                return player[this.layer].points.add(1).pow(1.45).mul(upgradeEffect(this.layer,24))
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
             unlocked() {
@@ -756,42 +798,69 @@ doReset(w) {
             description: "Winning has never been this easy before.",
             cost: new Decimal(500),
             effect() {
-                return Math.log10(player.points.add(1).pow(1.15)) + 1.5
+                return Math.log10(player.points.add(1).pow(1.15)) + 1.5 + +upgradeEffect(this.layer,34)
             },
             effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "÷" },
             unlocked() {
                 return hasUpgrade('w', 32)
             }
         },
+        34: {
+          title: "True Empowerer",
+          description: "Empowers your divisors based on your points.",
+          cost: new Decimal(1500),
+          effect() {
+            if (hasUpgrade(this.layer,this.id)) {
+              return (player.points).pow(0.2)
+            }
+            else {
+              return 0
+            }
+          },
+          effectDisplay() { return "Adding +" + format(upgradeEffect(this.layer, this.id)) + " power to your divisors."},
+          unlocked() {
+            if (hasChallenge("m",13)) {
+              if (hasUpgrade("w",33)) {
+                return true
+              } else {
+                return false
+              }
+              
+            }
+         }
+         
+        },
         
         
         
     },
+    
 })
 
 addLayer("m", {
   infoboxes: {
     lore: {
-        title: "Who are you?",
-        body() { return "You encounter a stranger." },
-        
+        title: "blah",
+        body() { return "blah" },
     },
     
 },
     tabFormat: {
       "Shop": {
           content: [
+            ["infobox", "lore"],
             "main-display",
             "prestige-button",
             "blank",
             "resource-display",
             "buyables",
-            "blank",     // ["infobox",["lore"]],
+            "blank",     
             
           ],
 
       },
-      "Mystic Field": {
+    
+      "Field": {
           content: [
             "challenges"
           ],
@@ -799,7 +868,7 @@ addLayer("m", {
         
       },
       
-    },
+},
     name: "magical field", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "M", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
@@ -807,6 +876,7 @@ addLayer("m", {
         unlocked: false,
 		points: new Decimal(0),
     }},
+    passiveGeneration() {return hasMilestone('w',5) ? 0.1 : 0},
     color: "#5941A9",
     requires : new Decimal(100), // Can be a function that takes requirement increases into account
     resource: "magical shards", // Name of prestige currency
@@ -848,16 +918,17 @@ addLayer("m", {
           return format(challengeEffect(this.layer,"11")) + "x"
         },
         
+        
     },
       12: {
         name: "Dismay",
         challengeDescription: "You can not buy any boosters or accelerators.",
-        canComplete: function() {return player.w.points.gte(100)},
-        goalDescription: "Reach 100 wins to complete the challenge.",
+        canComplete: function() {return player.w.points.gte(80)},
+        goalDescription: "Reach 80 wins to complete the challenge.",
         rewardDescription: "Magical shards make winning easier. (Only works outside of challenges.)",
         rewardEffect() {
           let effect = new Decimal(1)
-          effect = effect.add(Math.log((player.m.points)))
+          effect = effect.add(Math.sqrt((player.m.points)))
           return effect
           
         },
@@ -877,8 +948,8 @@ addLayer("m", {
       13: {
         name: "Appallment",
         challengeDescription: "Buying an upgrade divides your point production by 100.",
-        canComplete: function() {return player.w.points.gte(200)},
-        goalDescription: "Reach 200 wins to complete the challenge.",
+        canComplete: function() {return player.w.points.gte(250)},
+        goalDescription: "Reach 250 wins to complete the challenge.",
         rewardDescription: "Unlock new upgrades.",
         unlocked() {
           if (hasChallenge(this.layer, 11)) {
@@ -892,10 +963,10 @@ addLayer("m", {
       },
       21: {
         name: "Placeholder",
-        challengeDescription: "Winning requirement is raised to the power of 2",
-        canComplete: function() {return player.w.points.gte(100000)},
-        goalDescription: "Reach ??? wins to complete the challenge.",
-        rewardDescription: "idk",
+        challengeDescription: "Point production is raised to the power of 0.1. Also your wins multiply your production based on their value in sin function. Tip: You may want to use a calculator.",
+        canComplete: function() {return player.w.points.gte(101)},
+        goalDescription: "Reach 101 wins to complete the challenge.",
+        rewardDescription: "Point generation is increased to the power of 1.08",
         unlocked() {
           if (hasChallenge(this.layer, 11)) {
             return true
@@ -906,7 +977,29 @@ addLayer("m", {
           
         }
       },
-    },
+      31: {
+        name: "Endless Void",
+        challengeDescription: "",
+        canComplete: function() {return player.w.points.gte(101)},
+        fullDisplay() {
+          return `Goal ??<br>
+          <br> ${Math.roundm(challengeCompletions('m',31))} /100 completions.`
+        },
+        rewardDescription: "idk",
+        completionLimit: 100,
+        unlocked() {
+          if (hasChallenge(this.layer, 21)) {
+            return true
+            
+          } else {
+            return false
+          }
+          
+        },
+        style: {backgroundColor: "blue"}
+      },
+      },
+      
     buyables: {
         11: {
             purchaseLimit:99,
@@ -944,7 +1037,7 @@ addLayer("m", {
             return player[this.layer].points.gte(this.cost())
           },
           style() {
-            return {
+            if (this.canAfford()||getBuyableAmount("m",11) == 99) return {
               "width": "250px",
               "height": " 125px",
               "border-radius": "10px",
@@ -952,7 +1045,16 @@ addLayer("m", {
               "margin": "5px",
               "text-shadow": "0px 0px 10px #000000",
               "color": "#FFFFFF",
-              
+              "background-color": "#5941A9"}
+            if (!this.canAfford()) return {
+              "width": "250px",
+              "height": " 125px",
+              "border-radius": "10px",
+              "border": "0px",
+              "margin": "5px",
+              "text-shadow": "0px 0px 10px #000000",
+              "color": "#FFFFFF",
+              "background-color": "#77567F"
             }
           },
           buy() {
@@ -989,18 +1091,27 @@ addLayer("m", {
             canAfford() {
               return player[this.layer].points.gte(this.cost())
             },
-            style() {
-              return {
-                "width": "250px",
-                "height": " 125px",
-                "border-radius": "10px",
-                "border": "0px",
-                "margin": "5px",
-                "text-shadow": "0px 0px 10px #000000",
-                "color": "#FFFFFF",
-                
-              }
-            },
+                      style() {
+            if (this.canAfford()||getBuyableAmount("m",12) == 15) return {
+              "width": "250px",
+              "height": " 125px",
+              "border-radius": "10px",
+              "border": "0px",
+              "margin": "5px",
+              "text-shadow": "0px 0px 10px #000000",
+              "color": "#FFFFFF",
+              "background-color": "#5941A9"}
+            if (!this.canAfford()) return {
+              "width": "250px",
+              "height": " 125px",
+              "border-radius": "10px",
+              "border": "0px",
+              "margin": "5px",
+              "text-shadow": "0px 0px 10px #000000",
+              "color": "#FFFFFF",
+              "background-color": "#77567F"
+            }
+          },
             buy() {
               player[this.layer].points = player[this.layer].points.sub(this.cost())
               setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
@@ -1032,7 +1143,7 @@ addLayer("m", {
               return player[this.layer].points.gte(this.cost())
             },
             style() {
-              return {
+              if (this.canAfford()||getBuyableAmount("m",21) == 3) return {
                 "width": "250px",
                 "height": " 125px",
                 "border-radius": "10px",
@@ -1040,6 +1151,16 @@ addLayer("m", {
                 "margin": "5px",
                 "text-shadow": "0px 0px 10px #000000",
                 "color": "#FFFFFF",
+                "background-color": "#5941A9"}
+              if (!this.canAfford()) return {
+                "width": "250px",
+                "height": " 125px",
+                "border-radius": "10px",
+                "border": "0px",
+                "margin": "5px",
+                "text-shadow": "0px 0px 10px #000000",
+                "color": "#FFFFFF",
+                "background-color": "#77567F"
               }
             },
             buy() {
@@ -1055,7 +1176,7 @@ addLayer("m", {
             }
           },
           61: {
-            purchaseLimit: 15,
+            purchaseLimit: 30,
             title: "'Point'less Shard",
             cost(x) {
               let PowerI = new Decimal(10)
@@ -1067,13 +1188,13 @@ addLayer("m", {
               return `Makes items that cost magical shard cheaper.<br>
               x${format(tmp[this.layer].buyables[this.id].effect)} Cheaper </b><br>
           <h1>${format(tmp[this.layer].buyables[this.id].cost)} Points</h1>
-          <br> ${format(getBuyableAmount('m',61))} /15 Bought`
+          <br> ${format(getBuyableAmount('m',61))} /30 Bought`
             },
             canAfford() {
               return player.points.gte(this.cost())
             },
             style() {
-              return {
+              if (this.canAfford()||getBuyableAmount("m",61) == 15) return {
                 "width": "250px",
                 "height": " 125px",
                 "border-radius": "10px",
@@ -1081,6 +1202,16 @@ addLayer("m", {
                 "margin": "5px",
                 "text-shadow": "0px 0px 10px #000000",
                 "color": "#FFFFFF",
+                "background-color": "#5941A9"}
+              if (!this.canAfford()) return {
+                "width": "250px",
+                "height": " 125px",
+                "border-radius": "10px",
+                "border": "0px",
+                "margin": "5px",
+                "text-shadow": "0px 0px 10px #000000",
+                "color": "#FFFFFF",
+                "background-color": "#77567F"
               }
             },
             buy() {
@@ -1096,7 +1227,7 @@ addLayer("m", {
             }
           },
           62: {
-            purchaseLimit: 15,
+            purchaseLimit: 30,
             title: "? Shard",
             cost(x) {
               let PowerI = new Decimal(10)
@@ -1108,13 +1239,13 @@ addLayer("m", {
               return `Increases magical shard gain.<br>
               x${format(tmp[this.layer].buyables[this.id].effect)} to Magical Shard Gain </b><br>
           <h1>${format(tmp[this.layer].buyables[this.id].cost)} Points</h1>
-          <br> ${format(getBuyableAmount('m',62))} /15 Bought`
+          <br> ${format(getBuyableAmount('m',62))} /30 Bought`
             },
             canAfford() {
               return player.points.gte(this.cost())
             },
             style() {
-              return {
+              if (this.canAfford()||getBuyableAmount("m",62) == 15) return {
                 "width": "250px",
                 "height": " 125px",
                 "border-radius": "10px",
@@ -1122,6 +1253,16 @@ addLayer("m", {
                 "margin": "5px",
                 "text-shadow": "0px 0px 10px #000000",
                 "color": "#FFFFFF",
+                "background-color": "#5941A9"}
+              if (!this.canAfford()) return {
+                "width": "250px",
+                "height": " 125px",
+                "border-radius": "10px",
+                "border": "0px",
+                "margin": "5px",
+                "text-shadow": "0px 0px 10px #000000",
+                "color": "#FFFFFF",
+                "background-color": "#77567F"
               }
             },
             buy() {
