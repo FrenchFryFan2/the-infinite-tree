@@ -1169,7 +1169,7 @@ addLayer("m", {
             }
           },
           61: {
-            purchaseLimit: 30,
+            purchaseLimit: 29,
             title: "'Point'less Shard",
             cost(x) {
               let PowerI = new Decimal(10)
@@ -1220,7 +1220,7 @@ addLayer("m", {
             }
           },
           62: {
-            purchaseLimit: 30,
+            purchaseLimit: 29,
             title: "? Shard",
             cost(x) {
               let PowerI = new Decimal(10)
