@@ -353,9 +353,6 @@ milestones: {
       requirementDescription: "Win the game total of 700 times.",
       effectDescription: "You unlock an autobuyer for win upgrades.",
       done() { return player.w.points.gte(700) },
-      onComplete() {
-        player.w.points.add(720)
-      },
       toggles: [["w","auto"]
 
       ],
@@ -723,11 +720,7 @@ doReset(w) {
           title: "Mighty Empowerer",
           description: "Empowers your accelerators based on your wins.",
           cost() {
-            if (getBuyableAmount('m',21) > 0 ) {
-                return new Decimal(89).minus(buyableEffect('m',21))
-            } else {
-                return new Decimal(89)  
-            }
+            return new Decimal(80)
         },
           effect() {
             if (hasUpgrade(this.layer,this.id)) {

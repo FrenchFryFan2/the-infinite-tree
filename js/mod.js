@@ -62,7 +62,7 @@ function getPointGen() {
 	if (hasUpgrade('w', 32)) gain = gain.times(upgradeEffect('w', 32))
 	if (hasAchievement('A',23)) gain = gain.times(achievementEffect('A',23))
 	if (hasChallenge("m",21)) gain = gain.pow(1.08)
-	if (inChallenge("m",21)) gain = gain.pow(0.1)
+	
 	if (inChallenge("m",21)) gain = gain.mul(Math.sin(player.w.points)).add(1)
 	if (inChallenge("m",13)) {
 		if(hasUpgrade("w",11))gain = gain.div(100)	
