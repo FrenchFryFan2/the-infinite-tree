@@ -335,9 +335,9 @@ milestones: {
 
     },
     2: {
-      requirementDescription: "Win the game total of 400 times.",
+      requirementDescription: "Win the game total of 600 times.",
       effectDescription: "Make the ultra accelerator upgrade 50 wins cheaper.",
-      done() { return player.w.points.gte(400) },
+      done() { return player.w.points.gte(600) },
       style: { "width": "450px",
       "height": " 105px",
       "border-radius": "10px",
@@ -350,9 +350,9 @@ milestones: {
 
     },
     3: {
-      requirementDescription: "Win the game total of 600 times.",
+      requirementDescription: "Win the game total of 700 times.",
       effectDescription: "You unlock an autobuyer for win upgrades.",
-      done() { return player.w.points.gte(600) },
+      done() { return player.w.points.gte(700) },
       onComplete() {
         player.w.points.add(720)
       },
