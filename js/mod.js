@@ -8,16 +8,22 @@ let modInfo = {
 	discordName: "",
 	discordLink: "",
 	initialStartPoints: new Decimal (10), // Used for hard resets and new players
-	offlineLimit: 1,  // In hours
+	offlineLimit: 0,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.02",
-	name: "First Update",
+	num: "0.03",
+	name: "Magical Place",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+		 <br><br>
+         <h3>v0.03</h3><br>
+		- Implemented all 7 challenges.<br>
+		- Redesigned tab layouts.<br>
+		- Changed and rebalanced the third row of achievements. (Last one is not possible)<br>
+		- Also added one secret achievement :)<br>
          <br><br>
          <h3>v0.02</h3><br>
 		- Added 3 more upgrades.<br>
@@ -53,6 +59,12 @@ function getPointGen() {
 	
 
 	let gain = new Decimal(1)
+	if (hasAchievement('A',33)) {
+	if(inChallenge("m",13) ||inChallenge("m",12) ||inChallenge("m",11) ||inChallenge("m",21) ||inChallenge("m",22) ||inChallenge("m",23) ||inChallenge("m",31)){
+		gain = gain.mul(2)}}
+	if (hasAchievement('A',34)) {
+	if(inChallenge("m",13) ||inChallenge("m",12) ||inChallenge("m",11) ||inChallenge("m",21) ||inChallenge("m",22) ||inChallenge("m",23) ||inChallenge("m",31)){
+		gain = gain.mul(2)}}
 	if (hasUpgrade('w', 14)) gain = gain.times(upgradeEffect('w',14))
 	if (hasUpgrade('w', 11)) gain = gain.times(upgradeEffect('w',11))
 	if (hasUpgrade('w', 21)) gain = gain.times(4)
@@ -61,6 +73,7 @@ function getPointGen() {
 	if (hasUpgrade('w', 22)) gain = gain.times(upgradeEffect('w', 22))
 	if (hasUpgrade('w', 32)) gain = gain.times(upgradeEffect('w', 32))
 	if (hasAchievement('A',23)) gain = gain.times(achievementEffect('A',23))
+	if (getBuyableAmount('m', 22) > 0) gain = gain.times(buyableEffect('m', 22))
 	if (hasChallenge("m",21)) gain = gain.pow(1.08)
 	if (inChallenge("m",21)) gain = gain.pow(0.1)
 	if (inChallenge("m",21)) gain = gain.mul(Math.sin(player.w.points)).add(1)
@@ -68,13 +81,17 @@ function getPointGen() {
 		if(hasUpgrade("w",11))gain = gain.div(100)	
 		if(hasUpgrade("w",12))gain = gain.div(100)
 		if(hasUpgrade("w",13))gain = gain.div(100)
+		if(hasUpgrade("w",14))gain = gain.div(100)
 		if(hasUpgrade("w",21))gain = gain.div(100)
 		if(hasUpgrade("w",22))gain = gain.div(100)
 		if(hasUpgrade("w",23))gain = gain.div(100)
+		if(hasUpgrade("w",24))gain = gain.div(100)
 		if(hasUpgrade("w",31))gain = gain.div(100)
 		if(hasUpgrade("w",32))gain = gain.div(100)
 		if(hasUpgrade("w",33))gain = gain.div(100)
+		if(hasUpgrade("w",34))gain = gain.div(100)
 	}
+	if (inChallenge("m",22)) gain = gain.div(player.w.points.pow(10).add(1))
 	return gain
 }
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
@@ -110,6 +127,12 @@ function fixOldSave(oldVersion){
 }
 
 function calculatetimeplayed() {
-	return Math.log10(Math.log10(Math.sqrt(player.timePlayed)) + 10) 
+	if (player.timePlayed > 7200) {
+		return (player.timePlayed / 999999) + 3
+	} else {
+		return (player.timePlayed / 3600) + 1	
+	}
 }
+
+
 
