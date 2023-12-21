@@ -496,6 +496,7 @@ milestones: {
 
     }
 },
+
 doReset(w) {
   // Stage 1, almost always needed, makes resetting this layer not delete your progress
   if (layers[w].row <= this.row) return;
@@ -504,7 +505,7 @@ doReset(w) {
   let keptUpgrades = []
   if (layer == "w" && hasMilestone(w,3)) keptUpgrades.push()
   let keptMilestones = []
-  if (hasMilestone("w", 1)) keptMilestones.push(1)
+  if (layer == "w" && hasMilestone("w", 1)) keptMilestones.push(1)
 
   // Stage 3, track which main features you want to keep - all upgrades, total points, specific toggles, etc.
   let keep = [];
@@ -520,6 +521,8 @@ doReset(w) {
   // Stage 5, add back in the specific subfeatures you saved earlier
   player[this.layer].upgrades.push(keptUpgrades)
 },
+
+
     name: "win", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "W", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
@@ -542,7 +545,7 @@ doReset(w) {
         if (hasUpgrade('w', 33)) mult = mult.divide(upgradeEffect('w', 33))
         if (hasChallenge('m',23)) mult = mult.divide(challengeEffect('m',23))
         if (!inChallenge("m",13) && !inChallenge("m",12) && !inChallenge("m",11) && !inChallenge("m",21) && !inChallenge("m",22) && !inChallenge("m",23) && !inChallenge("m",31)) {if (hasChallenge("m", 12) == 1) mult = mult.divide(challengeEffect("m",12))}
-        if (inChallenge('m',23)) mult = mult.divide(Math.pow(upgradeEffect('w', 11),4.6))
+        if (inChallenge('m',23)) mult = mult.divide(Math.pow(upgradeEffect('w', 11),4.75))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -561,7 +564,7 @@ doReset(w) {
     infoboxes: {
       Firstbox: {
           title: "Strange Yet Familliar...",
-          body() { return "You find yourself in middle of nothingness. You are filled with a strange yet familliar feeling. In front of you there is a button, glowing in the darkness. 'Click n Win' it says. You hesitate but can't help yourself from clicking it. A yellow text appears in the sky(even though it's hard to tell if it's the sky.) Finally, you decide to keep clicking this button until you figure out a way to escape this place." },
+          body() { return "You find yourself in middle of nothingness. You are filled with a strange yet familliar feeling. In front of you there is a button, glowing in the darkness. 'Click n Win' it says. You hesitate but can't help yourself from clicking it. A weird text appears in the sky, you feel like you've accomplished something. Finally, you decide to keep clicking this button until you figure out a way to escape this place." },
           
       },
       EndlessVoid: {
@@ -1039,6 +1042,7 @@ addLayer("m", {
         return exp
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
+    displayrow: 0,
     layerShown(){
         return true
     },
@@ -1184,9 +1188,9 @@ addLayer("m", {
       },
       22: {
         name: "Placeholder 2",
-        challengeDescription: "Your wins divide point production.",
-        canComplete: function() {return player.w.points.gte(2700)},
-        goalDescription: "Reach 2700 wins to complete the challenge.",
+        challengeDescription: "Your wins divide point production immensely.",
+        canComplete: function() {return player.w.points.gte(1900)},
+        goalDescription: "Reach 1900 wins to complete the challenge.",
         rewardDescription: "Improve the magical shard gain formula.<br>(I don't know the formula lol, but it works trust me.)",
         unlocked() {
           if (hasChallenge(this.layer, 11)) {
@@ -1698,5 +1702,72 @@ addLayer("m", {
 
 
 })
+addLayer("h", {
+  name: "heaven", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "H", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    startData() { return {
+      unlocked: false,
+  points: new Decimal(0),
+  }},
+    auto: false,
+    color: "#B31312",
+    requires: new Decimal(90000), // Can be a function that takes requirement increases into account
+    resource: "pure energy", // Name of prestige currency
+    baseResource: "wins", // Name of resource prestige is based on
+    baseAmount() {return player.w.points}, // Get the current amount of baseResource
+    type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    exponent: 1,// Prestige currency exponent
+    gainMult() { // Calculate the multiplier for main currency from bonuses
+        let mult = new Decimal(1)
+        return mult
+    },
+    gainExp() { // Calculate the exponent on main currency from bonuses
+        exp = new Decimal(1)
+        return exp
+
+    },
+    tooltipLocked(){
+      return "Coming soon"
+    },
+    componentStyles: {
+      "prestige-button"() { return {'height':'150px','width':'300px',"border-radius":"10px"} }
+    },
+    row: 2, // Row the layer is in on the tree (0 is the first row)
+    displayRow: 3,
+    infoboxes: {
+      Heaven: {
+          title: "heaven stuf",
+          body() { return "heaven stuff" },
+          
+      },
+    },
+    tabFormat: {
+      "Heaven's Gates": {
+          content: [
+            
+            ["infobox", "Heaven"],
+            "main-display",
+            "prestige-button",
+            "blank",
+            "resource-display",
+            "blank",     
+            
+          ],
+
+      },
+    
+      "Ancient Tree": {
+          content: [
+            
+          ],
+
+        
+      },
+      
+},
+
+})
+
 
 

@@ -91,7 +91,14 @@ function getPointGen() {
 		if(hasUpgrade("w",33))gain = gain.div(100)
 		if(hasUpgrade("w",34))gain = gain.div(100)
 	}
-	if (inChallenge("m",22)) gain = gain.div(player.w.points.pow(10).add(1))
+	if (inChallenge("m",22)) {
+		if (player.w.points == 0) {
+			gain = gain.mul(1)
+		} else {
+			gain = gain.divide(player.w.points.pow(10).add(1))
+		}
+	}
+	
 	return gain
 }
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
