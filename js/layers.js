@@ -856,8 +856,8 @@ doReset(w) {
             return new Decimal(80)
         },
           effect() {
-            if (hasUpgrade(this.layer,this.id && player.w.points > 0)) {
-              return (player.w.points).pow(0.3)
+            if (hasUpgrade(this.layer,this.id)) {
+              return (player.w.points).pow(0.3).add(1)
             }
             else {
               return 1
@@ -1712,7 +1712,7 @@ addLayer("h", {
   }},
     auto: false,
     color: "#B31312",
-    requires: new Decimal(3), // Can be a function that takes requirement increases into account
+    requires: new Decimal(999999), // Can be a function that takes requirement increases into account
     resource: "pure energy", // Name of prestige currency
     baseResource: "wins", // Name of resource prestige is based on
     baseAmount() {return player.w.points}, // Get the current amount of baseResource
