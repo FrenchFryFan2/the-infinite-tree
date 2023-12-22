@@ -856,8 +856,8 @@ doReset(w) {
             return new Decimal(80)
         },
           effect() {
-            if (hasUpgrade(this.layer,this.id)) {
-              return (player.w.points).pow(0.3) + 1
+            if (hasUpgrade(this.layer,this.id && player.w.points > 0)) {
+              return (player.w.points).pow(0.3)
             }
             else {
               return 1
