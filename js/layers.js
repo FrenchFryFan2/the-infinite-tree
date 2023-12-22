@@ -857,7 +857,7 @@ doReset(w) {
         },
           effect() {
             if (hasUpgrade(this.layer,this.id)) {
-              return (player.w.points).pow(0.3).add(1)
+              return (player.w.points).pow(0.3) + 1
             }
             else {
               return 1
