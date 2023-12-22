@@ -93,7 +93,7 @@ function getPointGen() {
 	}
 	if (inChallenge("m",22)) {
 		if (player.w.points == 0) {
-			gain = gain.mul(1)
+			gain = gain.mul(1).add(1)
 		} else {
 			gain = gain.divide(player.w.points.pow(10).add(1))
 		}

@@ -503,13 +503,13 @@ doReset(w) {
 
   // Stage 2, track which specific subfeatures you want to keep, e.g. Upgrade 11, Challenge 32, Buyable 12
   let keptUpgrades = []
-  if (layer == "w" && hasMilestone(w,3)) keptUpgrades.push()
+  if (w == "w" && hasMilestone(w,3)) keptUpgrades.push()
   let keptMilestones = []
-  if (layer == "w" && hasMilestone("w", 1)) keptMilestones.push(1)
+  if (w == "w"|| w == "m") keptMilestones.push(1)
 
   // Stage 3, track which main features you want to keep - all upgrades, total points, specific toggles, etc.
   let keep = [];
-  if (hasMilestone("w",1)) keep.push("milestones"),
+  if (w == "w" || w == "m") keep.push("milestones"),
   keep.push("best")
   
   
@@ -1712,7 +1712,7 @@ addLayer("h", {
   }},
     auto: false,
     color: "#B31312",
-    requires: new Decimal(90000), // Can be a function that takes requirement increases into account
+    requires: new Decimal(3), // Can be a function that takes requirement increases into account
     resource: "pure energy", // Name of prestige currency
     baseResource: "wins", // Name of resource prestige is based on
     baseAmount() {return player.w.points}, // Get the current amount of baseResource
