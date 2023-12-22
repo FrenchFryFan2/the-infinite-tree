@@ -1003,7 +1003,8 @@ addLayer("m", {
             function() { return 'Challenges may be too hard if attempted too early.<br>Lower rows are harder than higher rows.<br>'},
             { "color": "grey", "font-size": "13px"}],
             "blank",
-            "challenges"
+            "challenges",
+            "blank"
           ],
 
         
@@ -1220,7 +1221,7 @@ addLayer("m", {
         fullDisplay()
         {return `Winning is extremely nerfed but your booster weakens this nerf.<br>
         Goal: Reach 50 wins to complete the challenge.<br>
-        Reward: The boosters' effect on winning works outside of this challenge with reduced effect.<br>
+        Reward: The booster's effect on winning works outside of this challenge with reduced effect.<br>
         Currently: ${format(challengeEffect(this.layer,this.id))}÷`
         },
         unlocked() {
@@ -1708,11 +1709,12 @@ addLayer("h", {
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
       unlocked: false,
+      total: true,
   points: new Decimal(0),
   }},
     auto: false,
     color: "#B31312",
-    requires: new Decimal(999999), // Can be a function that takes requirement increases into account
+    requires: new Decimal(89898988), // Can be a function that takes requirement increases into account
     resource: "pure energy", // Name of prestige currency
     baseResource: "wins", // Name of resource prestige is based on
     baseAmount() {return player.w.points}, // Get the current amount of baseResource
@@ -1730,6 +1732,12 @@ addLayer("h", {
     tooltipLocked(){
       return "Coming soon"
     },
+    effect(){
+      return player.h.points.add(1).pow(1.8)
+    },
+    effectDescription() {
+      return `which is multiplying magical sharp gain by ${format(player.h.points.add(1).pow(1.8))}x`
+    }, 
     componentStyles: {
       "prestige-button"() { return {'height':'150px','width':'300px',"border-radius":"10px"} }
     },
