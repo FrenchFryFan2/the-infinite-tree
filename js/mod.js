@@ -1,7 +1,7 @@
 let modInfo = {
 	name: "Click n Win",
 	id: "mymod",
-	author: "TheGreatHoho",
+	author: "Samed",
 	pointsName: "points",
 	modFiles: ["layers.js", "tree.js"],
 
@@ -13,17 +13,22 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.03",
-	name: "Magical Place",
+	num: "0.1",
+	name: "Heaven's Gates"	,
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+		 <br><br>
+         <h3>v0.1</h3><br>
+		- Added the 3rd layer.<br>
+		- Added 10 milestones. (Rest are not yet implemented)<br>
+		- 15th achievement is possible now.<br>
+		- Fixed some bugs.<br>
 		 <br><br>
          <h3>v0.03</h3><br>
 		- Implemented all 7 challenges.<br>
 		- Redesigned tab layouts.<br>
 		- Changed and rebalanced the third row of achievements. (Last one is not possible)<br>
-		- Also added one secret achievement :)<br>
          <br><br>
          <h3>v0.02</h3><br>
 		- Added 3 more upgrades.<br>
@@ -34,7 +39,7 @@ let changelog = `<h1>Changelog:</h1><br>
 		- Added the main 9 upgrades.<br>
 		- Added 4 win milestones.<br>
 		- Added magical field, a place where you can buy items.<br>
-		- Added 3 challenges. (2nd one may not be doable at the moment.)<br>
+		- Added 3 challenges. (2nd one may not be doable at the moment)<br>
 		- Added two and a half rows of achievements.`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
@@ -59,6 +64,7 @@ function getPointGen() {
 	
 
 	let gain = new Decimal(1)
+	if (hasMilestone('h',1)) gain = gain.mul(2)
 	if (hasAchievement('A',33)) {
 	if(inChallenge("m",13) ||inChallenge("m",12) ||inChallenge("m",11) ||inChallenge("m",21) ||inChallenge("m",22) ||inChallenge("m",23) ||inChallenge("m",31)){
 		gain = gain.mul(2)}}

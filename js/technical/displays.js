@@ -33,7 +33,7 @@ function challengeStyle(layer, id) {
 
 function challengeButtonText(layer, id) {
     return (player[layer].activeChallenge==(id)?(canCompleteChallenge(layer, id)?"Finish":"Exit Early"):(hasChallenge(layer, id)?"Completed":"Start"))
-
+	
 }
 
 function achievementStyle(layer, id){
