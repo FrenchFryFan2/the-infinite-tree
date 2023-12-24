@@ -26,7 +26,6 @@ addLayer("A", {
             "margin": "0.5px"
           }
         },
-        image: "youwin.png"
     },
     12: {
       name: "Boosting to the Max!",
@@ -133,7 +132,7 @@ addLayer("A", {
         },
         done() {
           if (player.timePlayed > 3600)
-          return player.points.gte(0)
+          return true
         },
         style() {
           return {
