@@ -320,7 +320,7 @@ addLayer("w", {
 displayRow: 2,
 autoUpgrade() {
 
-  if (player.w.auto && hasMilestone("w",3) == true)
+  if (player.w.auto && hasMilestone("w",3) == true) 
   return true
   else return false
    
@@ -331,7 +331,7 @@ canBuyMax() {
 },
 milestones: {
     1: {
-        requirementDescription: "Win the game total of 200 times.",
+        requirementDescription: "Win the game 200 times.",
         effectDescription: "You start with the second row of upgrades available for purchase.",
         done() {
         if (hasMilestone("h",1)) {
@@ -364,7 +364,7 @@ milestones: {
       } 
     },
     2: {
-      requirementDescription: "Win the game total of 600 times.",
+      requirementDescription: "Win the game 600 times.",
       effectDescription: "Make the ultra accelerator upgrade 50 wins cheaper.",
       done() { return player.w.points.gte(600) },
       style(){
@@ -393,7 +393,7 @@ milestones: {
 
     },
     3: {
-      requirementDescription: "Win the game total of 700 times.",
+      requirementDescription: "Win the game 700 times.",
       effectDescription: "You unlock an autobuyer for win upgrades.",
       done() { return player.w.points.gte(700) },
       toggles: [["w","auto"]
@@ -424,7 +424,7 @@ milestones: {
 
     },
     4: {
-      requirementDescription: "Win the game total of 900 times.",
+      requirementDescription: "Win the game 900 times.",
       effectDescription: "Unlock the ability to max win.",
       done() { return player.w.points.gte(900) },
       style(){
@@ -453,7 +453,7 @@ milestones: {
 
     },
     5: {
-      requirementDescription: "Win the game total of 10000 times.",
+      requirementDescription: "Win the game 10000 times.",
       effectDescription: "Unlock passive magical shard generation.",
       done() { return player.w.points.gte(10000) },
       style(){
