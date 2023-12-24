@@ -1058,7 +1058,7 @@ addLayer("m", {
   
     // Stage 2, track which specific subfeatures you want to keep, e.g. Upgrade 11, Challenge 32, Buyable 12
     let keptBuyables = {};
-    if (resettingLayer == "h" && hasMilestone('h',5)) keptBuyables[21] = getBuyableAmount(this.layer, 21);
+    if (resettingLayer == "h" && hasMilestone('h',1)) keptBuyables[21] = getBuyableAmount(this.layer, 21);
     let keptChallenges = [];
     if (resettingLayer == "h" && hasMilestone('h',6)) keptChallenges[11] = challengeCompletions(this.layer, 11)
     if (resettingLayer == "h" && hasMilestone('h',7)) keptChallenges[12] = challengeCompletions(this.layer, 12)
