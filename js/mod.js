@@ -1,8 +1,8 @@
 let modInfo = {
-	name: "The TechTree Tree",
-	id: "mymod",
+	name: "The Universal Tree",
+	id: "tttt",
 	author: "dackel09",
-	pointsName: "points",
+	pointsName: "particles",
 	modFiles: ["layers.js", "tree.js"],
 
 	discordName: "",
@@ -13,8 +13,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0",
-	name: "Literally nothing",
+	num: "0.1",
+	name: "Start of Nothing",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
