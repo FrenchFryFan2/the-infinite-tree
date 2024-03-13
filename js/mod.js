@@ -2,7 +2,7 @@ let modInfo = {
 	name: "The Universal Tree",
 	id: "tttt",
 	author: "dackel09",
-	pointsName: "particles",
+	pointsName: "Virtual Particles",
 	modFiles: ["layers.js", "tree.js"],
 
 	discordName: "",
@@ -43,6 +43,7 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(1)
+	if (hasUpgrade('p', 11)) gain = gain.times(2)
 	return gain
 }
 
