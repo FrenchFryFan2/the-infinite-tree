@@ -25,6 +25,8 @@ addLayer("p", {
     hotkeys: [
         {key: "p", description: "P: Reset for prestige points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
+
+
     upgrades: {
         11: {
             title: "quantum fluctuations",
@@ -62,10 +64,48 @@ addLayer("p", {
         },
 
         14: {
-            title: "proton and nuetron formation"
-        }
+            title: "elementary particle formation",
+        
+        },
 
     },
+
+    buyables: {
+        16: {
+            cost(x) { return new Decimal(1).mul(x) },
+            display() { return "Blah" },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+        },
+    },
+
+    microtabs: {
+        stuff: {
+            "Upgrades": {
+                content: [
+                    ["blank", "16px"],
+                    ["row",[["upgrade", 11], ['upgrade', 12], ['upgrade', 13], ['upgrade', 14]]],
+                    ["row",[['upgrade', 15]]],
+                    ["blank", "16px"],
+
+                ]
+            },
+        },
+        
+    },
+
+    tabFormat: [
+        "main-display",
+        "prestige-button",
+        ["blank", "25px"],
+        ["blank", "15px"],
+        ["microtabs", "stuff"],
+        ["blank", "35px"],
+    ],
+    
 
     layerShown(){return true}
 })
