@@ -93,6 +93,13 @@ addLayer("p", {
 
                 ]
             },
+            "Fabricators": {
+                unlocked: () => hasUpgrade('p', 11),
+                content: [
+                    ["blank", "16px"],
+                    "buyables"
+                ]
+            },
         },
         
     },
