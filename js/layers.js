@@ -31,6 +31,10 @@ addLayer("U", {
             cost: new Decimal(50),
             currencyDisplayName: "$",
             currencyInternalName: "points",
+            effectDisplay() {
+                if (hasUpgrade('U', 23) === false) return '~' + player.points.add(5).log(5).floor().toString()
+                if (hasUpgrade('U', 23) === true) return '~' + player.points.add(3).log(3).floor().toString()
+            },
         },
         14: {
             title: "Another Money Printer",
@@ -52,6 +56,9 @@ addLayer("U", {
             cost: new Decimal(2000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
+            effectDisplay() {
+                return '~' + player.points.pow(2).add(8).log(8).pow(0.5).floor().toString()
+            },
         },
         23: {
             title: "Super-Superinflation",
@@ -68,16 +75,20 @@ addLayer("U", {
             currencyInternalName: "points",
         },
     },
-    layerShown(){return true}
+    layerShown(){return true},
+    doReset() {
+        player['U'].upgrades
+    },
 })
 
-addLayer("Ach", {
+addLayer("A", {
     name: "achievements",
     symbol: "ACH",
     row: "side",
     type: "none",
     resource: "achievements",
     color: "#FFDD00",
+    tooltip: "Achievements",
     startData() { return {
         unlocked: true,
     }},
@@ -121,14 +132,14 @@ addLayer("Ach", {
             name: "Reincarnated",
             tooltip: "Rebirth",
             done() {
-                if (false) return true
+                if (player.R.points.gte(1)) return true
             },
         },
         22: {
-            name: "Re-Reincarnated",
-            tooltip: "Rebirth twice",
+            name: "Wow, more upgrades...",
+            tooltip: "Buy a Rebirth Upgrade",
             done() {
-                if (false) return true
+                if (hasUpgrade('R', 11)) return true
             },
         },
         23: {
@@ -142,14 +153,14 @@ addLayer("Ach", {
             name: "Life and Death",
             tooltip: "Get the 5th Rebirth upgrade",
             done() {
-                if (false) return true
+                if (hasUpgrade('R', 15)) return true
             },
         },
         25: {
             name: "Endless Cycle",
             tooltip: "Get 1000 Rebirth Points",
             done() {
-                if (false) return true
+                if (player.R.points.gte(1000)) return true
             },
         },
     }
@@ -161,13 +172,43 @@ addLayer("R", {
     row: "1",
     type: "normal",
     baseResource: "$",
+    resource: "Rebirth Points",
     baseAmount() { return player.points },
     requires: new Decimal(100000),
     exponent: new Decimal(0.5),
     color: "#DE1212",
-    unlocked: hasAchievement("Ach", 13),
+    branches: ['U'],
+    effect() {
+        player.R.points.pow(0.5).add(1)
+    },
+    layerShown() { return hasAchievement('A', 12) },
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
     }},
+    effectDescription() {
+        return "multiplying $ gain by ~" + player.R.points.pow(0.5).add(1).floor().toString()
+    },
+    upgrades: {
+        11: {
+            title: "$$$$$",
+            description: "Multiply $ gain by 5",
+            cost: new Decimal(1),
+        },
+        12: {
+            title: "Reincarnation Retainer",
+            description: "Keep $ upgrades based on best RP",
+            cost: new Decimal(5),
+        },
+        13: {
+            title: "I need more!",
+            description: "Unlock another row of $ upgrades",
+            cost: new Decimal(10),
+        },
+        14: {
+            title: "Underwhelming",
+            description: "Double $ gain",
+            cost: new Decimal(100),
+        },
+    },
 })

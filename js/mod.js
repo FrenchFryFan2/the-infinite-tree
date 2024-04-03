@@ -13,14 +13,14 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "1",
+	num: "0.1",
 	name: "Money",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
 	check the forum thread Create Incremental at [galaxy.click/forum/thread/255] to see what is coming next<br><br>
-	<h3>v1</h3><br>
-		- Added $`
+	<h3>I will not make a changelog</h3><br>
+		galaxy gives you the ability to view past updates so look there (if you aren't on galaxy go to [galaxy.click])`
 
 let winText = `You are win! Congratulations on wasting your time! (Keep save for future updates)`
 
@@ -54,8 +54,13 @@ function getPointGen() {
 	if (hasUpgrade('U', 13) === true && hasUpgrade('U', 23) === false) gain = gain.times(player.points.add(5).log(5))
 	if (hasUpgrade('U', 13) === true && hasUpgrade('U', 23) === true) gain = gain.times(player.points.add(3).log(3))
 	if (hasUpgrade('U', 14)) gain = gain.times(2)
-	if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(2).add(8).log(8))
+	if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(2).add(8).log(8).pow(0.5))
 	if (hasUpgrade('U', 24)) gain = gain.times(1.5)
+
+	// R Layer
+	gain = gain.times(player.R.points.pow(0.5).add(1))
+	if (hasUpgrade('R', 11)) gain = gain.times(5)
+	if (hasUpgrade('R', 14)) gain = gain.times(2)
 
 	// Exponents
 	// $ Layer
