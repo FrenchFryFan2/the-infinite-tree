@@ -74,6 +74,49 @@ addLayer("U", {
             currencyDisplayName: "$",
             currencyInternalName: "points",
         },
+        31: {
+            title: "Gigainflation",
+            description: "Multiply $ gain by sqrt(log($ + 10))",
+            cost: new Decimal(25000000),
+            currencyDisplayName: "$",
+            currencyInternalName: "points",
+            unlocked() {
+                return hasUpgrade('R', 13)
+            },
+            effectDisplay() {
+                return 'x' + regularFormat(player.points.add(10).log(10).pow(0.5), 2)
+            },
+        },
+        32: {
+            title: "Certainly a concept",
+            description: "Reduce RP gain scaling",
+            cost: new Decimal(80000000),
+            currencyDisplayName: "$",
+            currencyInternalName: "points",
+            unlocked() {
+                return hasUpgrade('R', 13)
+            },
+        },
+        33: {
+            title: "Blessing from the gods",
+            description: "Increase RP's effect",
+            cost: new Decimal(250000000),
+            currencyDisplayName: "$",
+            currencyInternalName: "points",
+            unlocked() {
+                return hasUpgrade('R', 13)
+            },
+        },
+        34: {
+            title: "THE MACHINE",
+            description: "Unlock The Machine",
+            cost: new Decimal("1e9"),
+            currencyDisplayName: "$",
+            currencyInternalName: "points",
+            unlocked() {
+                return hasUpgrade('R', 13)
+            },
+        },
     },
     layerShown(){return true},
     automate() {
@@ -155,7 +198,7 @@ addLayer("A", {
             name: "We COULD afford 9",
             tooltip: "Get the 9th $ upgrade",
             done() {
-                if (false) return true
+                if (hasUpgrade('U', 31)) return true
             },
         },
         24: {
@@ -167,9 +210,44 @@ addLayer("A", {
         },
         25: {
             name: "Endless Cycle",
-            tooltip: "Get 1000 Rebirth Points",
+            tooltip: "Get 100,000 Rebirth Points",
             done() {
-                if (player.R.points.gte(1000)) return true
+                if (player.R.points.gte(100000)) return true
+            },
+        },
+        31: {
+            name: "Mechanical Mechanic",
+            tooltip: "Unlock The Machine",
+            done() {
+                if (hasUpgrade('U', 34)) return true
+            },
+        },
+        32: {
+            name: "Secondary Choice",
+            tooltip: "Use two of the Machine's modes at once",
+            done() {
+                if (false) return true
+            },
+        },
+        33: {
+            name: "No thoughts required",
+            tooltip: "Use all of the Machine's modes at once",
+            done() {
+                if (hasUpgrade('U', 34)) return true
+            },
+        },
+        34: {
+            name: "Now with technically infinite upgrades!",
+            tooltip: "Purchase the first RP buyable",
+            done() {
+                if (hasUpgrade('U', 34)) return true
+            },
+        },
+        35: {
+            name: "Perfectly Balanced",
+            tooltip: "Purchase the second RP buyable",
+            done() {
+                if (hasUpgrade('U', 34)) return true
             },
         },
     }
@@ -184,7 +262,10 @@ addLayer("R", {
     resource: "Rebirth Points",
     baseAmount() { return player.points },
     requires: new Decimal(100000),
-    exponent: new Decimal(0.5),
+    exponent() {
+        if (hasUpgrade('U', 32) === true) return new Decimal(0.7)
+        if (!hasUpgrade('U', 32) === true) return new Decimal(0.5)
+    },
     color: "#ba0022",
     branches: ['U'],
     effect() {
@@ -205,7 +286,7 @@ addLayer("R", {
             cost: new Decimal(1),
         },
         12: {
-            title: "Reincarnation Retainer",
+            title: "Moneybots",
             description: "Automate $ upgrades 1-8",
             cost: new Decimal(15),
         },
