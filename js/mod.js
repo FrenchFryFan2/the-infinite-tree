@@ -1,7 +1,7 @@
 let modInfo = {
-	name: "galaxy Unnamed Incremental",
+	name: "Create Incremental",
 	id: "DidYouKnowThatBulbasaurIsAPokemon",
-	author: "BanaCubed",
+	author: "BanaCubed (Coding), and many people (Concepts)",
 	pointsName: "$",
 	modFiles: ["layers.js", "tree.js"],
 
@@ -13,14 +13,13 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0",
-	name: "Literally nothing",
+	num: "1",
+	name: "Money",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0</h3><br>
-		- Added things.<br>
-		- Added stuff.`
+	<h3>v1</h3><br>
+		- Added everything up to Hyper Rebirth (check the forum thread Create Incremental at [galaxy.click/forum/thread/255])`
 
 let winText = `You are win! Congratulations on wasting your time! (Keep save for future updates)`
 
@@ -44,6 +43,13 @@ function getPointGen() {
 
 	let gain = new Decimal(0)
 	if (hasUpgrade('U', 11)) gain = gain.add(1)
+	if (hasUpgrade('U', 12)) gain = gain.times(4)
+	if (hasUpgrade('U', 13) === true && hasUpgrade('U', 23) === false) gain = gain.times(player.points.add(5).log(5))
+	if (hasUpgrade('U', 13) === true && hasUpgrade('U', 23) === true) gain = gain.times(player.points.add(3).log(3))
+	if (hasUpgrade('U', 14)) gain = gain.times(2)
+	if (hasUpgrade('U', 21)) gain = gain.pow(1.25)
+	if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(2).add(8).log(8))
+	if (hasUpgrade('U', 24)) gain = gain.add(1)
 	return gain
 }
 
