@@ -10,6 +10,20 @@ addLayer("U", {
     resource: "$",
     type: "none",
     row: 0, // Row the layer is in on the tree (0 is the first row)
+    tabFormat: {
+        "Upgrades": {
+            content: [
+                "main-display",
+                "upgrades"
+            ],
+        },
+        "The Machine": {
+            content: [
+                "main-display",
+                "clickables"
+            ]
+        },
+    },
     upgrades: {
         11: {
             title: "Economic Inflation",
@@ -233,21 +247,21 @@ addLayer("A", {
             name: "No thoughts required",
             tooltip: "Use all of the Machine's modes at once",
             done() {
-                if (hasUpgrade('U', 34)) return true
+                if (false) return true
             },
         },
         34: {
             name: "Now with technically infinite upgrades!",
             tooltip: "Purchase the first RP buyable",
             done() {
-                if (hasUpgrade('U', 34)) return true
+                if (false) return true
             },
         },
         35: {
             name: "Perfectly Balanced",
             tooltip: "Purchase the second RP buyable",
             done() {
-                if (hasUpgrade('U', 34)) return true
+                if (false) return true
             },
         },
     }
@@ -263,8 +277,8 @@ addLayer("R", {
     baseAmount() { return player.points },
     requires: new Decimal(100000),
     exponent() {
-        if (hasUpgrade('U', 32) === true) return new Decimal(0.7)
-        if (!hasUpgrade('U', 32) === true) return new Decimal(0.5)
+        if (hasUpgrade('U', 32)) return new Decimal(0.7)
+        if (!hasUpgrade('U', 32)) return new Decimal(0.5)
     },
     color: "#ba0022",
     branches: ['U'],
@@ -277,7 +291,8 @@ addLayer("R", {
 		points: new Decimal(0),
     }},
     effectDescription() {
-        return "multiplying $ gain by " + regularFormat(player.R.points.pow(0.5).add(1), 2)
+        if (!hasUpgrade('U', 32)) return "multiplying $ gain by " + regularFormat(player.R.points.pow(0.5).add(1), 2)
+        if (hasUpgrade('U', 32)) return "multiplying $ gain by " + regularFormat(player.R.points.pow(0.7).add(1), 2)
     },
     upgrades: {
         11: {
