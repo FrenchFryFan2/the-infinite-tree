@@ -32,8 +32,8 @@ addLayer("U", {
             currencyDisplayName: "$",
             currencyInternalName: "points",
             effectDisplay() {
-                if (hasUpgrade('U', 23) === false) return regularFormat(player.points.add(5).log(5), 2)
-                if (hasUpgrade('U', 23) === true) return regularFormat(player.points.add(3).log(3), 2)
+                if (hasUpgrade('U', 23) === false) return 'x' + regularFormat(player.points.add(5).log(5), 2)
+                if (hasUpgrade('U', 23) === true) return 'x' + regularFormat(player.points.add(3).log(3), 2)
             },
         },
         14: {
@@ -57,7 +57,7 @@ addLayer("U", {
             currencyDisplayName: "$",
             currencyInternalName: "points",
             effectDisplay() {
-                return regularFormat(player.points.pow(2).add(8).log(8).pow(0.5), 2)
+                return 'x' + regularFormat(player.points.pow(2).add(8).log(8).pow(0.5), 2)
             },
         },
         23: {
@@ -76,9 +76,16 @@ addLayer("U", {
         },
     },
     layerShown(){return true},
-    doReset() {
-        if (hasUpgrade('R', 12) === true) {
-            layerDataReset('R', [upgrades])
+    automate() {
+        if(hasUpgrade('R', 12)) {
+            buyUpgrade('U', 11)
+            buyUpgrade('U', 12)
+            buyUpgrade('U', 13)
+            buyUpgrade('U', 14)
+            buyUpgrade('U', 21)
+            buyUpgrade('U', 22)
+            buyUpgrade('U', 23)
+            buyUpgrade('U', 24)
         };
     },
 })
@@ -189,7 +196,7 @@ addLayer("R", {
 		points: new Decimal(0),
     }},
     effectDescription() {
-        return "multiplying $ gain by ~" + player.R.points.pow(0.5).add(1).floor().toString()
+        return "multiplying $ gain by " + regularFormat(player.R.points.pow(0.5).add(1), 2)
     },
     upgrades: {
         11: {
@@ -199,7 +206,7 @@ addLayer("R", {
         },
         12: {
             title: "Reincarnation Retainer",
-            description: "Keep $ upgrades",
+            description: "Automate $ upgrades 1-8",
             cost: new Decimal(15),
         },
         13: {
