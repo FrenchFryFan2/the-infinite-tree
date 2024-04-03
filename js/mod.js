@@ -59,7 +59,7 @@ function getPointGen() {
 	if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(10).log(10).pow(0.5))
 
 	// R Layer
-	if (!hasUpgrade('U', 33)) gain = gain.times(player.R.points.pow(0.5).add(1))
+	if (!hasUpgrade('U', 33)) gain = gain.times(player.R.points.pow(0.6).add(1))
 	if (hasUpgrade('U', 33)) gain = gain.times(player.R.points.pow(0.7).add(1))
 	if (hasUpgrade('R', 11)) gain = gain.times(5)
 	if (hasUpgrade('R', 14)) gain = gain.times(2)

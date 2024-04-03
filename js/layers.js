@@ -20,9 +20,13 @@ addLayer("U", {
         "The Machine": {
             content: [
                 "main-display",
+                ["display-text", "The Machine can provide boosts to both $ and RP, but be aware that you can't change your selection once you make it."],
                 "clickables"
-            ]
-        },
+            ],
+            unlocked() {
+                return hasAchievement('A', 31)
+            }
+        }
     },
     upgrades: {
         11: {
@@ -91,7 +95,7 @@ addLayer("U", {
         31: {
             title: "Gigainflation",
             description: "Multiply $ gain by sqrt(log($ + 10))",
-            cost: new Decimal(25000000),
+            cost: new Decimal(5000000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
             unlocked() {
@@ -104,7 +108,7 @@ addLayer("U", {
         32: {
             title: "Certainly a concept",
             description: "Reduce RP gain scaling",
-            cost: new Decimal(80000000),
+            cost: new Decimal(35000000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
             unlocked() {
@@ -124,7 +128,7 @@ addLayer("U", {
         34: {
             title: "THE MACHINE",
             description: "Unlock The Machine",
-            cost: new Decimal("1e9"),
+            cost: new Decimal("5e9"),
             currencyDisplayName: "$",
             currencyInternalName: "points",
             unlocked() {
@@ -145,6 +149,26 @@ addLayer("U", {
             buyUpgrade('U', 24)
         };
     },
+    clickables: {
+        11: {
+            title: "Money Mode",
+            display() {
+                return "Quadruples $ gain<br>Doubles RP gain"
+            }
+        },
+        12: {
+            title: "Neutral Mode",
+            display() {
+                return "Triples $ gain<br>Triples RP gain"
+            }
+        },
+        13: {
+            title: "Rebirth Mode",
+            display() {
+                return "Doubles $ gain<br>Quadruples RP gain"
+            }
+        },
+    }
 })
 
 addLayer("A", {
@@ -291,7 +315,7 @@ addLayer("R", {
 		points: new Decimal(0),
     }},
     effectDescription() {
-        if (!hasUpgrade('U', 32)) return "multiplying $ gain by " + regularFormat(player.R.points.pow(0.5).add(1), 2)
+        if (!hasUpgrade('U', 32)) return "multiplying $ gain by " + regularFormat(player.R.points.pow(0.6).add(1), 2)
         if (hasUpgrade('U', 32)) return "multiplying $ gain by " + regularFormat(player.R.points.pow(0.7).add(1), 2)
     },
     upgrades: {
@@ -303,12 +327,12 @@ addLayer("R", {
         12: {
             title: "Moneybots",
             description: "Automate $ upgrades 1-8",
-            cost: new Decimal(15),
+            cost: new Decimal(3),
         },
         13: {
             title: "I need more!",
             description: "Unlock another row of $ upgrades",
-            cost: new Decimal(25),
+            cost: new Decimal(15),
         },
         14: {
             title: "Underwhelming",
