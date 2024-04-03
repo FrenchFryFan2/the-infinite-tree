@@ -18,8 +18,9 @@ let VERSION = {
 }
 
 let changelog = `<h1>Changelog:</h1><br>
+	check the forum thread Create Incremental at [galaxy.click/forum/thread/255] to see what is coming next<br><br>
 	<h3>v1</h3><br>
-		- Added everything up to Hyper Rebirth (check the forum thread Create Incremental at [galaxy.click/forum/thread/255])`
+		- Added $`
 
 let winText = `You are win! Congratulations on wasting your time! (Keep save for future updates)`
 
@@ -42,14 +43,27 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(0)
+
+	// Additions
+	// $ Layer
 	if (hasUpgrade('U', 11)) gain = gain.add(1)
+
+	// Multipliers
+	// $ Layer
 	if (hasUpgrade('U', 12)) gain = gain.times(4)
 	if (hasUpgrade('U', 13) === true && hasUpgrade('U', 23) === false) gain = gain.times(player.points.add(5).log(5))
 	if (hasUpgrade('U', 13) === true && hasUpgrade('U', 23) === true) gain = gain.times(player.points.add(3).log(3))
 	if (hasUpgrade('U', 14)) gain = gain.times(2)
-	if (hasUpgrade('U', 21)) gain = gain.pow(1.25)
 	if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(2).add(8).log(8))
-	if (hasUpgrade('U', 24)) gain = gain.add(1)
+	if (hasUpgrade('U', 24)) gain = gain.times(1.5)
+
+	// Exponents
+	// $ Layer
+	if (hasUpgrade('U', 21)) gain = gain.pow(1.25)
+
+	// Dunno were else to put this
+	setLayerCurrencyToPoints("U");
+
 	return gain
 }
 
@@ -64,6 +78,12 @@ var displayThings = [
 // Determines when the game "ends"
 function isEndgame() {
 	return player.points.gte(new Decimal("e280000000"))
+}
+
+function setLayerCurrencyToPoints(layer) {
+    let points = player.points;
+    
+    player[layer].points = new Decimal(points);
 }
 
 

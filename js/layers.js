@@ -1,25 +1,14 @@
 addLayer("U", {
     name: "upgrades", // This is optional, only used in a few places, If absent it just uses the layer id.
-    symbol: "UPG", // This appears on the layer's node. Default is the id with the first letter capitalized
+    symbol: "$", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
         unlocked: true,
 		points: new Decimal(0),
     }},
-    color: "#FFFF00",
-    requires: new Decimal(10), // Can be a function that takes requirement increases into account
-    resource: "upgrades", // Name of prestige currency
-    baseResource: "$", // Name of resource prestige is based on
-    baseAmount() {return player.points}, // Get the current amount of baseResource
-    type: "none", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.5, // Prestige currency exponent
-    gainMult() { // Calculate the multiplier for main currency from bonuses
-        mult = new Decimal(1)
-        return mult
-    },
-    gainExp() { // Calculate the exponent on main currency from bonuses
-        return new Decimal(1)
-    },
+    color: "#44FF44",
+    resource: "$",
+    type: "none",
     row: 0, // Row the layer is in on the tree (0 is the first row)
     upgrades: {
         11: {
@@ -52,7 +41,7 @@ addLayer("U", {
         },
         21: {
             title: "Hyperinflation",
-            description: "Raise $ gain by 1.25",
+            description: "Raise $ gain by 1.25 (applied after multipliers)",
             cost: new Decimal(500),
             currencyDisplayName: "$",
             currencyInternalName: "points",
@@ -80,4 +69,105 @@ addLayer("U", {
         },
     },
     layerShown(){return true}
+})
+
+addLayer("Ach", {
+    name: "achievements",
+    symbol: "ACH",
+    row: "side",
+    type: "none",
+    resource: "achievements",
+    color: "#FFDD00",
+    startData() { return {
+        unlocked: true,
+    }},
+    achievements: {
+        11: {
+            name: "The Start",
+            tooltip: "Start producing $",
+            done() {
+                if (hasUpgrade('U', 11)) return true
+            },
+        },
+        12: {
+            name: "100 antima- I mean cash is a lot",
+            tooltip: "Get 100 $ <br>(no, that is not a typo)",
+            done() {
+                if (player.points.gte(100)) return true
+            },
+        },
+        13: {
+            name: "We couldn't afford 9",
+            tooltip: "Get the 8th $ upgrade <br>Reward: Unlock Rebirth",
+            done() {
+                if (hasUpgrade('U', 24)) return true
+            },
+        },
+        14: {
+            name: "Millionaire",
+            tooltip: "Get 1,000,000 $",
+            done() {
+                if (player.points.gte(1000000)) return true
+            },
+        },
+        15: {
+            name: "Very Rich Person",
+            tooltip: "Get 5e11 $",
+            done() {
+                if (player.points.gte("5e11")) return true
+            },
+        },
+        21: {
+            name: "Reincarnated",
+            tooltip: "Rebirth",
+            done() {
+                if (false) return true
+            },
+        },
+        22: {
+            name: "Re-Reincarnated",
+            tooltip: "Rebirth twice",
+            done() {
+                if (false) return true
+            },
+        },
+        23: {
+            name: "We COULD afford 9",
+            tooltip: "Get the 9th $ upgrade",
+            done() {
+                if (false) return true
+            },
+        },
+        24: {
+            name: "Life and Death",
+            tooltip: "Get the 5th Rebirth upgrade",
+            done() {
+                if (false) return true
+            },
+        },
+        25: {
+            name: "Endless Cycle",
+            tooltip: "Get 1000 Rebirth Points",
+            done() {
+                if (false) return true
+            },
+        },
+    }
+})
+
+addLayer("R", {
+    name: "rebirth",
+    symbol: "R",
+    row: "1",
+    type: "normal",
+    baseResource: "$",
+    baseAmount() { return player.points },
+    requires: new Decimal(100000),
+    exponent: new Decimal(0.5),
+    color: "#DE1212",
+    unlocked: hasAchievement("Ach", 13),
+    startData() { return {
+        unlocked: false,
+		points: new Decimal(0),
+    }},
 })
