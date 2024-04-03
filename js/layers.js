@@ -6,7 +6,7 @@ addLayer("U", {
         unlocked: true,
 		points: new Decimal(0),
     }},
-    color: "#44FF44",
+    color: "#157307",
     resource: "$",
     type: "none",
     row: 0, // Row the layer is in on the tree (0 is the first row)
@@ -32,8 +32,8 @@ addLayer("U", {
             currencyDisplayName: "$",
             currencyInternalName: "points",
             effectDisplay() {
-                if (hasUpgrade('U', 23) === false) return '~' + player.points.add(5).log(5).floor().toString()
-                if (hasUpgrade('U', 23) === true) return '~' + player.points.add(3).log(3).floor().toString()
+                if (hasUpgrade('U', 23) === false) return regularFormat(player.points.add(5).log(5), 2)
+                if (hasUpgrade('U', 23) === true) return regularFormat(player.points.add(3).log(3), 2)
             },
         },
         14: {
@@ -57,37 +57,39 @@ addLayer("U", {
             currencyDisplayName: "$",
             currencyInternalName: "points",
             effectDisplay() {
-                return '~' + player.points.pow(2).add(8).log(8).pow(0.5).floor().toString()
+                return regularFormat(player.points.pow(2).add(8).log(8).pow(0.5), 2)
             },
         },
         23: {
             title: "Super-Superinflation",
             description: "Change Superinflations effect to log3($ + 3)",
-            cost: new Decimal(20000),
+            cost: new Decimal(15000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
         },
         24: {
             title: "Yet Another Money Printer",
             description: "Multiply $ gain by 1.5",
-            cost: new Decimal(60000),
+            cost: new Decimal(30000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
         },
     },
     layerShown(){return true},
     doReset() {
-        player['U'].upgrades
+        if (hasUpgrade('R', 12) === true) {
+            layerDataReset('R', [upgrades])
+        };
     },
 })
 
 addLayer("A", {
     name: "achievements",
-    symbol: "ACH",
+    symbol: "🏆",
     row: "side",
     type: "none",
     resource: "achievements",
-    color: "#FFDD00",
+    color: "#FFEE88",
     tooltip: "Achievements",
     startData() { return {
         unlocked: true,
@@ -109,7 +111,7 @@ addLayer("A", {
         },
         13: {
             name: "We couldn't afford 9",
-            tooltip: "Get the 8th $ upgrade <br>Reward: Unlock Rebirth",
+            tooltip: "Get the 8th $ upgrade",
             done() {
                 if (hasUpgrade('U', 24)) return true
             },
@@ -176,7 +178,7 @@ addLayer("R", {
     baseAmount() { return player.points },
     requires: new Decimal(100000),
     exponent: new Decimal(0.5),
-    color: "#DE1212",
+    color: "#ba0022",
     branches: ['U'],
     effect() {
         player.R.points.pow(0.5).add(1)
@@ -197,13 +199,13 @@ addLayer("R", {
         },
         12: {
             title: "Reincarnation Retainer",
-            description: "Keep $ upgrades based on best RP",
-            cost: new Decimal(5),
+            description: "Keep $ upgrades",
+            cost: new Decimal(15),
         },
         13: {
             title: "I need more!",
             description: "Unlock another row of $ upgrades",
-            cost: new Decimal(10),
+            cost: new Decimal(25),
         },
         14: {
             title: "Underwhelming",
