@@ -20,7 +20,9 @@ addLayer("U", {
         "The Machine": {
             content: [
                 "main-display",
-                ["display-text", "The Machine can provide boosts to both $ and RP, but be aware that you can't change your selection once you make it."],
+                ["display-text", function() {
+                    if(hasUpgrade('U', 34)) return "The Machine can provide boosts to both $ and RP, but be aware that you can't change your selection once you make it."; else return "The Machine is currently disabled because you don't have $ upgrade 12"
+                }],
                 "clickables"
             ],
             unlocked() {
@@ -161,6 +163,11 @@ addLayer("U", {
             buyUpgrade('U', 32)
             buyUpgrade('U', 33)
             buyUpgrade('U', 34)
+        };
+        if(!hasUpgrade('U', 34)) {
+            setClickableState('U', 11, false)
+            setClickableState('U', 12, false)
+            setClickableState('U', 13, false)
         };
     },
     clickables: {
