@@ -13,8 +13,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2",
-	name: "Rebirth",
+	num: "0.1.1",
+	name: "The Machine",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
@@ -44,12 +44,10 @@ function getPointGen() {
 
 	let gain = new Decimal(0)
 
-	// Additions
+
 	// $ Layer
 	if (hasUpgrade('U', 11)) gain = gain.add(1)
 
-	// Multipliers
-	// $ Layer
 	if (hasUpgrade('U', 12)) gain = gain.times(4)
 	if (hasUpgrade('U', 13) === true && hasUpgrade('U', 23) === false) gain = gain.times(player.points.add(5).log(5))
 	if (hasUpgrade('U', 13) === true && hasUpgrade('U', 23) === true) gain = gain.times(player.points.add(3).log(3))
@@ -58,15 +56,19 @@ function getPointGen() {
 	if (hasUpgrade('U', 24)) gain = gain.times(1.5)
 	if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(10).log(10).pow(0.5))
 
+	// The Machine
+	if (getClickableState('U', 11)) gain = gain.times(4)
+	if (getClickableState('U', 12)) gain = gain.times(3)
+	if (getClickableState('U', 13)) gain = gain.times(2)
+
+	if (hasUpgrade('U', 21)) gain = gain.pow(1.25)
+
+
 	// R Layer
 	if (!hasUpgrade('U', 33)) gain = gain.times(player.R.points.pow(0.6).add(1))
 	if (hasUpgrade('U', 33)) gain = gain.times(player.R.points.pow(0.7).add(1))
 	if (hasUpgrade('R', 11)) gain = gain.times(5)
 	if (hasUpgrade('R', 14)) gain = gain.times(2)
-
-	// Exponents
-	// $ Layer
-	if (hasUpgrade('U', 21)) gain = gain.pow(1.25)
 
 	// Dunno were else to put this
 	setLayerCurrencyToPoints("U");
@@ -84,7 +86,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e280000000"))
+	return player.points.gte(new Decimal("1e12"))
 }
 
 function setLayerCurrencyToPoints(layer) {

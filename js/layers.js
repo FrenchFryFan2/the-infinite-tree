@@ -144,7 +144,7 @@ addLayer("U", {
     },
     layerShown(){return true},
     automate() {
-        if(hasUpgrade('R', 12)) {
+        if(hasUpgrade('R', 12) || hasAchievement('A', 31)) {
             buyUpgrade('U', 11)
             buyUpgrade('U', 12)
             buyUpgrade('U', 13)
@@ -154,25 +154,51 @@ addLayer("U", {
             buyUpgrade('U', 23)
             buyUpgrade('U', 24)
         };
+        if(hasAchievement('A', 31)) {
+            buyUpgrade('U', 31)
+        };
+        if(hasAchievement('A', 33)) {
+            buyUpgrade('U', 32)
+            buyUpgrade('U', 33)
+            buyUpgrade('U', 34)
+        };
     },
     clickables: {
         11: {
             title: "Money Mode",
             display() {
-                return "Quadruples $ gain<br>Doubles RP gain"
-            }
+                if(!getClickableState('U', 11)) return "Quadruples $ gain<br>Doubles RP gain"; else return "Quadruples $ gain<br>Doubles RP gain<br>ACTIVE"
+            },
+            canClick() {
+                if(!getClickableState('U', 12) && !getClickableState('U', 13)) return true; else return false
+            },
+            onClick() {
+                setClickableState('U', 11, true)
+            },
         },
         12: {
             title: "Neutral Mode",
             display() {
-                return "Triples $ gain<br>Triples RP gain"
-            }
+                if(!getClickableState('U', 11)) return "Triples $ gain<br>Triples RP gain"; else return "Triples $ gain<br>Triples RP gain<br>ACTIVE"
+            },
+            canClick() {
+                if(!getClickableState('U', 11) && !getClickableState('U', 13)) return true; else return false
+            },
+            onClick() {
+                setClickableState('U', 12, true)
+            },
         },
         13: {
             title: "Rebirth Mode",
             display() {
-                return "Doubles $ gain<br>Quadruples RP gain"
-            }
+                if(!getClickableState('U', 11)) return "Doubles $ gain<br>Quadruples RP gain"; else return "Doubles $ gain<br>Quadruples RP gain<br>ACTIVE"
+            },
+            canClick() {
+                if(!getClickableState('U', 11) && !getClickableState('U', 12)) return true; else return false
+            },
+            onClick() {
+                setClickableState('U', 13, true)
+            },
         },
     }
 })
@@ -261,7 +287,7 @@ addLayer("A", {
         },
         31: {
             name: "Mechanical Mechanic",
-            tooltip: "Unlock The Machine",
+            tooltip: "Unlock The Machine<br>Reward: automate $ upgrade 9",
             done() {
                 if (hasUpgrade('U', 34)) return true
             },
@@ -275,7 +301,7 @@ addLayer("A", {
         },
         33: {
             name: "No thoughts required",
-            tooltip: "Use all of the Machine's modes at once",
+            tooltip: "Use all of the Machine's modes at once<br>Reward: automate $ upgrades 10-12",
             done() {
                 if (false) return true
             },
@@ -305,7 +331,19 @@ addLayer("R", {
     baseResource: "$",
     resource: "Rebirth Points",
     baseAmount() { return player.points },
+    onPrestige() {
+        setClickableState('U', 11, false)
+        setClickableState('U', 12, false)
+        setClickableState('U', 13, false)
+    },
     requires: new Decimal(100000),
+    gainMult () {
+        let remult = new Decimal(1)
+        if (getClickableState('U', 11)) remult = remult.times(2)
+        if (getClickableState('U', 12)) remult = remult.times(3)
+        if (getClickableState('U', 13)) remult = remult.times(4)
+        return remult
+    },
     exponent() {
         if (hasUpgrade('U', 32)) return new Decimal(0.7)
         if (!hasUpgrade('U', 32)) return new Decimal(0.5)
