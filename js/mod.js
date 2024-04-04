@@ -13,8 +13,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1.2",
-	name: "Rebirth - Finishing",
+	num: "0.1.3",
+	name: "Rebirth - Finished",
 }
 
 let changelog = `<h1>Changelog:</h1><br><br>
@@ -89,7 +89,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("1e20"))
+	return player.R.points.gte(new Decimal("1e19"))
 }
 
 function setLayerCurrencyToPoints(layer) {
@@ -115,4 +115,17 @@ function maxTickLength() {
 // Use this if you need to undo inflation from an older version. If the version is older than the version that fixed the issue,
 // you can cap their current resources with this.
 function fixOldSave(oldVersion){
+}
+
+function achievement33() {
+	// Variable setup
+	let machinemodes = 0
+
+	// Total modes selected
+	if (getClickableState('U', 11) === true) machinemodes = machinemodes + 1
+	if (getClickableState('U', 12) === true) machinemodes = machinemodes + 1
+	if (getClickableState('U', 13) === true) machinemodes = machinemodes + 1
+
+	// >= 2 return true
+	if (machinemodes >= 2) return true; else return false
 }

@@ -226,6 +226,11 @@ addLayer("U", {
             setClickableState('U', 12, false)
             setClickableState('U', 13, false)
         };
+        if(hasUpgrade('R', 32)) {
+            setClickableState('U', 11, true)
+            setClickableState('U', 12, true)
+            setClickableState('U', 13, true)
+        };
     },
     clickables: {
         11: {
@@ -234,7 +239,13 @@ addLayer("U", {
                 if(!getClickableState(this.layer, this.id)) return "Quadruples $ gain<br>Doubles RP gain"; else return "Quadruples $ gain<br>Doubles RP gain<br>ACTIVE"
             },
             canClick() {
-                if(!getClickableState(this.layer, 12) && !getClickableState(this.layer, 13)) return true; else return false
+                if(hasUpgrade('R', 32)) return true;
+                if(!hasUpgrade('R', 31)) {
+                    if(!getClickableState(this.layer, 12) && !getClickableState(this.layer, 13)) return true; else return false
+                }
+                if(hasUpgrade('R', 31)) {
+                    if(!getClickableState(this.layer, 12) || !getClickableState(this.layer, 13)) return true; else return false
+                }
             },
             onClick() {
                 setClickableState(this.layer, this.id, true)
@@ -246,7 +257,13 @@ addLayer("U", {
                 if(!getClickableState(this.layer, this.id)) return "Triples $ gain<br>Triples RP gain"; else return "Triples $ gain<br>Triples RP gain<br>ACTIVE"
             },
             canClick() {
-                if(!getClickableState(this.layer, 11) && !getClickableState(this.layer, 13)) return true; else return false
+                if(hasUpgrade('R', 32)) return true;
+                if(!hasUpgrade('R', 31)) {
+                    if(!getClickableState(this.layer, 11) && !getClickableState(this.layer, 13)) return true; else return false
+                }
+                if(hasUpgrade('R', 31)) {
+                    if(!getClickableState(this.layer, 11) || !getClickableState(this.layer, 13)) return true; else return false
+                }
             },
             onClick() {
                 setClickableState(this.layer, this.id, true)
@@ -258,7 +275,13 @@ addLayer("U", {
                 if(!getClickableState(this.layer, this.id)) return "Doubles $ gain<br>Quadruples RP gain"; else return "Doubles $ gain<br>Quadruples RP gain<br>ACTIVE"
             },
             canClick() {
-                if(!getClickableState(this.layer, 11) && !getClickableState(this.layer, 12)) return true; else return false
+                if(hasUpgrade('R', 32)) return true;
+                if(!hasUpgrade('R', 31)) {
+                    if(!getClickableState(this.layer, 11) && !getClickableState(this.layer, 12)) return true; else return false
+                }
+                if(hasUpgrade('R', 31)) {
+                    if(!getClickableState(this.layer, 11) || !getClickableState(this.layer, 12)) return true; else return false
+                }
             },
             onClick() {
                 setClickableState(this.layer, this.id, true)
@@ -360,7 +383,7 @@ addLayer("A", {
             name: "Secondary Choice",
             tooltip: "Unlock the ability to use two of The Machines modes at once",
             done() {
-                if (false) return true
+                if (achievement33()) return true
             },
         },
         33: {
@@ -392,10 +415,10 @@ addLayer("A", {
             },
         },
         42: {
-            name: "Super Duper Uber Rebirth",
-            tooltip: "Reset for Super Rebirth Points<br>Reward: retain all automation in future",
+            name: "Super Duper Uber Rebirth (ENDGAME)",
+            tooltip: "Reach 1e19 RP<br>Reward: retain all automation in future",
             done() {
-                if (false) return true
+                if (player.R.points.gte("1e19")) return true
             },
         },
         43: {
@@ -523,7 +546,7 @@ addLayer("R", {
         31: {
             title: "Doublatron 3000",
             description: "Allows use of two of The Machines modes at once",
-            cost: new Decimal("1e17"),
+            cost: new Decimal("1e16"),
             unlocked() {
                 return hasAchievement('A', 41)
             },
@@ -531,7 +554,7 @@ addLayer("R", {
         32: {
             title: "Machine automating Machine",
             description: "Automatically select all three modes of The Machine<br>Also buffs The Machines modes",
-            cost: new Decimal("1e19"),
+            cost: new Decimal("1e18"),
             unlocked() {
                 return hasAchievement('A', 41)
             },
