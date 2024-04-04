@@ -1,6 +1,6 @@
 let modInfo = {
 	name: "Create Incremental",
-	id: "DidYouKnowThatBulbasaurIsAPokemon",
+	id: "nhug dkjldgsgrcinhgrv",
 	author: "BanaCubed (Coding), and many people (Concepts)",
 	pointsName: "$",
 	modFiles: ["layers.js", "tree.js"],
