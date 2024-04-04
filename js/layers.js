@@ -21,7 +21,7 @@ addLayer("U", {
             content: [
                 "main-display",
                 ["display-text", function() {
-                    if(hasUpgrade('U', 34)) return "The Machine can provide boosts to both $ and RP, but be aware that you can't change your selection once you make it."; else return "The Machine is currently disabled because you don't have $ upgrade 12"
+                    if(hasUpgrade('U', 34) || hasUpgrade('R', 21)) return "The Machine can provide boosts to both $ and RP, but be aware that you can't change your selection once you make it."; else return "The Machine is currently disabled because you don't have $ upgrade 12"
                 }],
                 "clickables"
             ],
@@ -53,8 +53,8 @@ addLayer("U", {
             currencyDisplayName: "$",
             currencyInternalName: "points",
             effectDisplay() {
-                if (hasUpgrade('U', 23) === false) return 'x' + regularFormat(player.points.add(5).log(5), 2)
-                if (hasUpgrade('U', 23) === true) return 'x' + regularFormat(player.points.add(3).log(3), 2)
+                if (hasUpgrade('U', 23) === false) return 'x' + coolDynamicFormat(player.points.add(5).log(5), 2)
+                if (hasUpgrade('U', 23) === true) return 'x' + coolDynamicFormat(player.points.add(3).log(3), 2)
             },
         },
         14: {
@@ -79,7 +79,7 @@ addLayer("U", {
             currencyDisplayName: "$",
             currencyInternalName: "points",
             effectDisplay() {
-                return 'x' + regularFormat(player.points.pow(2).add(8).log(8).pow(0.5), 2)
+                return 'x' + coolDynamicFormat(player.points.pow(2).add(8).log(8).pow(0.5), 2)
             },
         },
         23: {
@@ -108,7 +108,7 @@ addLayer("U", {
                 return hasUpgrade('R', 13)
             },
             effectDisplay() {
-                return 'x' + regularFormat(player.points.add(10).log(10).pow(0.5), 2)
+                return 'x' + coolDynamicFormat(player.points.add(10).log(10).pow(0.5), 2)
             },
         },
         32: {
@@ -164,7 +164,7 @@ addLayer("U", {
             buyUpgrade('U', 33)
             buyUpgrade('U', 34)
         };
-        if(!hasUpgrade('U', 34)) {
+        if(!hasUpgrade('U', 34) && !hasUpgrade('R', 21)) {
             setClickableState('U', 11, false)
             setClickableState('U', 12, false)
             setClickableState('U', 13, false)
@@ -174,37 +174,37 @@ addLayer("U", {
         11: {
             title: "Money Mode",
             display() {
-                if(!getClickableState('U', 11)) return "Quadruples $ gain<br>Doubles RP gain"; else return "Quadruples $ gain<br>Doubles RP gain<br>ACTIVE"
+                if(!getClickableState(this.layer, this.id)) return "Quadruples $ gain<br>Doubles RP gain"; else return "Quadruples $ gain<br>Doubles RP gain<br>ACTIVE"
             },
             canClick() {
-                if(!getClickableState('U', 12) && !getClickableState('U', 13)) return true; else return false
+                if(!getClickableState(this.layer, 12) && !getClickableState(this.layer, 13)) return true; else return false
             },
             onClick() {
-                setClickableState('U', 11, true)
+                setClickableState(this.layer, this.id, true)
             },
         },
         12: {
             title: "Neutral Mode",
             display() {
-                if(!getClickableState('U', 11)) return "Triples $ gain<br>Triples RP gain"; else return "Triples $ gain<br>Triples RP gain<br>ACTIVE"
+                if(!getClickableState(this.layer, this.id)) return "Triples $ gain<br>Triples RP gain"; else return "Triples $ gain<br>Triples RP gain<br>ACTIVE"
             },
             canClick() {
-                if(!getClickableState('U', 11) && !getClickableState('U', 13)) return true; else return false
+                if(!getClickableState(this.layer, 11) && !getClickableState(this.layer, 13)) return true; else return false
             },
             onClick() {
-                setClickableState('U', 12, true)
+                setClickableState(this.layer, this.id, true)
             },
         },
         13: {
             title: "Rebirth Mode",
             display() {
-                if(!getClickableState('U', 11)) return "Doubles $ gain<br>Quadruples RP gain"; else return "Doubles $ gain<br>Quadruples RP gain<br>ACTIVE"
+                if(!getClickableState(this.layer, this.id)) return "Doubles $ gain<br>Quadruples RP gain"; else return "Doubles $ gain<br>Quadruples RP gain<br>ACTIVE"
             },
             canClick() {
-                if(!getClickableState('U', 11) && !getClickableState('U', 12)) return true; else return false
+                if(!getClickableState(this.layer, 11) && !getClickableState(this.layer, 12)) return true; else return false
             },
             onClick() {
-                setClickableState('U', 13, true)
+                setClickableState(this.layer, this.id, true)
             },
         },
     }
@@ -282,7 +282,7 @@ addLayer("A", {
             name: "Life and Death",
             tooltip: "Get the 5th Rebirth upgrade",
             done() {
-                if (hasUpgrade('R', 15)) return true
+                if (hasUpgrade('R', 21)) return true
             },
         },
         25: {
@@ -389,6 +389,70 @@ addLayer("R", {
             title: "Underwhelming",
             description: "Double $ gain",
             cost: new Decimal(100),
+        },
+        21: {
+            title: "Mechanical Reconstruction",
+            description: "The Machine starts unlocked",
+            cost: new Decimal(10000),
+            unlocked() {
+                return hasAchievement('A', 31)
+            },
+        },
+        22: {
+            title: "Repeated Costs",
+            description: "Unlock a RP buyable",
+            cost: new Decimal(100000),
+            unlocked() {
+                return hasAchievement('A', 31)
+            },
+        },
+        23: {
+            title: "Repeated Repeated Costs",
+            description: "Unlock a second RP buyable",
+            cost: new Decimal(10000000),
+            unlocked() {
+                return hasAchievement('A', 31)
+            },
+        },
+    },
+    buyables: {
+        11: {
+            cost(RPc) {
+                return new Decimal(20000).times(new Decimal(2).pow(new Decimal(RPc).pow(2)))
+            },
+            title: "Rebirth Booster",
+            display() {
+                return "Boost the previous buyables power gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "Effect: +" + coolDynamicFormat(this.cost, 2)
+            },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                return hasUpgrade('R', 22)
+            }
+        },
+        12: {
+            cost(RPc) {
+                return new Decimal(1000000).times(new Decimal(3).pow(new Decimal(RPc).pow(2)))
+            },
+            title: "Rebirth Booster Booster",
+            display() {
+                return "Boost the previous buyables power gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "Effect: +" + coolDynamicFormat(this.cost, 2)
+            },
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                return hasUpgrade('R', 23)
+            }
         },
     },
 })
