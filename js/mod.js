@@ -56,6 +56,7 @@ function getPointGen() {
 	if (hasUpgrade('U', 24)) gain = gain.times(1.5)
 	if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(10).log(10).pow(0.5))
 	if (hasUpgrade('U', 41)) gain = gain.times(10)
+	if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(10).log(10))
 
 	// The Machine
 	if (getClickableState('U', 11)) gain = gain.times(4)

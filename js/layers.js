@@ -70,6 +70,7 @@ addLayer("U", {
             cost: new Decimal(500),
             currencyDisplayName: "$",
             currencyInternalName: "points",
+            tooltip: "All exponents are applied after all multipliers in the same layer",
         },
         22: {
             title: "Ultrainflation",
@@ -142,6 +143,12 @@ addLayer("U", {
             unlocked() {
                 return hasUpgrade('R', 13)
             },
+            canAfford() {
+                if(player.points.gte("1e9") || hasUpgrade('R', 21)) return true
+            },
+            pay() {
+                if(!hasUpgrade('R', 21)) player.points = player.points.sub("1e9")
+            },
         },
         41: {
             title: "Super Duper Deca Multiplier",
@@ -182,9 +189,10 @@ addLayer("U", {
         44: {
             title: "This is a really weird concept tbh",
             description: "Boost the second RP buyables effect slightly",
-            cost: new Decimal("1e18"),
+            cost: new Decimal("1e25"),
             currencyDisplayName: "$",
             currencyInternalName: "points",
+            tooltip: "+0.05 to base",
             unlocked() {
                 return hasUpgrade('R', 24)
             },
@@ -208,6 +216,9 @@ addLayer("U", {
         if(hasAchievement('A', 33)) {
             buyUpgrade('U', 32)
             buyUpgrade('U', 33)
+            buyUpgrade('U', 34)
+        };
+        if(hasUpgrade('R', 21)) {
             buyUpgrade('U', 34)
         };
         if(!hasUpgrade('U', 34) && !hasUpgrade('R', 21)) {
@@ -356,7 +367,7 @@ addLayer("A", {
             name: "No thoughts required",
             tooltip: "Use all of the Machine's modes at once<br>Reward: automate $ upgrades 10-12",
             done() {
-                if (false) return true
+                if (hasUpgrade('R', 32)) return true
             },
         },
         34: {
@@ -413,6 +424,8 @@ addLayer("A", {
 
 addLayer("R", {
     name: "rebirth",
+    softcap: new Decimal("1e17"),
+    softcapPower: new Decimal(0.25),
     symbol: "R",
     row: "1",
     type: "normal",
@@ -430,7 +443,9 @@ addLayer("R", {
         if (getClickableState('U', 11)) remult = remult.times(2)
         if (getClickableState('U', 12)) remult = remult.times(3)
         if (getClickableState('U', 13)) remult = remult.times(4)
-        remult = remult.times(new Decimal(new Decimal(1.5).add(getBuyableAmount('R', 12).times(0.25))).pow(getBuyableAmount('R', 11)))
+        if (hasUpgrade('U', 43)) remult = remult.times(player.points.add(10).log(10).add(10).log(10))
+        if (!hasUpgrade('U', 44)) remult = remult.times(new Decimal(new Decimal(1.5).add(getBuyableAmount('R', 12).times(0.25))).pow(getBuyableAmount('R', 11)))
+        if (hasUpgrade('U', 44)) remult = remult.times(new Decimal(new Decimal(1.5).add(getBuyableAmount('R', 12).times(0.3))).pow(getBuyableAmount('R', 11)))
         return remult
     },
     exponent() {
@@ -492,7 +507,7 @@ addLayer("R", {
         23: {
             title: "Repeated Repeated Costs",
             description: "Unlock a second RP buyable",
-            cost: new Decimal(3000000),
+            cost: new Decimal(1000000),
             unlocked() {
                 return hasAchievement('A', 31)
             },
@@ -500,9 +515,25 @@ addLayer("R", {
         24: {
             title: "Upgrading Revival",
             description: "Unlock more upgrades (both RP and $)",
-            cost: new Decimal("1e9"),
+            cost: new Decimal("1e8"),
             unlocked() {
                 return hasAchievement('A', 31)
+            },
+        },
+        31: {
+            title: "Doublatron 3000",
+            description: "Allows use of two of The Machines modes at once",
+            cost: new Decimal("1e17"),
+            unlocked() {
+                return hasAchievement('A', 41)
+            },
+        },
+        32: {
+            title: "Machine automating Machine",
+            description: "Automatically select all three modes of The Machine<br>Also buffs The Machines modes",
+            cost: new Decimal("1e19"),
+            unlocked() {
+                return hasAchievement('A', 41)
             },
         },
     },
@@ -512,7 +543,7 @@ addLayer("R", {
                 return new Decimal(20000).times(new Decimal(1.2).pow(new Decimal(x).pow(2)))
             },
             title: "Rebirth Booster",
-            tooltip: "Base effect: 1.5^x<br>Base cost:20,000*(1.2^x^1.5)",
+            tooltip: "Base effect: 1.5^x<br>Base cost:20,000*(1.2^x^2)",
             display() {
                 return "Multiply RP gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
@@ -527,7 +558,8 @@ addLayer("R", {
                 return hasUpgrade('R', 22)
             },
             effect(x) {
-                return new Decimal(1.5).add(getBuyableAmount(this.layer, 12).times(0.25)).pow(x)
+                if (!hasUpgrade('U', 44)) return new Decimal(1.5).add(getBuyableAmount(this.layer, 12).times(0.25)).pow(x)
+                if (hasUpgrade('U', 44)) return new Decimal(1.5).add(getBuyableAmount(this.layer, 12).times(0.3)).pow(x)
             },
         },
         12: {
@@ -550,7 +582,8 @@ addLayer("R", {
                 return hasUpgrade('R', 23)
             },
             effect(x) {
-                return new Decimal(0.25).times(x)
+                if (!hasUpgrade('U', 44)) return new Decimal(0.25).times(x)
+                if (hasUpgrade('U', 44)) return new Decimal(0.3).times(x)
             },
         },
     },
