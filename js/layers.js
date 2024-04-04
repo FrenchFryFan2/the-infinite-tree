@@ -317,14 +317,14 @@ addLayer("A", {
             name: "Now with technically infinite upgrades!",
             tooltip: "Purchase the first RP buyable",
             done() {
-                if (false) return true
+                if (getBuyableAmount('R', 11).gte(1)) return true
             },
         },
         35: {
             name: "Perfectly Balanced",
             tooltip: "Purchase the second RP buyable",
             done() {
-                if (false) return true
+                if (getBuyableAmount('R', 12).gte(1)) return true
             },
         },
     }
@@ -349,6 +349,7 @@ addLayer("R", {
         if (getClickableState('U', 11)) remult = remult.times(2)
         if (getClickableState('U', 12)) remult = remult.times(3)
         if (getClickableState('U', 13)) remult = remult.times(4)
+        remult = remult.times(new Decimal(new Decimal(1.5).add(getBuyableAmount('R', 12).times(0.25))).pow(getBuyableAmount('R', 11)))
         return remult
     },
     exponent() {
@@ -409,7 +410,7 @@ addLayer("R", {
         23: {
             title: "Repeated Repeated Costs",
             description: "Unlock a second RP buyable",
-            cost: new Decimal(10000000),
+            cost: new Decimal(3000000),
             unlocked() {
                 return hasAchievement('A', 31)
             },
@@ -418,11 +419,12 @@ addLayer("R", {
     buyables: {
         11: {
             cost(x) {
-                return new Decimal(20000).times(new Decimal(2).pow(new Decimal(x).pow(2)))
+                return new Decimal(20000).times(new Decimal(1.2).pow(new Decimal(x).pow(1.5)))
             },
             title: "Rebirth Booster",
+            tooltip: "Base effect: 1.5^x<br>Base cost:20,000*(1.2^x^1.5)",
             display() {
-                return "Boost the previous buyables power gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                return "Multiply RP gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
                 + "<br>Effect: x" + coolDynamicFormat(this.effect(), 2)
             },
@@ -439,14 +441,15 @@ addLayer("R", {
             },
         },
         12: {
-            cost(RPc) {
-                return new Decimal(1000000).times(new Decimal(3).pow(new Decimal(RPc).pow(2)))
+            cost(x) {
+                return new Decimal(1000000).times(new Decimal(3).pow(new Decimal(x).pow(2)))
             },
             title: "Rebirth Booster Booster",
+            tooltip: "Base effect: +x/4<br>Base cost:1,000,000*(3^x^2)",
             display() {
-                return "Boost the previous buyables power gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                return "Boost the previous buyables power<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
-                + "<br>Effect: +" + coolDynamicFormat(this.cost(), 2)
+                + "<br>Effect: +" + coolDynamicFormat(this.effect(), 2)
             },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             buy() {
@@ -455,7 +458,10 @@ addLayer("R", {
             },
             unlocked() {
                 return hasUpgrade('R', 23)
-            }
+            },
+            effect(x) {
+                return new Decimal(0.25).times(x)
+            },
         },
     },
 })
