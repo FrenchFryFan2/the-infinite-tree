@@ -136,7 +136,7 @@ addLayer("U", {
         34: {
             title: "THE MACHINE",
             description: "Unlock The Machine",
-            cost: new Decimal("5e9"),
+            cost: new Decimal("1e9"),
             currencyDisplayName: "$",
             currencyInternalName: "points",
             unlocked() {
@@ -484,7 +484,7 @@ addLayer("R", {
         22: {
             title: "Repeated Costs",
             description: "Unlock a RP buyable",
-            cost: new Decimal(100000),
+            cost: new Decimal(50000),
             unlocked() {
                 return hasAchievement('A', 31)
             },
