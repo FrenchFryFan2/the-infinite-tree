@@ -450,7 +450,7 @@ addLayer("R", {
 		points: new Decimal(0),
     }},
     effectDescription() {
-        return "multiplying $ gain by " + coolDynamicFormat(new Decimal(this.layer.effect), 2)
+        return "multiplying $ gain by " + coolDynamicFormat(this.layer.effect, 2)
     },
     upgrades: {
         11: {

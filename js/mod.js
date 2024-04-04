@@ -7,17 +7,17 @@ let modInfo = {
 
 	discordName: "",
 	discordLink: "",
-	initialStartPoints: new Decimal (0), // Used for hard resets and new players
+	initialStartPoints: new Decimal(0), // Used for hard resets and new players
 	offlineLimit: 1024,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
 	num: "0.1.2",
-	name: "Rebirth of Buyables",
+	name: "Rebirth - Finishing",
 }
 
-let changelog = `<h1>Changelog:</h1><br>
+let changelog = `<h1>Changelog:</h1><br><br>
 	check the forum thread Create Incremental at [galaxy.click/forum/thread/255] to see what is coming next<br><br>
 	<h3>I will not make a changelog</h3><br>
 		galaxy gives you the ability to view past updates so look there (if you aren't on galaxy go to [galaxy.click])`
