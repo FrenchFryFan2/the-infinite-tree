@@ -425,7 +425,7 @@ addLayer("R", {
         setClickableState('U', 13, false)
     },
     requires: new Decimal(100000),
-    gainMult () {
+    gainMult() {
         let remult = new Decimal(1)
         if (getClickableState('U', 11)) remult = remult.times(2)
         if (getClickableState('U', 12)) remult = remult.times(3)
@@ -440,7 +440,9 @@ addLayer("R", {
     color: "#ba0022",
     branches: ['U'],
     effect() {
-        player.R.points.pow(0.5).add(1)
+        if (!hasUpgrade('U', 33) && !hasUpgrade('U', 42)) return player.R.points.pow(0.6).add(1)
+        if (hasUpgrade('U', 33) && hasUpgrade('U', 42)) return player.R.points.pow(0.8).add(1)
+        if (hasUpgrade('U', 33) || hasUpgrade('U', 42)) return player.R.points.pow(0.7).add(1)
     },
     layerShown() { return hasAchievement('A', 12) },
     startData() { return {
@@ -448,8 +450,7 @@ addLayer("R", {
 		points: new Decimal(0),
     }},
     effectDescription() {
-        if (!hasUpgrade('U', 32)) return "multiplying $ gain by " + regularFormat(player.R.points.pow(0.6).add(1), 2)
-        if (hasUpgrade('U', 32)) return "multiplying $ gain by " + regularFormat(player.R.points.pow(0.7).add(1), 2)
+        return "multiplying $ gain by " + coolDynamicFormat(new Decimal(this.layer.effect), 2)
     },
     upgrades: {
         11: {
@@ -508,7 +509,7 @@ addLayer("R", {
     buyables: {
         11: {
             cost(x) {
-                return new Decimal(20000).times(new Decimal(1.2).pow(new Decimal(x).pow(1.5)))
+                return new Decimal(20000).times(new Decimal(1.2).pow(new Decimal(x).pow(2)))
             },
             title: "Rebirth Booster",
             tooltip: "Base effect: 1.5^x<br>Base cost:20,000*(1.2^x^1.5)",

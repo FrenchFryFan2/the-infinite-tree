@@ -55,6 +55,7 @@ function getPointGen() {
 	if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(2).add(8).log(8).pow(0.5))
 	if (hasUpgrade('U', 24)) gain = gain.times(1.5)
 	if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(10).log(10).pow(0.5))
+	if (hasUpgrade('U', 41)) gain = gain.times(10)
 
 	// The Machine
 	if (getClickableState('U', 11)) gain = gain.times(4)
@@ -65,8 +66,7 @@ function getPointGen() {
 
 
 	// R Layer
-	if (!hasUpgrade('U', 33)) gain = gain.times(player.R.points.pow(0.6).add(1))
-	if (hasUpgrade('U', 33)) gain = gain.times(player.R.points.pow(0.7).add(1))
+	gain = gain.times(player.R.effect)
 	if (hasUpgrade('R', 11)) gain = gain.times(5)
 	if (hasUpgrade('R', 14)) gain = gain.times(2)
 
