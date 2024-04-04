@@ -143,6 +143,52 @@ addLayer("U", {
                 return hasUpgrade('R', 13)
             },
         },
+        41: {
+            title: "Super Duper Deca Multiplier",
+            description: "Multiply $ gain by 10",
+            cost: new Decimal("1e13"),
+            currencyDisplayName: "$",
+            currencyInternalName: "points",
+            unlocked() {
+                return hasUpgrade('R', 24)
+            },
+        },
+        42: {
+            title: "Wow, another RP effect boost",
+            description: "Boost RP's effect again",
+            tooltip: "^0.7 -> ^0.8",
+            cost: new Decimal("5e14"),
+            currencyDisplayName: "$",
+            currencyInternalName: "points",
+            unlocked() {
+                return hasUpgrade('R', 24)
+            },
+        },
+        43: {
+            title: "Synergism",
+            description: "RP and $ boost each other",
+            tooltip: "RP*log(log($ + 10) + 10)<br>$*log(RP + 10)",
+            cost: new Decimal("3e15"),
+            currencyDisplayName: "$",
+            currencyInternalName: "points",
+            unlocked() {
+                return hasUpgrade('R', 24)
+            },
+            effectDisplay() {
+                return 'RP x' + coolDynamicFormat(player.points.add(10).log(10).add(10).log(10), 2)
+                + '<br>$ x' + coolDynamicFormat(player.R.points.add(10).log(10), 2)
+            },
+        },
+        44: {
+            title: "This is a really weird concept tbh",
+            description: "Boost the second RP buyables effect slightly",
+            cost: new Decimal("1e18"),
+            currencyDisplayName: "$",
+            currencyInternalName: "points",
+            unlocked() {
+                return hasUpgrade('R', 24)
+            },
+        },
     },
     layerShown(){return true},
     automate() {
@@ -301,7 +347,7 @@ addLayer("A", {
         },
         32: {
             name: "Secondary Choice",
-            tooltip: "Use two of the Machine's modes at once",
+            tooltip: "Unlock the ability to use two of The Machines modes at once",
             done() {
                 if (false) return true
             },
@@ -325,6 +371,41 @@ addLayer("A", {
             tooltip: "Purchase the second RP buyable",
             done() {
                 if (getBuyableAmount('R', 12).gte(1)) return true
+            },
+        },
+        41: {
+            name: "Wow, a content",
+            tooltip: "Buy RP upgrade 8",
+            done() {
+                if (hasUpgrade('R', 24)) return true
+            },
+        },
+        42: {
+            name: "Super Duper Uber Rebirth",
+            tooltip: "Reset for Super Rebirth Points<br>Reward: retain all automation in future",
+            done() {
+                if (false) return true
+            },
+        },
+        43: {
+            name: "PLACEHOLDER",
+            tooltip: "Unobtainable",
+            done() {
+                if (false) return true
+            },
+        },
+        44: {
+            name: "PLACEHOLDER",
+            tooltip: "Unobtainable",
+            done() {
+                if (false) return true
+            },
+        },
+        45: {
+            name: "PLACEHOLDER",
+            tooltip: "Unobtainable",
+            done() {
+                if (false) return true
             },
         },
     }
@@ -411,6 +492,14 @@ addLayer("R", {
             title: "Repeated Repeated Costs",
             description: "Unlock a second RP buyable",
             cost: new Decimal(3000000),
+            unlocked() {
+                return hasAchievement('A', 31)
+            },
+        },
+        24: {
+            title: "Upgrading Revival",
+            description: "Unlock more upgrades (both RP and $)",
+            cost: new Decimal("1e9"),
             unlocked() {
                 return hasAchievement('A', 31)
             },
