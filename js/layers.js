@@ -45,7 +45,8 @@ addLayer("U", {
         },
         13: {
             title: "Superinflation",
-            description: "Multiply $ gain by log5($ + 5)",
+            description: "Multiply $ gain based on $",
+            tooltip: "log5($ + 5)",
             cost: new Decimal(50),
             currencyDisplayName: "$",
             currencyInternalName: "points",
@@ -70,7 +71,8 @@ addLayer("U", {
         },
         22: {
             title: "Ultrainflation",
-            description: "Multiply $ gain by sqrt(log8($^1.5 + 8))",
+            description: "Multiply $ gain based on $ again",
+            tooltip: "sqrt(log8($^1.5 + 8))",
             cost: new Decimal(2000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
@@ -80,7 +82,8 @@ addLayer("U", {
         },
         23: {
             title: "Super-Superinflation",
-            description: "Change Superinflations effect to log3($ + 3)",
+            description: "Improve the above upgrades effect",
+            tooltip: "log5 -> log3",
             cost: new Decimal(15000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
@@ -94,7 +97,8 @@ addLayer("U", {
         },
         31: {
             title: "Gigainflation",
-            description: "Multiply $ gain by sqrt(log($ + 10))",
+            description: "Multiply $ gain based on $ yet again",
+            tooltip: "sqrt(log($ + 10))",
             cost: new Decimal(5000000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
@@ -108,6 +112,7 @@ addLayer("U", {
         32: {
             title: "Certainly a concept",
             description: "Reduce RP gain scaling",
+            tooltip: "^0.5 -> ^0.7",
             cost: new Decimal(35000000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
@@ -118,6 +123,7 @@ addLayer("U", {
         33: {
             title: "Blessing from the gods",
             description: "Increase RP's effect",
+            tooltip: "^0.6 -> ^0.7",
             cost: new Decimal(250000000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
