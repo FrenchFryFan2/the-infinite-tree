@@ -417,14 +417,14 @@ addLayer("R", {
     },
     buyables: {
         11: {
-            cost(RPc) {
-                return new Decimal(20000).times(new Decimal(2).pow(new Decimal(RPc).pow(2)))
+            cost(x) {
+                return new Decimal(20000).times(new Decimal(2).pow(new Decimal(x).pow(2)))
             },
             title: "Rebirth Booster",
             display() {
                 return "Boost the previous buyables power gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
-                + "Effect: +" + coolDynamicFormat(this.cost, 2)
+                + "<br>Effect: x" + coolDynamicFormat(this.effect(), 2)
             },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             buy() {
@@ -433,7 +433,10 @@ addLayer("R", {
             },
             unlocked() {
                 return hasUpgrade('R', 22)
-            }
+            },
+            effect(x) {
+                return new Decimal(1.5).add(getBuyableAmount(this.layer, 12).times(0.25)).pow(x)
+            },
         },
         12: {
             cost(RPc) {
@@ -443,7 +446,7 @@ addLayer("R", {
             display() {
                 return "Boost the previous buyables power gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
-                + "Effect: +" + coolDynamicFormat(this.cost, 2)
+                + "<br>Effect: +" + coolDynamicFormat(this.cost(), 2)
             },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             buy() {
