@@ -1,5 +1,5 @@
 // ************ Themes ************
-var themes = ["default", "aqua", "light", "quality"]
+var themes = ["default", "aqua", "verdant", "pyro", "light", "quality"]
 
 var colors = {
 	default: {
@@ -21,6 +21,26 @@ var colors = {
 		locked: "#c4a7b3",
 		background: "#001f3f",
 		background_tooltip: "rgba(0, 15, 31, 0.75)",
+	},
+	pyro: {
+		1: "#ffbfbf",
+		2: "#bf8f8f",
+		3: "#7f5f5f",
+		color: "#ffbfbf",
+		points: "#ffdfdf",
+		locked: "#b3a7a7",
+		background: "#3f0000",
+		background_tooltip: "rgba(31, 0, 0, 0.75)",
+	},
+	verdant: {
+		1: "#bfffbf",
+		2: "#8fbf8f",
+		3: "#5f7f5f",
+		color: "#bfffbf",
+		points: "#dfffdf",
+		locked: "#a7b3a7",
+		background: "#003f00",
+		background_tooltip: "rgba(0, 31, 0, 0.75)",
 	},
 	quality: {
 		1: "#00ff00",

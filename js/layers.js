@@ -47,12 +47,6 @@ addLayer("U", {
             cost: new Decimal(10),
             currencyDisplayName: "$",
             currencyInternalName: "points",
-            canAfford() {
-                if(player.points.gte(10) || hasAchievement('A', 43)) return true
-            },
-            pay() {
-                if(!hasAchievement('A', 43)) player.points = player.points.sub(10)
-            },
         },
         13: {
             title: "Superinflation",
@@ -65,12 +59,6 @@ addLayer("U", {
                 if (hasUpgrade('U', 23) === false) return 'x' + coolDynamicFormat(player.points.add(5).log(5), 2)
                 if (hasUpgrade('U', 23) === true) return 'x' + coolDynamicFormat(player.points.add(3).log(3), 2)
             },
-            canAfford() {
-                if(player.points.gte(50) || hasAchievement('A', 43)) return true
-            },
-            pay() {
-                if(!hasAchievement('A', 43)) player.points = player.points.sub(50)
-            },
         },
         14: {
             title: "Another Money Printer",
@@ -78,12 +66,6 @@ addLayer("U", {
             cost: new Decimal(200),
             currencyDisplayName: "$",
             currencyInternalName: "points",
-            canAfford() {
-                if(player.points.gte(200) || hasAchievement('A', 43)) return true
-            },
-            pay() {
-                if(!hasAchievement('A', 43)) player.points = player.points.sub(200)
-            },
         },
         21: {
             title: "Hyperinflation",
@@ -92,12 +74,6 @@ addLayer("U", {
             currencyDisplayName: "$",
             currencyInternalName: "points",
             tooltip: "All exponents are applied after all multipliers in the same layer",
-            canAfford() {
-                if(player.points.gte(500) || hasAchievement('A', 43)) return true
-            },
-            pay() {
-                if(!hasAchievement('A', 43)) player.points = player.points.sub(500)
-            },
         },
         22: {
             title: "Ultrainflation",
@@ -109,12 +85,6 @@ addLayer("U", {
             effectDisplay() {
                 return 'x' + coolDynamicFormat(player.points.pow(2).add(8).log(8).pow(0.5), 2)
             },
-            canAfford() {
-                if(player.points.gte(2000) || hasAchievement('A', 43)) return true
-            },
-            pay() {
-                if(!hasAchievement('A', 43)) player.points = player.points.sub(2000)
-            },
         },
         23: {
             title: "Super-Superinflation",
@@ -123,12 +93,6 @@ addLayer("U", {
             cost: new Decimal(15000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
-            canAfford() {
-                if(player.points.gte(15000) || hasAchievement('A', 43)) return true
-            },
-            pay() {
-                if(!hasAchievement('A', 43)) player.points = player.points.sub(15000)
-            },
         },
         24: {
             title: "Yet Another Money Printer",
@@ -136,12 +100,6 @@ addLayer("U", {
             cost: new Decimal(30000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
-            canAfford() {
-                if(player.points.gte(30000) || hasAchievement('A', 43)) return true
-            },
-            pay() {
-                if(!hasAchievement('A', 43)) player.points = player.points.sub(30000)
-            },
         },
         31: {
             title: "Gigainflation",
@@ -187,12 +145,6 @@ addLayer("U", {
             currencyInternalName: "points",
             unlocked() {
                 return hasUpgrade('R', 13)
-            },
-            canAfford() {
-                if(player.points.gte("1e9") || hasUpgrade('R', 21)) return true
-            },
-            pay() {
-                if(!hasUpgrade('R', 21)) player.points = player.points.sub("1e9")
             },
         },
         41: {
@@ -332,7 +284,17 @@ addLayer("U", {
                 setClickableState(this.layer, this.id, true)
             },
         },
-    }
+    },
+    doReset(resetlayer) {
+        player.U.upgrades = [];
+        if(resetlayer == 'R') {
+            if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
+            if(hasUpgrade('R', 21)) player.U.upgrades.push(34)
+        };
+        if(resetlayer == 'SR') {
+            player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
+        }
+    },
 })
 
 addLayer("A", {
