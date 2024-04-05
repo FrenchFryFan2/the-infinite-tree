@@ -21,9 +21,12 @@ addLayer("U", {
             content: [
                 "main-display",
                 ["display-text", function() {
-                    if(hasUpgrade('U', 34) || hasUpgrade('R', 21)) return "The Machine can provide boosts to both $ and RP, but be aware that you can't change your selection once you make it."; else return "The Machine is currently disabled because you don't have $ upgrade 12"
+                    if(hasUpgrade('U', 34) || hasUpgrade('R', 21)) return "The Machine can provide boosts to both $ and RP, but be aware that you can't change your selection once you make it.<br>Bonus is reset on Rebirth."; else return "The Machine is currently disabled because you don't have $ upgrade 12"
                 }],
-                "clickables"
+                "clickables",
+                ["display-text", function() {
+                    if(hasAchievement('A', 33)) return "Your bonuses to the Machine are multiplying $ and RP gain by " + coolDynamicFormat(machineBonuses(), 2)
+                }],
             ],
             unlocked() {
                 return hasAchievement('A', 31)
@@ -44,6 +47,12 @@ addLayer("U", {
             cost: new Decimal(10),
             currencyDisplayName: "$",
             currencyInternalName: "points",
+            canAfford() {
+                if(player.points.gte(10) || hasAchievement('A', 43)) return true
+            },
+            pay() {
+                if(!hasAchievement('A', 43)) player.points = player.points.sub(10)
+            },
         },
         13: {
             title: "Superinflation",
@@ -56,6 +65,12 @@ addLayer("U", {
                 if (hasUpgrade('U', 23) === false) return 'x' + coolDynamicFormat(player.points.add(5).log(5), 2)
                 if (hasUpgrade('U', 23) === true) return 'x' + coolDynamicFormat(player.points.add(3).log(3), 2)
             },
+            canAfford() {
+                if(player.points.gte(50) || hasAchievement('A', 43)) return true
+            },
+            pay() {
+                if(!hasAchievement('A', 43)) player.points = player.points.sub(50)
+            },
         },
         14: {
             title: "Another Money Printer",
@@ -63,6 +78,12 @@ addLayer("U", {
             cost: new Decimal(200),
             currencyDisplayName: "$",
             currencyInternalName: "points",
+            canAfford() {
+                if(player.points.gte(200) || hasAchievement('A', 43)) return true
+            },
+            pay() {
+                if(!hasAchievement('A', 43)) player.points = player.points.sub(200)
+            },
         },
         21: {
             title: "Hyperinflation",
@@ -71,6 +92,12 @@ addLayer("U", {
             currencyDisplayName: "$",
             currencyInternalName: "points",
             tooltip: "All exponents are applied after all multipliers in the same layer",
+            canAfford() {
+                if(player.points.gte(500) || hasAchievement('A', 43)) return true
+            },
+            pay() {
+                if(!hasAchievement('A', 43)) player.points = player.points.sub(500)
+            },
         },
         22: {
             title: "Ultrainflation",
@@ -82,6 +109,12 @@ addLayer("U", {
             effectDisplay() {
                 return 'x' + coolDynamicFormat(player.points.pow(2).add(8).log(8).pow(0.5), 2)
             },
+            canAfford() {
+                if(player.points.gte(2000) || hasAchievement('A', 43)) return true
+            },
+            pay() {
+                if(!hasAchievement('A', 43)) player.points = player.points.sub(2000)
+            },
         },
         23: {
             title: "Super-Superinflation",
@@ -90,6 +123,12 @@ addLayer("U", {
             cost: new Decimal(15000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
+            canAfford() {
+                if(player.points.gte(15000) || hasAchievement('A', 43)) return true
+            },
+            pay() {
+                if(!hasAchievement('A', 43)) player.points = player.points.sub(15000)
+            },
         },
         24: {
             title: "Yet Another Money Printer",
@@ -97,6 +136,12 @@ addLayer("U", {
             cost: new Decimal(30000),
             currencyDisplayName: "$",
             currencyInternalName: "points",
+            canAfford() {
+                if(player.points.gte(30000) || hasAchievement('A', 43)) return true
+            },
+            pay() {
+                if(!hasAchievement('A', 43)) player.points = player.points.sub(30000)
+            },
         },
         31: {
             title: "Gigainflation",
@@ -200,7 +245,7 @@ addLayer("U", {
     },
     layerShown(){return true},
     automate() {
-        if(hasUpgrade('R', 12) || hasAchievement('A', 31)) {
+        if(hasUpgrade('R', 12) || hasAchievement('A', 43)) {
             buyUpgrade('U', 11)
             buyUpgrade('U', 12)
             buyUpgrade('U', 13)
@@ -218,7 +263,7 @@ addLayer("U", {
             buyUpgrade('U', 33)
             buyUpgrade('U', 34)
         };
-        if(hasUpgrade('R', 21)) {
+        if(hasUpgrade('R', 21) || hasAchievement('A', 43)) {
             buyUpgrade('U', 34)
         };
         if(!hasUpgrade('U', 34) && !hasUpgrade('R', 21)) {
@@ -415,27 +460,62 @@ addLayer("A", {
             },
         },
         42: {
-            name: "Super Duper Uber Rebirth (ENDGAME)",
+            name: "Super Duper Uber Rebirth",
             tooltip: "Reach 1e19 RP<br>Reward: retain all automation in future",
             done() {
                 if (player.R.points.gte("1e19")) return true
             },
         },
         43: {
-            name: "PLACEHOLDER",
-            tooltip: "Unobtainable",
+            name: "Can't wait for Hyper Rebirth",
+            tooltip: "Perform a Super Rebirth reset",
             done() {
-                if (false) return true
+                if (player.SR.points.gte(1)) return true
             },
         },
         44: {
-            name: "PLACEHOLDER",
-            tooltip: "Unobtainable",
+            name: "Monetary Incentive",
+            tooltip: "Purchase the $ buyable",
             done() {
                 if (false) return true
             },
         },
         45: {
+            name: "Kilometrerock",
+            tooltip: "Get all SRP milestones",
+            done() {
+                if (false) return true
+            },
+        },
+        51: {
+            name: "Unchallenged",
+            tooltip: "Complete a challenge",
+            done() {
+                if (false) return true
+            },
+        },
+        52: {
+            name: "PLACEHOLDER",
+            tooltip: "Unobtainable",
+            done() {
+                if (false) return true
+            },
+        },
+        53: {
+            name: "PLACEHOLDER",
+            tooltip: "Unobtainable",
+            done() {
+                if (false) return true
+            },
+        },
+        54: {
+            name: "HOLDERPLACE",
+            tooltip: "tainableUn",
+            done() {
+                if (false) return true
+            },
+        },
+        55: {
             name: "PLACEHOLDER",
             tooltip: "Unobtainable",
             done() {
@@ -554,7 +634,7 @@ addLayer("R", {
         },
         32: {
             title: "Machine automating Machine",
-            description: "Automatically select all three modes of The Machine<br>Also buffs The Machines modes",
+            description: "Automatically select all three modes of The Machine<br>The Machine also gets a buff",
             cost: new Decimal("1e18"),
             unlocked() {
                 return hasAchievement('A', 41)
@@ -626,7 +706,7 @@ addLayer("SR", {
     color: "#eb1a3d",
     resource: "Super Rebirth Points",
     requires: new Decimal(1e19),
-    type: "normal",
+    type: "static",
     base: new Decimal(2),
     exponent: new Decimal(1),
     roundUpCost: true,
@@ -637,6 +717,20 @@ addLayer("SR", {
         return hasAchievement('A', 41)
     },
     effect() {
-        
+        return [player.SR.points.pow(0.5).add(player.SR.points.times(0.1)).add(1),
+        player.SR.points.pow(0.5).add(1)]
     },
+    effectDescription() {
+        return "multiplying RP gain by " + coolDynamicFormat(this.effect()[1], 2)
+        + " and $ gain by " + coolDynamicFormat(this.effect()[0], 2)
+    },
+    milestones: {
+        0: {
+            requirementDescription: "1 SRP",
+            effectDescription: "Cash Upgrades 1-8 are kept on all resets, and RP buyables don't spend RP.",
+            done() {
+                return player.SR.points.gte(1)
+            }
+        }
+    }
 })

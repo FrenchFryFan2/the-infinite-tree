@@ -49,12 +49,12 @@ function getPointGen() {
 	if (hasUpgrade('U', 11)) gain = gain.add(1)
 
 	if (hasUpgrade('U', 12)) gain = gain.times(4)
-	if (hasUpgrade('U', 13) === true && hasUpgrade('U', 23) === false) gain = gain.times(player.points.add(5).log(5))
-	if (hasUpgrade('U', 13) === true && hasUpgrade('U', 23) === true) gain = gain.times(player.points.add(3).log(3))
+	if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(5).log(5))
+	if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(player.points.add(3).log(3))
 	if (hasUpgrade('U', 14)) gain = gain.times(2)
 	if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(2).add(8).log(8).pow(0.5))
 	if (hasUpgrade('U', 24)) gain = gain.times(1.5)
-	if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(10).log(10).pow(0.5))
+	if (hasUpgrade('U', 31)) gain = gain.times(player.points.log(10).pow(0.5).add(1))
 	if (hasUpgrade('U', 41)) gain = gain.times(10)
 	if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(10).log(10))
 
@@ -62,12 +62,13 @@ function getPointGen() {
 	if (getClickableState('U', 11)) gain = gain.times(4)
 	if (getClickableState('U', 12)) gain = gain.times(3)
 	if (getClickableState('U', 13)) gain = gain.times(2)
+	if (hasUpgrade('R', 32)) gain = gain.times(1.3)
 
 	if (hasUpgrade('U', 21)) gain = gain.pow(1.25)
 
 
 	// R Layer
-	if (!hasUpgrade('U', 33) && !hasUpgrade('U', 42)) gain = gain.times(player.R.points.pow(0.6).add(1))
+	if (!hasUpgrade('U', 33)) gain = gain.times(player.R.points.pow(0.6).add(1))
     if (hasUpgrade('U', 33) && hasUpgrade('U', 42)) gain = gain.times(player.R.points.pow(0.8).add(1))
     if (hasUpgrade('U', 33) && !hasUpgrade('U', 42)) gain = gain.times(player.R.points.pow(0.7).add(1))
 	if (hasUpgrade('R', 11)) gain = gain.times(5)
@@ -102,6 +103,11 @@ function setLayerCurrencyToPoints(layer) {
     player[layer].points = new Decimal(points);
 }
 
+function machineBonuses() {
+	let bonus = new Decimal(1);
+	if(hasUpgrade('R', 32)) bonus = bonus.add(0.3);
+	return bonus
+}
 
 
 // Less important things beyond this point!
