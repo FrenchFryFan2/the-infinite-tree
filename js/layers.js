@@ -469,6 +469,7 @@ addLayer("R", {
         if (hasUpgrade('U', 43)) remult = remult.times(player.points.add(10).log(10).add(10).log(10))
         if (!hasUpgrade('U', 44)) remult = remult.times(new Decimal(new Decimal(1.5).add(getBuyableAmount('R', 12).times(0.25))).pow(getBuyableAmount('R', 11)))
         if (hasUpgrade('U', 44)) remult = remult.times(new Decimal(new Decimal(1.5).add(getBuyableAmount('R', 12).times(0.3))).pow(getBuyableAmount('R', 11)))
+        remult = remult.times(player.SR.points.pow(0.5).add(1))
         return remult
     },
     exponent() {
@@ -613,4 +614,29 @@ addLayer("R", {
     automate() {
         // Wow, a nothing
     }
+})
+
+addLayer("SR", {
+    startData() { return {
+        unlocked: false,
+        points: new Decimal(0),
+        best: new Decimal(0),
+    }},
+    row: "2",
+    color: "#eb1a3d",
+    resource: "Super Rebirth Points",
+    requires: new Decimal(1e19),
+    type: "normal",
+    base: new Decimal(2),
+    exponent: new Decimal(1),
+    roundUpCost: true,
+    baseResource: "RP",
+    branches: "R",
+    baseAmount() { return player.R.points },
+    layerShown() {
+        return hasAchievement('A', 41)
+    },
+    effect() {
+        
+    },
 })

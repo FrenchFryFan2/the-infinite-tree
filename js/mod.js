@@ -13,8 +13,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1.3",
-	name: "Rebirth - Finished",
+	num: "0.2.0",
+	name: "Super Rebirth - Start",
 }
 
 let changelog = `<h1>Changelog:</h1><br><br>
@@ -73,6 +73,10 @@ function getPointGen() {
 	if (hasUpgrade('R', 11)) gain = gain.times(5)
 	if (hasUpgrade('R', 14)) gain = gain.times(2)
 
+
+	// SR Layer
+	gain = gain.times(player.SR.points.pow(0.5).add(player.SR.points.times(0.1)).add(1))
+
 	// Dunno were else to put this
 	setLayerCurrencyToPoints("U");
 
@@ -89,7 +93,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.R.points.gte(new Decimal("1e19"))
+	return player.R.points.gte(new Decimal("1e190000"))
 }
 
 function setLayerCurrencyToPoints(layer) {
