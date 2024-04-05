@@ -289,10 +289,12 @@ addLayer("U", {
         player.U.upgrades = [];
         if(resetlayer == 'R') {
             if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
+            if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
             if(hasUpgrade('R', 21)) player.U.upgrades.push(34)
         };
         if(resetlayer == 'SR') {
-            player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
+            if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
+            if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
         }
     },
 })
@@ -591,7 +593,7 @@ addLayer("R", {
             description: "Allows use of two of The Machines modes at once",
             cost: new Decimal("1e16"),
             unlocked() {
-                return hasAchievement('A', 41)
+                return hasUpgrade('R', 24)
             },
         },
         32: {
@@ -599,7 +601,7 @@ addLayer("R", {
             description: "Automatically select all three modes of The Machine<br>The Machine also gets a buff",
             cost: new Decimal("1e18"),
             unlocked() {
-                return hasAchievement('A', 41)
+                return hasUpgrade('R', 24)
             },
         },
     },
@@ -617,7 +619,7 @@ addLayer("R", {
             },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             buy() {
-                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                if(!hasMilestone('SR', 0)) player[this.layer].points = player[this.layer].points.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             unlocked() {
@@ -641,7 +643,7 @@ addLayer("R", {
             },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             buy() {
-                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                if(!hasMilestone('SR', 0)) player[this.layer].points = player[this.layer].points.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             unlocked() {
@@ -654,8 +656,19 @@ addLayer("R", {
         },
     },
     automate() {
-        // Wow, a nothing
-    }
+        
+    },
+    doReset(resetlayer) {
+        if(resetlayer !== 'R') {
+            player.R.upgrades = []
+            setBuyableAmount('R', 11, new Decimal(0))
+            setBuyableAmount('R', 12, new Decimal(0))
+        }
+        if(resetlayer == 'SR') {
+            player.R.points = new Decimal(0)
+            if(hasMilestone('SR', 1)) player.R.upgrades.push(11, 12, 13, 14)
+        }
+    },
 })
 
 addLayer("SR", {
@@ -673,7 +686,7 @@ addLayer("SR", {
     exponent: new Decimal(1),
     roundUpCost: true,
     baseResource: "RP",
-    branches: "R",
+    branches: ["R"],
     baseAmount() { return player.R.points },
     layerShown() {
         return hasAchievement('A', 41)
@@ -689,9 +702,16 @@ addLayer("SR", {
     milestones: {
         0: {
             requirementDescription: "1 SRP",
-            effectDescription: "Cash Upgrades 1-8 are kept on all resets, and RP buyables don't spend RP.",
+            effectDescription: "$ upgrades 1-8 are kept on all resets, and RP buyables don't spend RP.",
             done() {
                 return player.SR.points.gte(1)
+            }
+        },
+        1: {
+            requirementDescription: "2 SRP",
+            effectDescription: "Keep first 4 RP upgrades on SRP reset and keep $ upgrades 9-11 on all resets",
+            done() {
+                return player.SR.points.gte(2)
             }
         }
     }
