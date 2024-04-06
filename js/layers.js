@@ -680,9 +680,6 @@ addLayer("R", {
         if(hasChallenge('SR', 11)) passive = passive.add(0.2)
         return passive
     },
-    update(dT) {
-        console.log(dT)
-    },
 })
 
 addLayer("SR", {
