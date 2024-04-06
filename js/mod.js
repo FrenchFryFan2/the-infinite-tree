@@ -13,8 +13,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2.1",
-	name: "Super Rebirth - Big Fix",
+	num: "0.2.2",
+	name: "Super Rebirth - Challenger Awakens",
 }
 
 let changelog = `<h1>Changelog:</h1><br><br>
@@ -45,7 +45,7 @@ function getPointGen() {
 	let gain = new Decimal(0)
 
 
-	// $ Layer
+	// $ Layer ('U')
 	if (hasUpgrade('U', 11)) gain = gain.add(1)
 
 	if (hasUpgrade('U', 12)) gain = gain.times(4)
@@ -76,8 +76,10 @@ function getPointGen() {
 	// SR Layer
 	gain = gain.times(layers.SR.effect()[0])
 
+
 	// Dunno were else to put this
-	setLayerCurrencyToPoints("U");
+
+	everyTick();
 
 	return gain
 }
@@ -103,10 +105,54 @@ function setLayerCurrencyToPoints(layer) {
 
 function machineBonuses() {
 	let bonus = new Decimal(1);
-	if(hasUpgrade('R', 32)) bonus = bonus.add(0.3);
+	if(hasUpgrade('R', 32)) bonus = bonus.times(1.3);
 	return bonus
 }
 
+function everyTick() {
+	// Automation and Value fixing
+	// $ Layer ('U')
+	setLayerCurrencyToPoints("U");
+
+	if(hasUpgrade('R', 12) || hasAchievement('A', 43)) {
+		buyUpgrade('U', 11)
+		buyUpgrade('U', 12)
+		buyUpgrade('U', 13)
+		buyUpgrade('U', 14)
+		buyUpgrade('U', 21)
+		buyUpgrade('U', 22)
+		buyUpgrade('U', 23)
+		buyUpgrade('U', 24)
+	};
+	if(hasAchievement('A', 31)) {
+		buyUpgrade('U', 31)
+	};
+	if(hasAchievement('A', 33)) {
+		buyUpgrade('U', 32)
+		buyUpgrade('U', 33)
+		buyUpgrade('U', 34)
+	};
+	
+	if(!hasUpgrade('U', 34)) {
+		setClickableState('U', 11, false)
+		setClickableState('U', 12, false)
+		setClickableState('U', 13, false)
+	};
+	if(hasUpgrade('R', 32)) {
+		setClickableState('U', 11, true)
+		setClickableState('U', 12, true)
+		setClickableState('U', 13, true)
+	};
+
+
+	// Rebirth Layer
+
+
+	// Super Rebrith Layer
+
+
+	// Hyper Rebirth Layer
+}
 
 // Less important things beyond this point!
 

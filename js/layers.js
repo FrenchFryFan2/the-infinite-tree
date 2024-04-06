@@ -198,34 +198,7 @@ addLayer("U", {
     },
     layerShown(){return true},
     automate() {
-        if(hasUpgrade('R', 12) || hasAchievement('A', 43)) {
-            buyUpgrade('U', 11)
-            buyUpgrade('U', 12)
-            buyUpgrade('U', 13)
-            buyUpgrade('U', 14)
-            buyUpgrade('U', 21)
-            buyUpgrade('U', 22)
-            buyUpgrade('U', 23)
-            buyUpgrade('U', 24)
-        };
-        if(hasAchievement('A', 31)) {
-            buyUpgrade('U', 31)
-        };
-        if(hasAchievement('A', 33)) {
-            buyUpgrade('U', 32)
-            buyUpgrade('U', 33)
-            buyUpgrade('U', 34)
-        };
-        if(!hasUpgrade('U', 34) && !hasUpgrade('R', 21)) {
-            setClickableState('U', 11, false)
-            setClickableState('U', 12, false)
-            setClickableState('U', 13, false)
-        };
-        if(hasUpgrade('R', 32)) {
-            setClickableState('U', 11, true)
-            setClickableState('U', 12, true)
-            setClickableState('U', 13, true)
-        };
+
     },
     clickables: {
         11: {
@@ -318,7 +291,17 @@ addLayer("U", {
             if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
             if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
             if(!hasMilestone('SR', 3)) setBuyableAmount('U', 11, new Decimal(0))
-        }
+        };
+        if(!hasUpgrade('R', 32)) {
+            setClickableState('U', 11, false)
+            setClickableState('U', 12, false)
+            setClickableState('U', 13, false)
+        };
+        if(hasUpgrade('R', 32)) {
+            setClickableState('U', 11, true)
+            setClickableState('U', 12, true)
+            setClickableState('U', 13, true)
+        };
     },
 })
 
@@ -478,7 +461,7 @@ addLayer("A", {
             name: "Unchallenged",
             tooltip: "Complete a challenge",
             done() {
-                if (false) return true
+                if (hasChallenge('SR', 11)) return true
             },
         },
         52: {
@@ -523,11 +506,12 @@ addLayer("R", {
     resource: "Rebirth Points",
     baseAmount() { return player.points },
     onPrestige() {
-        setClickableState('U', 11, false)
-        setClickableState('U', 12, false)
-        setClickableState('U', 13, false)
+
     },
-    requires: new Decimal(100000),
+    requires() {
+        if(!inChallenge('SR', 11)) return new Decimal(100000)
+        if(inChallenge('SR', 11)) return new Decimal("eeeeeeeee10")
+    },
     gainMult() {
         let remult = new Decimal(1)
         if (getClickableState('U', 11)) remult = remult.times(2)
@@ -691,6 +675,12 @@ addLayer("R", {
             if(!hasMilestone('SR', 3)) setBuyableAmount('R', 12, new Decimal(0))
         }
     },
+    passiveGeneration() {
+        if(hasChallenge('SR', 11)) return 0.2
+    },
+    update(dT) {
+        console.log(dT)
+    },
 })
 
 addLayer("SR", {
@@ -712,20 +702,32 @@ addLayer("SR", {
     roundUpCost: true,
     baseResource: "RP",
     branches: ["R"],
-    tabFormat: [
-        "main-display",
-        ["prestige-button"],
-        "challenges",
-        "blank",
-        "milestones",
-        "upgrades"
-    ],
+    tabFormat: {
+        "Main": {
+            content: [
+                "main-display",
+                "prestige-button",
+                "resource-display",
+                "milestones",
+                "upgrades"
+            ]
+        },
+        "Challenges": {
+            content: [
+                ["display-text", "Entering a challenge forces a Super Rebirth reset<br>Whilst inside of a challenge, various nerfs are applied to you<br>A challenge can be completed after reaching its goal, which will vary between the challenges<br>After completing a challenge, a powerful upgrade is applied for free"],
+                "blank",
+                "h-line",
+                "blank",
+                "challenges",
+            ]
+        },
+    },
     baseAmount() { return player.R.points },
     layerShown() {
         return hasAchievement('A', 41)
     },
     effect() {
-        return [player.SR.points.pow(0.5).add(player.SR.points.times(0.1)).add(1),
+        return [player.SR.points.times(1.5).add(1),
         player.SR.points.pow(0.5).add(1)]
     },
     effectDescription() {
@@ -773,11 +775,11 @@ addLayer("SR", {
     challenges: {
         11: {
             name: "Betrayed Gods",
-            challengeDescription: "You cannot Rebirth, $ upgrade 12 is forcefully removed, and RP upgrade 5 is forcefully removed",
-            canComplete() { return hasUpgrade('U', 34) },
+            challengeDescription: "Drastically increase Rebirth requirement",
+            canComplete() { return player.points.gte(100000000) },
             unlocked() { return hasUpgrade(this.layer, 11) },
             rewardDescription: "Gain 20% of RP gain every second",
-            goalDescription: "Unlock the machine again"
+            goalDescription: "Reach 100,000,000 $"
         },
     },
 })
