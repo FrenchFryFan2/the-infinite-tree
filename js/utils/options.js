@@ -46,12 +46,12 @@ function toggleAuto(toggle) {
 	needCanvasUpdate=true
 }
 
-const MS_DISPLAYS = ["ALL", "LAST, INCOMPLETE", "INCOMPLETE", "NONE"];
+const MS_DISPLAYS = ["ALL", "LAST, AUTO, INCOMPLETE", "AUTOMATION, INCOMPLETE", "INCOMPLETE", "NONE"];
 
-const MS_SETTINGS = ["always", "last", "incomplete", "never"];
+const MS_SETTINGS = ["always", "last", "automation", "incomplete", "never"];
 
 function adjustMSDisp() {
-	options.msDisplay = MS_SETTINGS[(MS_SETTINGS.indexOf(options.msDisplay) + 1) % 4];
+	options.msDisplay = MS_SETTINGS[(MS_SETTINGS.indexOf(options.msDisplay) + 1) % 5];
 }
 function milestoneShown(layer, id) {
 	complete = player[layer].milestones.includes(id);
