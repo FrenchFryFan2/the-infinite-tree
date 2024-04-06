@@ -775,10 +775,10 @@ addLayer("SR", {
         11: {
             name: "Betrayed Gods",
             challengeDescription: "Drastically increase Rebirth requirement",
-            canComplete() { return player.points.gte(100000000) },
+            canComplete() { return player.points.gte(30000000) },
             unlocked() { return hasUpgrade(this.layer, 11) },
             rewardDescription: "Gain 20% of RP gain every second",
-            goalDescription: "Reach 100,000,000 $"
+            goalDescription: "Reach 30,000,000 $"
         },
     },
 })
