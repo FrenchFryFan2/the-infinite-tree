@@ -216,9 +216,6 @@ addLayer("U", {
             buyUpgrade('U', 33)
             buyUpgrade('U', 34)
         };
-        if(hasUpgrade('R', 21) || hasAchievement('A', 43)) {
-            buyUpgrade('U', 34)
-        };
         if(!hasUpgrade('U', 34) && !hasUpgrade('R', 21)) {
             setClickableState('U', 11, false)
             setClickableState('U', 12, false)
@@ -293,7 +290,8 @@ addLayer("U", {
             },
             title: "Pay to Win Afterlife",
             effect(x) {
-                return new Decimal(1.1).pow(x)
+                if(!hasMilestone('SR', 3)) return new Decimal(1.1).pow(x)
+                if(hasMilestone('SR', 3)) return new Decimal(1.3).pow(x)
             },
             buy() {
                 player.points = player.points.sub(this.cost())
@@ -536,11 +534,10 @@ addLayer("R", {
         if (getClickableState('U', 12)) remult = remult.times(3)
         if (getClickableState('U', 13)) remult = remult.times(4)
         if (hasUpgrade('U', 43)) remult = remult.times(player.points.add(10).log(10).add(10).log(10))
-        if (!hasUpgrade('U', 44)) remult = remult.times(new Decimal(new Decimal(1.5).add(getBuyableAmount('R', 12).times(0.25))).pow(getBuyableAmount('R', 11)))
-        if (hasUpgrade('U', 44)) remult = remult.times(new Decimal(new Decimal(1.5).add(getBuyableAmount('R', 12).times(0.3))).pow(getBuyableAmount('R', 11)))
+        remult = remult.times(layers.R.buyables[11].effect())
         if (hasUpgrade('R', 32)) remult = remult.times(1.3)
-        remult = remult.times(player.SR.points.pow(0.5).add(1))
-        remult = remult.times(new Decimal(1.1).pow(getBuyableAmount('U', 11)))
+        remult = remult.times(layers.SR.effect()[0])
+        remult = remult.times(layers.U.buyables[11].effect())
         return remult
     },
     exponent() {
@@ -653,8 +650,7 @@ addLayer("R", {
                 return hasUpgrade('R', 22)
             },
             effect(x) {
-                if (!hasUpgrade('U', 44)) return new Decimal(1.5).add(getBuyableAmount(this.layer, 12).times(0.25)).pow(x)
-                if (hasUpgrade('U', 44)) return new Decimal(1.5).add(getBuyableAmount(this.layer, 12).times(0.3)).pow(x)
+                return new Decimal(1.5).add(layers.R.buyables[12].effect()).pow(x)
             },
         },
         12: {
@@ -690,6 +686,7 @@ addLayer("R", {
             player.R.upgrades = []
             player.R.points = new Decimal(0)
             if(hasMilestone('SR', 1)) player.R.upgrades.push(11, 12, 13, 14)
+            if(hasMilestone('SR', 3)) player.R.upgrades.push(22, 23)
             if(!hasMilestone('SR', 3)) setBuyableAmount('R', 11, new Decimal(0))
             if(!hasMilestone('SR', 3)) setBuyableAmount('R', 12, new Decimal(0))
         }
@@ -704,7 +701,7 @@ addLayer("SR", {
     }},
     row: "2",
     canBuyMax() {
-        return hasMilestone('SR', 2)
+        return hasMilestone(this.layer, 2)
     },
     color: "#eb1a3d",
     resource: "Super Rebirth Points",
@@ -715,6 +712,14 @@ addLayer("SR", {
     roundUpCost: true,
     baseResource: "RP",
     branches: ["R"],
+    tabFormat: [
+        "main-display",
+        ["prestige-button"],
+        "challenges",
+        "blank",
+        "milestones",
+        "upgrades"
+    ],
     baseAmount() { return player.R.points },
     layerShown() {
         return hasAchievement('A', 41)
@@ -751,13 +756,55 @@ addLayer("SR", {
         },
         3: {
             requirementDescription: "5 SRP",
-            effectDescription: "ALL buyables are kept on Super Rebirth resets and boost the $ buyable",
+            effectDescription: "ALL buyables are kept on Super Rebirth resets, keep RP upgrade 5 and 6, and boost the $ buyable",
             done() {
                 return player.SR.points.gte(5)
-            }
+            },
+            tooltip: "$ buyable boost: 1.1^x -> 1.3^x"
         },
     },
     upgrades: {
+        11: {
+            title: "Challenging",
+            description: "Unlock the first challenge",
+            cost: new Decimal(5),
+        },
+    },
+    challenges: {
+        11: {
+            name: "Betrayed Gods",
+            challengeDescription: "You cannot Rebirth, $ upgrade 12 is forcefully removed, and RP upgrade 5 is forcefully removed",
+            canComplete() { return hasUpgrade('U', 34) },
+            unlocked() { return hasUpgrade(this.layer, 11) },
+            rewardDescription: "Gain 20% of RP gain every second",
+            goalDescription: "Unlock the machine again"
+        },
+    },
+})
 
+addLayer("SA", {
+    name: "secret-achievements",
+    symbol: "🔮",
+    row: "side",
+    type: "none",
+    resource: "secret achievements",
+    color: "#9966BB",
+    tooltip: "Secret Achievements",
+    tabFormat: [
+        ["display-text", "Secret Achievements are only visible once completed<br>This tab is only visible once any Secret Achievement has been completed<br>Each Secret Achievement will also eventually have its own exclusive visual theme (available in options) once I figure out how to do that"],
+        ["display-text", "<br>There is currently 1 Secret Achievement"],
+        "blank",
+        "achievements"
+    ],
+    unlocked() {
+        return hasAchievement('SA', 11)
+    },
+    achievements: {
+        11: {
+            name: "Out of Order",
+            tooltip: "Buy $ upgrade 7 before $ upgrade 3",
+            unlocked() { return hasAchievement('SA', 11) },
+            done() { return !hasUpgrade('U', 13) && hasUpgrade('U', 23) }
+        },
     },
 })

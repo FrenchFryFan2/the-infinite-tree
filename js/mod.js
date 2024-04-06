@@ -68,15 +68,13 @@ function getPointGen() {
 
 
 	// R Layer
-	if (!hasUpgrade('U', 33)) gain = gain.times(player.R.points.pow(0.6).add(1))
-    if (hasUpgrade('U', 33) && hasUpgrade('U', 42)) gain = gain.times(player.R.points.pow(0.8).add(1))
-    if (hasUpgrade('U', 33) && !hasUpgrade('U', 42)) gain = gain.times(player.R.points.pow(0.7).add(1))
+	gain = gain.times(layers.R.effect())
 	if (hasUpgrade('R', 11)) gain = gain.times(5)
 	if (hasUpgrade('R', 14)) gain = gain.times(2)
 
 
 	// SR Layer
-	gain = gain.times(player.SR.points.pow(0.5).add(player.SR.points.times(0.1)).add(1))
+	gain = gain.times(layers.SR.effect()[0])
 
 	// Dunno were else to put this
 	setLayerCurrencyToPoints("U");
