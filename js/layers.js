@@ -662,9 +662,6 @@ addLayer("R", {
             },
         },
     },
-    automate() {
-        
-    },
     doReset(resetlayer) {
         if(resetlayer == 'SR') {
             player.R.upgrades = []
@@ -708,7 +705,7 @@ addLayer("SR", {
                 "prestige-button",
                 "resource-display",
                 "milestones",
-                "upgrades"
+                "upgrades",
             ]
         },
         "Challenges": {
