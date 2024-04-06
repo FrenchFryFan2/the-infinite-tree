@@ -676,7 +676,9 @@ addLayer("R", {
         }
     },
     passiveGeneration() {
-        if(hasChallenge('SR', 11)) return 0.2
+        let passive = new Decimal(0)
+        if(hasChallenge('SR', 11)) passive = passive.add(0.2)
+        return passive
     },
     update(dT) {
         console.log(dT)
