@@ -14,7 +14,8 @@ addLayer("U", {
         "Upgrades": {
             content: [
                 "main-display",
-                "upgrades"
+                "buyables",
+                "upgrades",
             ],
         },
         "The Machine": {
@@ -148,7 +149,7 @@ addLayer("U", {
             },
         },
         41: {
-            title: "Super Duper Deca Multiplier",
+            title: "Payrise",
             description: "Multiply $ gain by 10",
             cost: new Decimal("1e13"),
             currencyDisplayName: "$",
@@ -158,7 +159,7 @@ addLayer("U", {
             },
         },
         42: {
-            title: "Wow, another RP effect boost",
+            title: "Relativity",
             description: "Boost RP's effect again",
             tooltip: "^0.7 -> ^0.8",
             cost: new Decimal("5e14"),
@@ -184,7 +185,7 @@ addLayer("U", {
             },
         },
         44: {
-            title: "This is a really weird concept tbh",
+            title: "Reincarnativism",
             description: "Boost the second RP buyables effect slightly",
             cost: new Decimal("1e25"),
             currencyDisplayName: "$",
@@ -285,6 +286,29 @@ addLayer("U", {
             },
         },
     },
+    buyables: {
+        11: {
+            cost(x) {
+                return new Decimal(1000000).times(new Decimal(10).pow(x))
+            },
+            title: "Pay to Win Afterlife",
+            effect(x) {
+                return new Decimal(1.1).pow(x)
+            },
+            buy() {
+                player.points = player.points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            canAfford() { return player.points.gte(this.cost()) },
+            display() {
+                return "Boost RP gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "<br>Effect: x" + coolDynamicFormat(this.effect(), 2)
+            },
+            tooltip: "Base effect: +1.1^x<br>Base cost:1,000,000*(10^x)",
+            unlocked() { return hasMilestone('SR', 2) }
+        },
+    },
     doReset(resetlayer) {
         player.U.upgrades = [];
         if(resetlayer == 'R') {
@@ -295,6 +319,7 @@ addLayer("U", {
         if(resetlayer == 'SR') {
             if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
             if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
+            if(!hasMilestone('SR', 3)) setBuyableAmount('U', 11, new Decimal(0))
         }
     },
 })
@@ -441,7 +466,7 @@ addLayer("A", {
             name: "Monetary Incentive",
             tooltip: "Purchase the $ buyable",
             done() {
-                if (false) return true
+                if (getBuyableAmount('U', 11).gte(1)) return true
             },
         },
         45: {
@@ -513,7 +538,9 @@ addLayer("R", {
         if (hasUpgrade('U', 43)) remult = remult.times(player.points.add(10).log(10).add(10).log(10))
         if (!hasUpgrade('U', 44)) remult = remult.times(new Decimal(new Decimal(1.5).add(getBuyableAmount('R', 12).times(0.25))).pow(getBuyableAmount('R', 11)))
         if (hasUpgrade('U', 44)) remult = remult.times(new Decimal(new Decimal(1.5).add(getBuyableAmount('R', 12).times(0.3))).pow(getBuyableAmount('R', 11)))
+        if (hasUpgrade('R', 32)) remult = remult.times(1.3)
         remult = remult.times(player.SR.points.pow(0.5).add(1))
+        remult = remult.times(new Decimal(1.1).pow(getBuyableAmount('U', 11)))
         return remult
     },
     exponent() {
@@ -659,14 +686,12 @@ addLayer("R", {
         
     },
     doReset(resetlayer) {
-        if(resetlayer !== 'R') {
-            player.R.upgrades = []
-            setBuyableAmount('R', 11, new Decimal(0))
-            setBuyableAmount('R', 12, new Decimal(0))
-        }
         if(resetlayer == 'SR') {
+            player.R.upgrades = []
             player.R.points = new Decimal(0)
             if(hasMilestone('SR', 1)) player.R.upgrades.push(11, 12, 13, 14)
+            if(!hasMilestone('SR', 3)) setBuyableAmount('R', 11, new Decimal(0))
+            if(!hasMilestone('SR', 3)) setBuyableAmount('R', 12, new Decimal(0))
         }
     },
 })
@@ -678,6 +703,9 @@ addLayer("SR", {
         best: new Decimal(0),
     }},
     row: "2",
+    canBuyMax() {
+        return hasMilestone('SR', 2)
+    },
     color: "#eb1a3d",
     resource: "Super Rebirth Points",
     requires: new Decimal(1e19),
@@ -709,10 +737,27 @@ addLayer("SR", {
         },
         1: {
             requirementDescription: "2 SRP",
-            effectDescription: "Keep first 4 RP upgrades on SRP reset and keep $ upgrades 9-11 on all resets",
+            effectDescription: "Keep first 4 RP upgrades on SRP reset, and keep $ upgrades 9-11 on all resets",
             done() {
                 return player.SR.points.gte(2)
             }
-        }
-    }
+        },
+        2: {
+            requirementDescription: "3 SRP",
+            effectDescription: "Unlock a $ buyable (kept on Rebirths), and unlock the ability to buy max SRP",
+            done() {
+                return player.SR.points.gte(3)
+            }
+        },
+        3: {
+            requirementDescription: "5 SRP",
+            effectDescription: "ALL buyables are kept on Super Rebirth resets and boost the $ buyable",
+            done() {
+                return player.SR.points.gte(5)
+            }
+        },
+    },
+    upgrades: {
+
+    },
 })
