@@ -95,7 +95,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.R.points.gte(new Decimal("1e190000"))
+	return player.SR.points.gte(new Decimal("8"))
 }
 
 function setLayerCurrencyToPoints(layer) {
