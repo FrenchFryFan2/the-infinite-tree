@@ -316,6 +316,22 @@ addLayer("A", {
     startData() { return {
         unlocked: true,
     }},
+    tabFormat: {
+        "Achievements": {
+            content: [
+                "achievements"
+            ]
+        },
+        "Secrets": {
+            content: [
+                ["layer-proxy", ["SA", [
+                    ["display-text", "Secret Achievements are only visible once completed<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement will also eventually have its own exclusive visual theme (available in options) once I figure out how to do that<br>There will be a surprise for getting all of them once there are enough of them for it to be interesting"],
+                    ["display-text", "<br>There is currently 1 Secret Achievement<br>Every Secret Achievement has hints hidden around the game to make them possible to obtain without searching up the answers (you'll do it anyways)"],
+                    "blank",
+                    "achievements"]]]
+            ]
+        }
+    },
     achievements: {
         11: {
             name: "The Start",
@@ -783,11 +799,11 @@ addLayer("SR", {
 addLayer("SA", {
     name: "secret-achievements",
     symbol: "🔮",
-    row: "side",
+    // row: "side",
     type: "none",
-    resource: "secret achievements",
+    resource: "secretachievements",
     color: "#9966BB",
-    tooltip: "Secret Achievements",
+    tooltip: "SecretAchievements",
     tabFormat: [
         ["display-text", "Secret Achievements are only visible once completed<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement will also eventually have its own exclusive visual theme (available in options) once I figure out how to do that<br>There will be a surprise for getting all of them once there are enough of them for it to be interesting"],
         ["display-text", "<br>There is currently 1 Secret Achievement<br>Every Secret Achievement has hints hidden around the game to make them possible to obtain without searching up the answers (you'll do it anyways)"],
