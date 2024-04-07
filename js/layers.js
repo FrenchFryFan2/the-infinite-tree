@@ -794,9 +794,7 @@ addLayer("SA", {
         "blank",
         "achievements"
     ],
-    unlocked() {
-        return hasAchievement('SA', 11)
-    },
+    unlocked: true,
     achievements: {
         11: {
             name: "Out of Order",
