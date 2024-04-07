@@ -1,5 +1,5 @@
 // ************ Themes ************
-var themes = ["default", "aqua", "light", "quality"]
+var themes = ["default", "aqua", "verdant", "pyro", "arcane", "light", "void", "quality"]
 
 var colors = {
 	default: {
@@ -22,15 +22,45 @@ var colors = {
 		background: "#001f3f",
 		background_tooltip: "rgba(0, 15, 31, 0.75)",
 	},
-	quality: {
-		1: "#00ff00",
-		2: "#00ffff",
-		3: "#ff00ff",
-		color: "#ff00ff",
-		points: "#ff00ff",
-		locked: "#ff0000",
-		background: "#ffff00",
-		background_tooltip: "rgba(255, 255, 0, 0.75)",
+	pyro: {
+		1: "#ffbfbf",
+		2: "#bf8f8f",
+		3: "#7f5f5f",
+		color: "#ffbfbf",
+		points: "#ffdfdf",
+		locked: "#c4a7a7",
+		background: "#3f0000",
+		background_tooltip: "rgba(31, 0, 0, 0.75)",
+	},
+	arcane: {
+		1: "#dfbfff",
+		2: "#a78fbf",
+		3: "#6f5f7f",
+		color: "#dfbfff",
+		points: "#efdfff",
+		locked: "#b3a7c4",
+		background: "#1f003f",
+		background_tooltip: "rgba(31, 0, 31, 0.75)",
+	},
+	verdant: {
+		1: "#bfffbf",
+		2: "#8fbf8f",
+		3: "#5f7f5f",
+		color: "#bfffbf",
+		points: "#dfffdf",
+		locked: "#a7c4a7",
+		background: "#003f00",
+		background_tooltip: "rgba(0, 31, 0, 0.75)",
+	},
+	void: {
+		1: "#888888",
+		2: "#777777",
+		3: "#666666",
+		color: "#777777",
+		points: "#888888",
+		locked: "#886666",
+		background: "#000000",
+		background_tooltip: "rgba(0, 0, 0, 0.75)",
 	},
 	light: {
 		1: "#000000",
@@ -41,6 +71,16 @@ var colors = {
 		locked: "#a07070",
 		background: "#e0e0e0",
 		background_tooltip: "rgba(255, 255, 255, 0.75)",
+	},
+	quality: {
+		1: "#00ff00",
+		2: "#00ffff",
+		3: "#ff00ff",
+		color: "#ff00ff",
+		points: "#ff00ff",
+		locked: "#ff0000",
+		background: "#ffff00",
+		background_tooltip: "rgba(255, 255, 0, 0.75)",
 	},
 }
 function changeTheme() {

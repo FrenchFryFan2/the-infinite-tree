@@ -14,16 +14,20 @@ addLayer("U", {
         "Upgrades": {
             content: [
                 "main-display",
-                "upgrades"
+                "buyables",
+                "upgrades",
             ],
         },
         "The Machine": {
             content: [
                 "main-display",
                 ["display-text", function() {
-                    if(hasUpgrade('U', 34) || hasUpgrade('R', 21)) return "The Machine can provide boosts to both $ and RP, but be aware that you can't change your selection once you make it."; else return "The Machine is currently disabled because you don't have $ upgrade 12"
+                    if(hasUpgrade('U', 34) || hasUpgrade('R', 21)) return "The Machine can provide boosts to both $ and RP, but be aware that you can't change your selection once you make it.<br>Bonus is reset on Rebirth."; else return "The Machine is currently disabled because you don't have $ upgrade 12"
                 }],
-                "clickables"
+                "clickables",
+                ["display-text", function() {
+                    if(hasAchievement('A', 33)) return "Your bonuses to the Machine are multiplying $ and RP gain by " + coolDynamicFormat(machineBonuses(), 2)
+                }],
             ],
             unlocked() {
                 return hasAchievement('A', 31)
@@ -143,15 +147,9 @@ addLayer("U", {
             unlocked() {
                 return hasUpgrade('R', 13)
             },
-            canAfford() {
-                if(player.points.gte("1e9") || hasUpgrade('R', 21)) return true
-            },
-            pay() {
-                if(!hasUpgrade('R', 21)) player.points = player.points.sub("1e9")
-            },
         },
         41: {
-            title: "Super Duper Deca Multiplier",
+            title: "Payrise",
             description: "Multiply $ gain by 10",
             cost: new Decimal("1e13"),
             currencyDisplayName: "$",
@@ -161,7 +159,7 @@ addLayer("U", {
             },
         },
         42: {
-            title: "Wow, another RP effect boost",
+            title: "Relativity",
             description: "Boost RP's effect again",
             tooltip: "^0.7 -> ^0.8",
             cost: new Decimal("5e14"),
@@ -187,7 +185,7 @@ addLayer("U", {
             },
         },
         44: {
-            title: "This is a really weird concept tbh",
+            title: "Reincarnativism",
             description: "Boost the second RP buyables effect slightly",
             cost: new Decimal("1e25"),
             currencyDisplayName: "$",
@@ -200,37 +198,7 @@ addLayer("U", {
     },
     layerShown(){return true},
     automate() {
-        if(hasUpgrade('R', 12) || hasAchievement('A', 31)) {
-            buyUpgrade('U', 11)
-            buyUpgrade('U', 12)
-            buyUpgrade('U', 13)
-            buyUpgrade('U', 14)
-            buyUpgrade('U', 21)
-            buyUpgrade('U', 22)
-            buyUpgrade('U', 23)
-            buyUpgrade('U', 24)
-        };
-        if(hasAchievement('A', 31)) {
-            buyUpgrade('U', 31)
-        };
-        if(hasAchievement('A', 33)) {
-            buyUpgrade('U', 32)
-            buyUpgrade('U', 33)
-            buyUpgrade('U', 34)
-        };
-        if(hasUpgrade('R', 21)) {
-            buyUpgrade('U', 34)
-        };
-        if(!hasUpgrade('U', 34) && !hasUpgrade('R', 21)) {
-            setClickableState('U', 11, false)
-            setClickableState('U', 12, false)
-            setClickableState('U', 13, false)
-        };
-        if(hasUpgrade('R', 32)) {
-            setClickableState('U', 11, true)
-            setClickableState('U', 12, true)
-            setClickableState('U', 13, true)
-        };
+
     },
     clickables: {
         11: {
@@ -287,7 +255,54 @@ addLayer("U", {
                 setClickableState(this.layer, this.id, true)
             },
         },
-    }
+    },
+    buyables: {
+        11: {
+            cost(x) {
+                return new Decimal(1000000).times(new Decimal(10).pow(x))
+            },
+            title: "Pay to Win Afterlife",
+            effect(x) {
+                if(!hasMilestone('SR', 3)) return new Decimal(1.1).pow(x)
+                if(hasMilestone('SR', 3)) return new Decimal(1.3).pow(x)
+            },
+            buy() {
+                player.points = player.points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            canAfford() { return player.points.gte(this.cost()) },
+            display() {
+                return "Boost RP gain<br>Cost: " + coolDynamicFormat(this.cost(), 3)
+                + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
+                + "<br>Effect: x" + coolDynamicFormat(this.effect(), 2)
+            },
+            tooltip: "Base effect: +1.1^x<br>Base cost:1,000,000*(10^x)",
+            unlocked() { return hasMilestone('SR', 2) }
+        },
+    },
+    doReset(resetlayer) {
+        player.U.upgrades = [];
+        if(resetlayer == 'R') {
+            if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
+            if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
+            if(hasUpgrade('R', 21)) player.U.upgrades.push(34)
+        };
+        if(resetlayer == 'SR') {
+            if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
+            if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
+            if(!hasMilestone('SR', 3)) setBuyableAmount('U', 11, new Decimal(0))
+        };
+        if(!hasUpgrade('R', 32)) {
+            setClickableState('U', 11, false)
+            setClickableState('U', 12, false)
+            setClickableState('U', 13, false)
+        };
+        if(hasUpgrade('R', 32)) {
+            setClickableState('U', 11, true)
+            setClickableState('U', 12, true)
+            setClickableState('U', 13, true)
+        };
+    },
 })
 
 addLayer("A", {
@@ -415,27 +430,62 @@ addLayer("A", {
             },
         },
         42: {
-            name: "Super Duper Uber Rebirth (ENDGAME)",
+            name: "Super Duper Uber Rebirth",
             tooltip: "Reach 1e19 RP<br>Reward: retain all automation in future",
             done() {
                 if (player.R.points.gte("1e19")) return true
             },
         },
         43: {
-            name: "PLACEHOLDER",
-            tooltip: "Unobtainable",
+            name: "Can't wait for Hyper Rebirth",
+            tooltip: "Perform a Super Rebirth reset",
             done() {
-                if (false) return true
+                if (player.SR.points.gte(1)) return true
             },
         },
         44: {
+            name: "Monetary Incentive",
+            tooltip: "Purchase the $ buyable",
+            done() {
+                if (getBuyableAmount('U', 11).gte(1)) return true
+            },
+        },
+        45: {
+            name: "Kilometrerock",
+            tooltip: "Get all SRP milestones (currently unobtainable)",
+            done() {
+                if (hasMilestone('SR', 8)) return true
+            },
+        },
+        51: {
+            name: "Unchallenged (ENDGAME)",
+            tooltip: "Complete a challenge",
+            done() {
+                if (hasChallenge('SR', 11)) return true
+            },
+        },
+        52: {
             name: "PLACEHOLDER",
             tooltip: "Unobtainable",
             done() {
                 if (false) return true
             },
         },
-        45: {
+        53: {
+            name: "PLACEHOLDER",
+            tooltip: "Unobtainable",
+            done() {
+                if (false) return true
+            },
+        },
+        54: {
+            name: "HOLDERPLACE",
+            tooltip: "tainableUnob",
+            done() {
+                if (false) return true
+            },
+        },
+        55: {
             name: "PLACEHOLDER",
             tooltip: "Unobtainable",
             done() {
@@ -456,19 +506,22 @@ addLayer("R", {
     resource: "Rebirth Points",
     baseAmount() { return player.points },
     onPrestige() {
-        setClickableState('U', 11, false)
-        setClickableState('U', 12, false)
-        setClickableState('U', 13, false)
+
     },
-    requires: new Decimal(100000),
+    requires() {
+        if(!inChallenge('SR', 11)) return new Decimal(100000)
+        if(inChallenge('SR', 11)) return new Decimal("eeeeeeeee10")
+    },
     gainMult() {
         let remult = new Decimal(1)
         if (getClickableState('U', 11)) remult = remult.times(2)
         if (getClickableState('U', 12)) remult = remult.times(3)
         if (getClickableState('U', 13)) remult = remult.times(4)
         if (hasUpgrade('U', 43)) remult = remult.times(player.points.add(10).log(10).add(10).log(10))
-        if (!hasUpgrade('U', 44)) remult = remult.times(new Decimal(new Decimal(1.5).add(getBuyableAmount('R', 12).times(0.25))).pow(getBuyableAmount('R', 11)))
-        if (hasUpgrade('U', 44)) remult = remult.times(new Decimal(new Decimal(1.5).add(getBuyableAmount('R', 12).times(0.3))).pow(getBuyableAmount('R', 11)))
+        remult = remult.times(layers.R.buyables[11].effect())
+        if (hasUpgrade('R', 32)) remult = remult.times(1.3)
+        remult = remult.times(layers.SR.effect()[0])
+        remult = remult.times(layers.U.buyables[11].effect())
         return remult
     },
     exponent() {
@@ -548,15 +601,15 @@ addLayer("R", {
             description: "Allows use of two of The Machines modes at once",
             cost: new Decimal("1e16"),
             unlocked() {
-                return hasAchievement('A', 41)
+                return hasUpgrade('R', 24)
             },
         },
         32: {
             title: "Machine automating Machine",
-            description: "Automatically select all three modes of The Machine<br>Also buffs The Machines modes",
+            description: "Automatically select all three modes of The Machine<br>The Machine also gets a buff",
             cost: new Decimal("1e18"),
             unlocked() {
-                return hasAchievement('A', 41)
+                return hasUpgrade('R', 24)
             },
         },
     },
@@ -574,15 +627,14 @@ addLayer("R", {
             },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             buy() {
-                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                if(!hasMilestone('SR', 0)) player[this.layer].points = player[this.layer].points.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             unlocked() {
                 return hasUpgrade('R', 22)
             },
             effect(x) {
-                if (!hasUpgrade('U', 44)) return new Decimal(1.5).add(getBuyableAmount(this.layer, 12).times(0.25)).pow(x)
-                if (hasUpgrade('U', 44)) return new Decimal(1.5).add(getBuyableAmount(this.layer, 12).times(0.3)).pow(x)
+                return new Decimal(1.5).add(layers.R.buyables[12].effect()).pow(x)
             },
         },
         12: {
@@ -598,7 +650,7 @@ addLayer("R", {
             },
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             buy() {
-                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                if(!hasMilestone('SR', 0)) player[this.layer].points = player[this.layer].points.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             unlocked() {
@@ -610,7 +662,147 @@ addLayer("R", {
             },
         },
     },
-    automate() {
-        // Wow, a nothing
-    }
+    doReset(resetlayer) {
+        if(resetlayer == 'SR') {
+            player.R.upgrades = []
+            player.R.points = new Decimal(0)
+            if(hasMilestone('SR', 1)) player.R.upgrades.push(11, 12, 13, 14)
+            if(hasMilestone('SR', 3)) player.R.upgrades.push(22, 23)
+            if(!hasMilestone('SR', 3)) setBuyableAmount('R', 11, new Decimal(0))
+            if(!hasMilestone('SR', 3)) setBuyableAmount('R', 12, new Decimal(0))
+        }
+    },
+    passiveGeneration() {
+        let passive = new Decimal(0)
+        if(hasChallenge('SR', 11)) passive = passive.add(0.2)
+        return passive
+    },
+})
+
+addLayer("SR", {
+    startData() { return {
+        unlocked: false,
+        points: new Decimal(0),
+        best: new Decimal(0),
+    }},
+    row: "2",
+    canBuyMax() {
+        return hasMilestone(this.layer, 2)
+    },
+    color: "#eb1a3d",
+    resource: "Super Rebirth Points",
+    requires: new Decimal(1e19),
+    type: "static",
+    base: new Decimal(2),
+    exponent: new Decimal(1),
+    roundUpCost: true,
+    baseResource: "RP",
+    branches: ["R"],
+    tabFormat: {
+        "Main": {
+            content: [
+                "main-display",
+                "prestige-button",
+                "resource-display",
+                "milestones",
+                "upgrades",
+            ]
+        },
+        "Challenges": {
+            content: [
+                ["display-text", "Entering a challenge forces a Super Rebirth reset<br>Whilst inside of a challenge, various nerfs are applied to you<br>A challenge can be completed after reaching its goal, which will vary between the challenges<br>After completing a challenge, a powerful upgrade is applied for free"],
+                "blank",
+                "h-line",
+                "blank",
+                "challenges",
+            ]
+        },
+    },
+    baseAmount() { return player.R.points },
+    layerShown() {
+        return hasAchievement('A', 41)
+    },
+    effect() {
+        return [player.SR.points.times(1.5).add(1),
+        player.SR.points.pow(0.5).add(1)]
+    },
+    effectDescription() {
+        return "multiplying RP gain by " + coolDynamicFormat(this.effect()[1], 2)
+        + " and $ gain by " + coolDynamicFormat(this.effect()[0], 2)
+    },
+    milestones: {
+        0: {
+            requirementDescription: "1 SRP",
+            effectDescription: "$ upgrades 1-8 are kept on all resets, and RP buyables don't spend RP.",
+            done() {
+                return player.SR.points.gte(1)
+            }
+        },
+        1: {
+            requirementDescription: "2 SRP",
+            effectDescription: "Keep first 4 RP upgrades on SRP reset, and keep $ upgrades 9-11 on all resets",
+            done() {
+                return player.SR.points.gte(2)
+            }
+        },
+        2: {
+            requirementDescription: "3 SRP",
+            effectDescription: "Unlock a $ buyable (kept on Rebirths), and unlock the ability to buy max SRP",
+            done() {
+                return player.SR.points.gte(3)
+            }
+        },
+        3: {
+            requirementDescription: "5 SRP",
+            effectDescription: "ALL buyables are kept on Super Rebirth resets, keep RP upgrade 6 and 7, boost the $ buyable, and unlock the first challenge",
+            done() {
+                return player.SR.points.gte(5)
+            },
+            tooltip: "$ buyable boost: 1.1^x -> 1.3^x"
+        },
+        4: {
+            requirementDescription: "8 SRP",
+            effectDescription: "Raise $ gain ^1.1",
+            done() {
+                return player.SR.points.gte(8)
+            },
+        },
+    },
+    challenges: {
+        11: {
+            name: "Betrayed Gods",
+            challengeDescription: "You cannot Rebirth",
+            canComplete() { return player.points.gte(30000000) },
+            unlocked() { return hasMilestone(this.layer, 3) },
+            rewardDescription: "Gain 20% of RP gain every second (currently broken)",
+            goalDescription: "Reach 30,000,000 $"
+        },
+    },
+})
+
+addLayer("SA", {
+    name: "secret-achievements",
+    symbol: "🔮",
+    row: "side",
+    type: "none",
+    resource: "secret achievements",
+    color: "#9966BB",
+    tooltip: "Secret Achievements",
+    tabFormat: [
+        ["display-text", "Secret Achievements are only visible once completed<br>This tab is only visible once any Secret Achievement has been completed<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement will also eventually have its own exclusive visual theme (available in options) once I figure out how to do that<br>There will be a surprise for getting all of them once there are enough of them for it to be interesting"],
+        ["display-text", "<br>There is currently 1 Secret Achievement<br>Every Secret Achievement has hints hidden around the game to make them possible to obtain without searching up the answers (you'll do it anyways)"],
+        "blank",
+        "achievements"
+    ],
+    unlocked() {
+        return hasAchievement('SA', 11)
+    },
+    achievements: {
+        11: {
+            name: "Out of Order",
+            tooltip: "Buy $ upgrade 7 before $ upgrade 3",
+            unlocked() { return hasAchievement('SA', 11) },
+            done() { return !hasUpgrade('U', 13) && hasUpgrade('U', 23) }
+        },
+    },
 })
