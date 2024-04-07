@@ -454,7 +454,7 @@ addLayer("A", {
             name: "Kilometrerock",
             tooltip: "Get all SRP milestones",
             done() {
-                if (false) return true
+                if (hasMilestone('SR', 8)) return true
             },
         },
         51: {
@@ -480,7 +480,7 @@ addLayer("A", {
         },
         54: {
             name: "HOLDERPLACE",
-            tooltip: "tainableUn",
+            tooltip: "tainableUnob",
             done() {
                 if (false) return true
             },
