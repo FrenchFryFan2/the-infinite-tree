@@ -790,7 +790,7 @@ addLayer("SR", {
             challengeDescription: "You cannot Rebirth",
             canComplete() { return player.points.gte(30000000) },
             unlocked() { return hasMilestone(this.layer, 3) },
-            rewardDescription: "Gain 20% of RP gain every second (currently broken)",
+            rewardDescription: "Gain 20% of RP gain every second",
             goalDescription: "Reach 30,000,000 $"
         },
     },
