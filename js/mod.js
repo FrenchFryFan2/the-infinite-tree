@@ -43,6 +43,7 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(0)
+	if(player.points === null || player.points === undefined) player.points = new Decimal(0)
 
 
 	// $ Layer ('U')
