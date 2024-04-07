@@ -452,13 +452,13 @@ addLayer("A", {
         },
         45: {
             name: "Kilometrerock",
-            tooltip: "Get all SRP milestones",
+            tooltip: "Get all SRP milestones (currently unobtainable)",
             done() {
                 if (hasMilestone('SR', 8)) return true
             },
         },
         51: {
-            name: "Unchallenged",
+            name: "Unchallenged (ENDGAME)",
             tooltip: "Complete a challenge",
             done() {
                 if (hasChallenge('SR', 11)) return true
@@ -767,34 +767,6 @@ addLayer("SR", {
                 return player.SR.points.gte(8)
             },
         },
-        5: {
-            requirementDescription: "12 SRP",
-            effectDescription: "Keep RP upgrades 5 and 8 on reset, and keep ALL $ upgrades on Rebirth and Super Rebirth, unlock another challenge",
-            done() {
-                return player.SR.points.gte(12)
-            },
-        },
-        6: {
-            requirementDescription: "20 SRP",
-            effectDescription: "Unlock More upgrades, again",
-            done() {
-                return player.SR.points.gte(20)
-            },
-        },
-        7: {
-            requirementDescription: "40 SRP",
-            effectDescription: "Unlock Power",
-            done() {
-                return player.SR.points.gte(40)
-            },
-        },
-        8: {
-            requirementDescription: "100 SRP",
-            effectDescription: "Increase $ gain +40% per upgrade (counts as SR layer mult)",
-            done() {
-                return player.SR.points.gte(100)
-            },
-        },
     },
     challenges: {
         11: {
@@ -802,7 +774,7 @@ addLayer("SR", {
             challengeDescription: "You cannot Rebirth",
             canComplete() { return player.points.gte(30000000) },
             unlocked() { return hasMilestone(this.layer, 3) },
-            rewardDescription: "Gain 20% of RP gain every second",
+            rewardDescription: "Gain 20% of RP gain every second (currently broken)",
             goalDescription: "Reach 30,000,000 $"
         },
     },
