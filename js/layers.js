@@ -754,26 +754,54 @@ addLayer("SR", {
         },
         3: {
             requirementDescription: "5 SRP",
-            effectDescription: "ALL buyables are kept on Super Rebirth resets, keep RP upgrade 5 and 6, and boost the $ buyable",
+            effectDescription: "ALL buyables are kept on Super Rebirth resets, keep RP upgrade 6 and 7, boost the $ buyable, and unlock the first challenge",
             done() {
                 return player.SR.points.gte(5)
             },
             tooltip: "$ buyable boost: 1.1^x -> 1.3^x"
         },
-    },
-    upgrades: {
-        11: {
-            title: "Challenging",
-            description: "Unlock the first challenge",
-            cost: new Decimal(5),
+        4: {
+            requirementDescription: "8 SRP",
+            effectDescription: "Raise $ gain ^1.1",
+            done() {
+                return player.SR.points.gte(8)
+            },
+        },
+        5: {
+            requirementDescription: "12 SRP",
+            effectDescription: "Keep RP upgrades 5 and 8 on reset, and keep ALL $ upgrades on Rebirth and Super Rebirth, unlock another challenge",
+            done() {
+                return player.SR.points.gte(12)
+            },
+        },
+        6: {
+            requirementDescription: "20 SRP",
+            effectDescription: "Unlock More upgrades, again",
+            done() {
+                return player.SR.points.gte(20)
+            },
+        },
+        7: {
+            requirementDescription: "40 SRP",
+            effectDescription: "Unlock Power",
+            done() {
+                return player.SR.points.gte(40)
+            },
+        },
+        8: {
+            requirementDescription: "100 SRP",
+            effectDescription: "Increase $ gain +40% per upgrade (counts as SR layer mult)",
+            done() {
+                return player.SR.points.gte(100)
+            },
         },
     },
     challenges: {
         11: {
             name: "Betrayed Gods",
-            challengeDescription: "Drastically increase Rebirth requirement",
+            challengeDescription: "You cannot Rebirth",
             canComplete() { return player.points.gte(30000000) },
-            unlocked() { return hasUpgrade(this.layer, 11) },
+            unlocked() { return hasMilestone(this.layer, 3) },
             rewardDescription: "Gain 20% of RP gain every second",
             goalDescription: "Reach 30,000,000 $"
         },

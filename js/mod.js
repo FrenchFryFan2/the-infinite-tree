@@ -75,6 +75,7 @@ function getPointGen() {
 
 	// SR Layer
 	gain = gain.times(layers.SR.effect()[0])
+	if (hasMilestone('SR', 4)) gain = gain.pow(1.1)
 
 
 	// Dunno were else to put this
@@ -110,6 +111,21 @@ function machineBonuses() {
 }
 
 function everyTick() {
+
+	// Challenge Effect
+	// SR1
+	if(inChallenge('SR', 11)) {
+		makeParticles({
+			spread: 20,
+			gravity: 2,
+			time: 3,
+			speed() { // Randomize speed a bit
+				return (Math.random() + 1.2) * 8 
+			},
+		}, 1)
+	}
+
+
 	// Automation and Value fixing
 	// $ Layer ('U')
 	setLayerCurrencyToPoints("U");
