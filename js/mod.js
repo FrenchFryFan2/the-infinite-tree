@@ -13,7 +13,7 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2.0.1",
+	num: "0.2.1",
 	name: "Super Rebirth",
 }
 
@@ -97,7 +97,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.SR.points.gte(new Decimal("8"))
+	return player.SR.points.gte(new Decimal("800000"))
 }
 
 function setLayerCurrencyToPoints(layer) {

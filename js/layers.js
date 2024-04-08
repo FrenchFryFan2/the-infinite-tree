@@ -276,19 +276,20 @@ addLayer("U", {
                 + "<br>Count: " + coolDynamicFormat(getBuyableAmount(this.layer, this.id), 0)
                 + "<br>Effect: x" + coolDynamicFormat(this.effect(), 2)
             },
-            tooltip: "Base effect: +1.1^x<br>Base cost:1,000,000*(10^x)",
+            tooltip: "Base effect: +1.1^x<br>Base cost: 1,000,000*(10^x)",
             unlocked() { return hasMilestone('SR', 2) }
         },
     },
     doReset(resetlayer) {
-        player.U.upgrades = [];
         if(resetlayer == 'R') {
+            if(!hasMilestone('SR', 5)) player.U.upgrades = []
             if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
             if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
             if(hasUpgrade('R', 21)) player.U.upgrades.push(34)
             if(hasMilestone('SR', 5)) player.U.upgrades.push(34, 41, 42, 43, 44)
         };
         if(resetlayer == 'SR') {
+            if(!hasMilestone('SR', 5)) player.U.upgrades = []
             if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
             if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
             if(!hasMilestone('SR', 3)) setBuyableAmount('U', 11, new Decimal(0))
@@ -718,13 +719,12 @@ addLayer("R", {
     },
     doReset(resetlayer) {
         if(resetlayer == 'SR') {
-            player.R.upgrades = []
+            if(!hasMilestone('SR', 5)) player.R.upgrades = []
             player.R.points = new Decimal(0)
             if(hasMilestone('SR', 1)) player.R.upgrades.push(11, 12, 13, 14)
             if(hasMilestone('SR', 3)) player.R.upgrades.push(22, 23)
             if(!hasMilestone('SR', 3)) setBuyableAmount('R', 11, new Decimal(0))
             if(!hasMilestone('SR', 3)) setBuyableAmount('R', 12, new Decimal(0))
-            if(hasMilestone('SR', 5)) player.R.upgrades.push(21, 24, 31, 32)
         }
     },
     passiveGeneration() {
@@ -823,10 +823,17 @@ addLayer("SR", {
             },
         },
         5: {
-            requirementDescription: "16 SRP",
+            requirementDescription: "12 SRP",
             effectDescription: "Keep ALL $ and RP upgrades on Rebirth and Super Rebirth, and unlock another challenge",
             done() {
-                return player.SR.points.gte(16)
+                return player.SR.points.gte(12)
+            },
+        },
+        6: {
+            requirementDescription: "18 SRP",
+            effectDescription: "Unlock more upgrades (above milestone affects them)",
+            done() {
+                return player.SR.points.gte(18)
             },
         },
     },
