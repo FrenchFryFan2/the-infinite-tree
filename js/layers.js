@@ -286,11 +286,13 @@ addLayer("U", {
             if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
             if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
             if(hasUpgrade('R', 21)) player.U.upgrades.push(34)
+            if(hasMilestone('SR', 5)) player.U.upgrades.push(34, 41, 42, 43, 44)
         };
         if(resetlayer == 'SR') {
             if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
             if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
             if(!hasMilestone('SR', 3)) setBuyableAmount('U', 11, new Decimal(0))
+            if(hasMilestone('SR', 5)) player.U.upgrades.push(34, 41, 42, 43, 44)
         };
         if(!hasUpgrade('R', 32)) {
             setClickableState('U', 11, false)
@@ -303,6 +305,38 @@ addLayer("U", {
             setClickableState('U', 13, true)
         };
     },
+    automate() {
+        setLayerCurrencyToPoints("U");
+        if(hasUpgrade('R', 12) || hasAchievement('A', 43)) {
+            buyUpgrade('U', 11)
+            buyUpgrade('U', 12)
+            buyUpgrade('U', 13)
+            buyUpgrade('U', 14)
+            buyUpgrade('U', 21)
+            buyUpgrade('U', 22)
+            buyUpgrade('U', 23)
+            buyUpgrade('U', 24)
+        };
+        if(hasAchievement('A', 31)) {
+            buyUpgrade('U', 31)
+        };
+        if(hasAchievement('A', 33)) {
+            buyUpgrade('U', 32)
+            buyUpgrade('U', 33)
+            buyUpgrade('U', 34)
+        };
+        
+        if(!hasUpgrade('U', 34)) {
+            setClickableState('U', 11, false)
+            setClickableState('U', 12, false)
+            setClickableState('U', 13, false)
+        };
+        if(hasUpgrade('R', 32)) {
+            setClickableState('U', 11, true)
+            setClickableState('U', 12, true)
+            setClickableState('U', 13, true)
+        };
+    }
 })
 
 addLayer("A", {
@@ -525,8 +559,12 @@ addLayer("R", {
 
     },
     requires() {
-        if(!inChallenge('SR', 11)) return new Decimal(100000)
-        if(inChallenge('SR', 11)) return new Decimal("eeeeeeeee10")
+        let requirement = new Decimal(0)
+        if(!inChallenge('SR', 11)) requirement = requirement.add(100000)
+        if(inChallenge('SR', 11)) requirement = requirement.add("eeeeeeeee10")
+        if(hasChallenge('SR', 12)) requirement = requirement.div(10)
+        if(inChallenge('SR', 12)) requirement = requirement.times(10)
+        return requirement
     },
     gainMult() {
         let remult = new Decimal(1)
@@ -686,6 +724,7 @@ addLayer("R", {
             if(hasMilestone('SR', 3)) player.R.upgrades.push(22, 23)
             if(!hasMilestone('SR', 3)) setBuyableAmount('R', 11, new Decimal(0))
             if(!hasMilestone('SR', 3)) setBuyableAmount('R', 12, new Decimal(0))
+            if(hasMilestone('SR', 5)) player.R.upgrades.push(21, 24, 31, 32)
         }
     },
     passiveGeneration() {
@@ -783,6 +822,13 @@ addLayer("SR", {
                 return player.SR.points.gte(8)
             },
         },
+        5: {
+            requirementDescription: "16 SRP",
+            effectDescription: "Keep ALL $ and RP upgrades on Rebirth and Super Rebirth, and unlock another challenge",
+            done() {
+                return player.SR.points.gte(16)
+            },
+        },
     },
     challenges: {
         11: {
@@ -792,6 +838,14 @@ addLayer("SR", {
             unlocked() { return hasMilestone(this.layer, 3) },
             rewardDescription: "Gain 20% of RP gain every second",
             goalDescription: "Reach 30,000,000 $"
+        },
+        12: {
+            name: "A Low Income Family in the Midst of Inflation",
+            challengeDescription: "$ gain ^0.5 and Rebirth requirement x10,000",
+            canComplete() { return player.R.points.gte("1e15") },
+            unlocked() { return hasMilestone(this.layer, 3) },
+            rewardDescription: "Rebirth Requirement /10",
+            goalDescription: "Reach 1e15 RP"
         },
     },
 })
