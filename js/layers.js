@@ -26,7 +26,7 @@ addLayer("U", {
                 }],
                 "clickables",
                 ["display-text", function() {
-                    if(hasAchievement('A', 33)) return "Your bonuses to the Machine are multiplying $ and RP gain by " + coolDynamicFormat(machineBonuses(), 2)
+                    if(hasAchievement('A', 33)) return "Your bonuses to The Machine are multiplying $ and RP gain by " + coolDynamicFormat(machineBonuses(), 2)
                 }],
             ],
             unlocked() {
@@ -283,17 +283,23 @@ addLayer("U", {
     doReset(resetlayer) {
         if(resetlayer == 'R') {
             if(!hasMilestone('SR', 5)) player.U.upgrades = []
-            if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
-            if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
-            if(hasUpgrade('R', 21)) player.U.upgrades.push(34)
-            if(hasMilestone('SR', 5)) player.U.upgrades.push(34, 41, 42, 43, 44)
+            if(!inChallenge('SR', 21)) {
+                if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
+                if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
+                if(hasUpgrade('R', 21)) player.U.upgrades.push(34)
+                if(hasMilestone('SR', 5)) player.U.upgrades.push(34, 41, 42, 43, 44)
+            }
+            if(inChallenge('SR', 21)) player.U.upgrades = []
         };
         if(resetlayer == 'SR') {
             if(!hasMilestone('SR', 5)) player.U.upgrades = []
-            if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
-            if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
-            if(!hasMilestone('SR', 3)) setBuyableAmount('U', 11, new Decimal(0))
-            if(hasMilestone('SR', 5)) player.U.upgrades.push(34, 41, 42, 43, 44)
+            if(!inChallenge('SR', 21)) {
+                if(hasMilestone('SR', 0)) player.U.upgrades.push(11, 12, 13, 14, 21, 22, 23, 24)
+                if(hasMilestone('SR', 1)) player.U.upgrades.push(31, 32, 33)
+                if(!hasMilestone('SR', 3)) setBuyableAmount('U', 11, new Decimal(0))
+                if(hasMilestone('SR', 5)) player.U.upgrades.push(34, 41, 42, 43, 44)
+            }
+            if(inChallenge('SR', 21)) player.U.upgrades = []
         };
         if(!hasUpgrade('R', 32)) {
             setClickableState('U', 11, false)
@@ -308,24 +314,30 @@ addLayer("U", {
     },
     automate() {
         player.U.points = player.points
-        if(hasUpgrade('R', 12) || hasAchievement('A', 43)) {
-            buyUpgrade('U', 11)
-            buyUpgrade('U', 12)
-            buyUpgrade('U', 13)
-            buyUpgrade('U', 14)
-            buyUpgrade('U', 21)
-            buyUpgrade('U', 22)
-            buyUpgrade('U', 23)
-            buyUpgrade('U', 24)
-        };
-        if(hasAchievement('A', 31)) {
-            buyUpgrade('U', 31)
-        };
-        if(hasAchievement('A', 33)) {
-            buyUpgrade('U', 32)
-            buyUpgrade('U', 33)
-            buyUpgrade('U', 34)
-        };
+        if(!inChallenge('SR', 21)) {
+            if(hasUpgrade('R', 12) || hasAchievement('A', 43)) {
+                buyUpgrade('U', 11)
+                buyUpgrade('U', 12)
+                buyUpgrade('U', 13)
+                buyUpgrade('U', 14)
+                buyUpgrade('U', 21)
+                buyUpgrade('U', 22)
+                buyUpgrade('U', 23)
+                buyUpgrade('U', 24)
+            };
+            if(hasAchievement('A', 31)) {
+                buyUpgrade('U', 31)
+            };
+            if(hasAchievement('A', 33)) {
+                buyUpgrade('U', 32)
+                buyUpgrade('U', 33)
+                buyUpgrade('U', 34)
+            };
+            if(layers.U.buyables[11].canAfford() && hasMilestone('SR', 7)) {
+                player.U.points = player.U.points.sub(layers.U.buyables[11].cost())
+                setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(1))
+            }
+        }
         
         if(!hasUpgrade('U', 34)) {
             setClickableState('U', 11, false)
@@ -337,10 +349,6 @@ addLayer("U", {
             setClickableState('U', 12, true)
             setClickableState('U', 13, true)
         };
-        if(layers.U.buyables[11].canAfford() && hasMilestone('SR', 7)) {
-            player.U.points = player.U.points.sub(layers.U.buyables[11].cost())
-            setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(1))
-        }
     }
 })
 
@@ -506,7 +514,7 @@ addLayer("A", {
             },
         },
         45: {
-            name: "The Ninth Milestone is a lie",
+            name: "The Ninth Milestone is a Lie",
             tooltip: "Get Super Rebirth Milestone 8",
             done() {
                 if (hasMilestone('SR', 7)) return true
@@ -527,24 +535,24 @@ addLayer("A", {
             },
         },
         53: {
-            name: "PLACEHOLDER",
-            tooltip: "Unobtainable",
+            name: "Megawatt",
+            tooltip: "Reach 1,000,000 Power",
             done() {
-                if (false) return true
+                if (player.P.points.gte(1000000)) return true
             },
         },
         54: {
-            name: "HOLDERPLACE",
-            tooltip: "tainableUnob",
+            name: "Googology",
+            tooltip: "Reach e100 $",
             done() {
-                if (false) return true
+                if (player.points.gte("1e100")) return true
             },
         },
         55: {
-            name: "PLACEHOLDER",
-            tooltip: "Unobtainable",
+            name: "The Seventh Pylon is a Lie",
+            tooltip: "Buy a PPyF",
             done() {
-                if (false) return true
+                if (player.P.pylobF.gte(1)) return true
             },
         },
     }
@@ -696,7 +704,9 @@ addLayer("R", {
     buyables: {
         11: {
             cost(x) {
-                return new Decimal(20000).times(new Decimal(1.2).pow(new Decimal(x).pow(2)))
+                scalar = 2
+                if(hasChallenge('SR', 21)) scalar = scalar - 0.5
+                return new Decimal(20000).times(new Decimal(1.2).pow(new Decimal(x).pow(scalar)))
             },
             title: "Rebirth Booster",
             tooltip: "Base effect: 1.5^x<br>Base cost:20,000*(1.2^x^2)",
@@ -719,7 +729,9 @@ addLayer("R", {
         },
         12: {
             cost(x) {
-                return new Decimal(1000000).times(new Decimal(3).pow(new Decimal(x).pow(2)))
+                scalar = 2
+                if(hasChallenge('SR', 21)) scalar = scalar - 0.25
+                return new Decimal(1000000).times(new Decimal(3).pow(new Decimal(x).pow(scalar)))
             },
             title: "Rebirth Booster Booster",
             tooltip: "Base effect: +x/4<br>Base cost:1,000,000*(3^x^2)",
@@ -744,27 +756,33 @@ addLayer("R", {
     },
     doReset(resetlayer) {
         if(resetlayer == 'SR') {
-            if(!hasMilestone('SR', 5)) player.R.upgrades = []
             player.R.points = new Decimal(0)
-            if(hasMilestone('SR', 1)) player.R.upgrades.push(11, 12, 13, 14)
-            if(hasMilestone('SR', 3)) player.R.upgrades.push(22, 23)
-            if(!hasMilestone('SR', 3)) setBuyableAmount('R', 11, new Decimal(0))
-            if(!hasMilestone('SR', 3)) setBuyableAmount('R', 12, new Decimal(0))
+            if(!hasMilestone('SR', 5)) player.R.upgrades = []
+            if(!inChallenge('SR', 21)) {
+                if(hasMilestone('SR', 1)) player.R.upgrades.push(11, 12, 13, 14)
+                if(hasMilestone('SR', 3)) player.R.upgrades.push(22, 23)
+                if(!hasMilestone('SR', 3)) setBuyableAmount('R', 11, new Decimal(0))
+                if(!hasMilestone('SR', 3)) setBuyableAmount('R', 12, new Decimal(0))
+            }
+            if(inChallenge('SR', 21)) player.R.upgrades = []
         }
     },
     passiveGeneration() {
         let passive = new Decimal(0)
         if(hasChallenge('SR', 11)) passive = passive.add(0.2)
+        if(hasChallenge('SR', 21)) passive = passive.times(10)
         return passive
     },
     automate() {
-        if(layers.R.buyables[11].canAfford() && hasMilestone('SR', 7)) {
-            if(!hasMilestone('SR', 0)) player.R.points = player.R.points.sub(layers.R.buyables[11].cost())
-            setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
-        }
-        if(layers.R.buyables[12].canAfford() && hasMilestone('SR', 7)) {
-            if(!hasMilestone('SR', 0)) player.R.points = player.R.points.sub(layers.R.buyables[12].cost())
-            setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
+        if(!inChallenge('SR', 21)) {
+            if(layers.R.buyables[11].canAfford() && hasMilestone('SR', 7)) {
+                if(!hasMilestone('SR', 0)) player.R.points = player.R.points.sub(layers.R.buyables[11].cost())
+                setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
+            }
+            if(layers.R.buyables[12].canAfford() && hasMilestone('SR', 7)) {
+                if(!hasMilestone('SR', 0)) player.R.points = player.R.points.sub(layers.R.buyables[12].cost())
+                setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
+            }
         }
     },
 })
@@ -911,7 +929,14 @@ addLayer("SR", {
             canComplete() { return player.R.points.gte("1e20") },
             unlocked() { return hasMilestone('P', 1) },
             rewardDescription: "Multiply automatic RP gain by 10 and also reduce RP buyables scaling",
-            goalDescription: "Reach 1e20 RP"
+            goalDescription: "Reach 1e20 RP",
+            onEnter() {
+                player.U.upgrades = []
+                player.R.upgrades = []
+                setBuyableAmount('U', 11, new Decimal(0))
+                setBuyableAmount('R', 11, new Decimal(0))
+                setBuyableAmount('R', 12, new Decimal(0))
+            }
         },
     },
     position: 0,
@@ -947,10 +972,10 @@ addLayer("P", {
     symbol: "P",
     row: "2",
     resource: "Power",
-    color: "#FFFF00",
+    color: "#d6c611",
     unlocked() { return hasAchievement('A', 52) },
     type: "none",
-    branches: ['SR'],
+    branches: [['SR', 2]],
     layerShown() { return hasAchievement('A', 52) },
     startData() {
         return {
@@ -973,7 +998,7 @@ addLayer("P", {
     update(diff) {
         if (hasMilestone('SR', 8)) player.P.points = player.P.points.add(layers.P.clickables[11].effect().times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonA = player.P.pylonA.add(layers.P.clickables[12].effect().times(diff))
-        if (hasMilestone('SR', 8)) player.P.pylonB = player.P.pylonB.add(player.P.pylonC.div(10).times(diff))
+        if (hasMilestone('SR', 8)) player.P.pylonB = player.P.pylonB.add(layers.P.clickables[13].effect().times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonC = player.P.pylonC.add(player.P.pylonD.div(10).times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonD = player.P.pylonD.add(player.P.pylonE.div(10).times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonE = player.P.pylonE.add(player.P.pylonF.div(10).times(diff))
@@ -1009,9 +1034,30 @@ addLayer("P", {
         },
         3: {
             requirementDescription: "5 PPyB",
-            effectDescription: "Each manually bough PPy boosts its own type by x1.15 (exponential)",
+            effectDescription: "Each manually bought PPy boosts its own type by x1.15 (exponential)",
             done() {
                 return player.P.pylobB.gte(5)
+            }
+        },
+        4: {
+            requirementDescription: "50,000,000 Power",
+            effectDescription: "Boost PPyA's effect by x5",
+            done() {
+                return player.P.points.gte(50000000)
+            }
+        },
+        5: {
+            requirementDescription: "500,000,000 Power",
+            effectDescription: "Unlock Power Pylon C",
+            done() {
+                return player.P.points.gte(500000000)
+            }
+        },
+        5: {
+            requirementDescription: "1e9 Power",
+            effectDescription: "Slightly reduce Power Pylon Costs and unlock some more upgrades",
+            done() {
+                return player.P.points.gte("1e9")
             }
         },
     },
@@ -1038,13 +1084,13 @@ addLayer("P", {
             },
             title: "Power Pylon A",
             display() {
-                return "Cost: " + coolDynamicFormat(new Decimal(1.5).pow(player.P.pylobA), 1)
+                return "Cost: " + coolDynamicFormat(this.cost(), 2) + " Power"
                 + "<br>Count: " + coolDynamicFormat(player.P.pylonA, 2) + " [" + coolDynamicFormat(player.P.pylobA, 0) + "]"
                 + "<br>Producing +" + coolDynamicFormat(this.effect(), 3) + " Power/s"
             },
-            canClick() { return player[this.layer].points.gte(new Decimal(1.5).pow(player.P.pylobA)) },
+            canClick() { return player[this.layer].points.gte(this.cost()) },
             onClick() {
-                player[this.layer].points = player[this.layer].points.sub(new Decimal(1.5).pow(player.P.pylobA));
+                player[this.layer].points = player[this.layer].points.sub(this.cost());
                 player.P.pylonA = player.P.pylonA.add(1)
                 player.P.pylobA = player.P.pylobA.add(1)
             },
@@ -1054,7 +1100,13 @@ addLayer("P", {
             effect() {
                 let effect = player.P.pylonA.div(10)
                 if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobA))
+                if(hasMilestone('P', 4)) effect = effect.times(5)
                 return effect
+            },
+            cost() {
+                let expo = new Decimal(1.5)
+                if(hasMilestone('P', 5)) expo = expo.sub(0.05)
+                return expo.pow(player.P.pylobA)
             }
         },
         12: {
@@ -1064,13 +1116,13 @@ addLayer("P", {
             },
             title: "Power Pylon B",
             display() {
-                return "Cost: " + coolDynamicFormat(new Decimal(2).pow(player.P.pylobB), 1)
+                return "Cost: " + coolDynamicFormat(this.cost(), 2) + " PPyA"
                 + "<br>Count: " + coolDynamicFormat(player.P.pylonB, 2) + " [" + coolDynamicFormat(player.P.pylobB, 0) + "]"
                 + "<br>Producing +" + coolDynamicFormat(this.effect(), 3) + " PPyA/s"
             },
-            canClick() { return player[this.layer].pylonA.gte(new Decimal(2).pow(player.P.pylobB)) },
+            canClick() { return player[this.layer].pylonA.gte(this.cost()) },
             onClick() {
-                player[this.layer].pylonA = player[this.layer].pylonA.sub(new Decimal(2).pow(player.P.pylobB));
+                player[this.layer].pylonA = player[this.layer].pylonA.sub(this.cost());
                 player.P.pylonB = player.P.pylonB.add(1)
                 player.P.pylobB = player.P.pylobB.add(1)
             },
@@ -1081,6 +1133,42 @@ addLayer("P", {
                 let effect = player.P.pylonB.div(10)
                 if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobB))
                 return effect
+            },
+            cost() {
+                let expo = new Decimal(2)
+                if(hasMilestone('P', 5)) expo = expo.sub(0.05)
+                return expo.pow(player.P.pylobB)
+            }
+        },
+        13: {
+            style: {
+                height: '100px',
+                width: '200px'
+            },
+            title: "Power Pylon C",
+            display() {
+                return "Cost: " + coolDynamicFormat(this.cost(), 2) + " PPyB"
+                + "<br>Count: " + coolDynamicFormat(player.P.pylonC, 2) + " [" + coolDynamicFormat(player.P.pylobC, 0) + "]"
+                + "<br>Producing +" + coolDynamicFormat(this.effect(), 3) + " PPyB/s"
+            },
+            canClick() { return player[this.layer].pylonB.gte(this.cost()) },
+            onClick() {
+                player[this.layer].pylonB = player[this.layer].pylonB.sub(this.cost());
+                player.P.pylonC = player.P.pylonC.add(1)
+                player.P.pylobC = player.P.pylobC.add(1)
+            },
+            unlocked() {
+                return hasMilestone('P', 5)
+            },
+            effect() {
+                let effect = player.P.pylonC.div(10)
+                if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobC))
+                return effect
+            },
+            cost() {
+                let expo = new Decimal(2.5)
+                if(hasMilestone('P', 5)) expo = expo.sub(0.05)
+                return expo.pow(player.P.pylobC)
             }
         },
     },
