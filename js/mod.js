@@ -112,14 +112,6 @@ function everyTick() {
 	// meh
 }
 
-function powerPylonText() {
-	display = ""
-	if (hasMilestone('P', 0)) display = "You have " + coolDynamicFormat(player.P.pylonA, 0) + " Power Pylon A"
-	if (hasMilestone('P', 2)) display = display + "You have " + coolDynamicFormat(player.P.pylonB, 0) + " Power Pylon B"
-
-	return display
-}
-
 // Less important things beyond this point!
 
 // Style for the background, can be a function

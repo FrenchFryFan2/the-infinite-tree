@@ -690,6 +690,7 @@ addLayer("R", {
             unlocked() {
                 return hasMilestone('SR', 6)
             },
+            tooltip: "1.5x -> 1.5(x^2)",
         },
     },
     buyables: {
@@ -904,6 +905,14 @@ addLayer("SR", {
             rewardDescription: "Rebirth Requirement /10",
             goalDescription: "Reach 1e15 RP"
         },
+        21: {
+            name: "Clicking Simulator<br>202X",
+            challengeDescription: "Nothing is kept on any resets and all automation is disabled",
+            canComplete() { return player.R.points.gte("1e20") },
+            unlocked() { return hasMilestone('P', 1) },
+            rewardDescription: "Multiply automatic RP gain by 10 and also reduce RP buyables scaling",
+            goalDescription: "Reach 1e20 RP"
+        },
     },
     position: 0,
 })
@@ -953,10 +962,21 @@ addLayer("P", {
             pylonD: new Decimal(0),
             pylonE: new Decimal(0),
             pylonF: new Decimal(0),
+            pylobA: new Decimal(0),
+            pylobB: new Decimal(0),
+            pylobC: new Decimal(0),
+            pylobD: new Decimal(0),
+            pylobE: new Decimal(0),
+            pylobF: new Decimal(0),
         }
     },
     update(diff) {
-        if (hasMilestone('SR', 8)) player.P.points = player.P.points.add(player.P.pylonA.div(10).times(diff))
+        if (hasMilestone('SR', 8)) player.P.points = player.P.points.add(layers.P.clickables[11].effect().times(diff))
+        if (hasMilestone('SR', 8)) player.P.pylonA = player.P.pylonA.add(layers.P.clickables[12].effect().times(diff))
+        if (hasMilestone('SR', 8)) player.P.pylonB = player.P.pylonB.add(player.P.pylonC.div(10).times(diff))
+        if (hasMilestone('SR', 8)) player.P.pylonC = player.P.pylonC.add(player.P.pylonD.div(10).times(diff))
+        if (hasMilestone('SR', 8)) player.P.pylonD = player.P.pylonD.add(player.P.pylonE.div(10).times(diff))
+        if (hasMilestone('SR', 8)) player.P.pylonE = player.P.pylonE.add(player.P.pylonF.div(10).times(diff))
     },
     effect() {
         return player.P.points.div(100).add(1)
@@ -974,17 +994,24 @@ addLayer("P", {
             }
         },
         1: {
-            requirementDescription: "2 Power Pylon A",
+            requirementDescription: "2 Power Pylon A (PPyA)",
             effectDescription: "Unlock another challenge",
             done() {
-                return player.P.pylonA.gte(2)
+                return player.P.pylobA.gte(2)
             }
         },
         2: {
             requirementDescription: "20 Power",
-            effectDescription: "Unlock Power Pylon B",
+            effectDescription: "Unlock Power Pylon B (PPyB)",
             done() {
                 return player.P.points.gte(20)
+            }
+        },
+        3: {
+            requirementDescription: "5 PPyB",
+            effectDescription: "Each manually bough PPy boosts its own type by x1.15 (exponential)",
+            done() {
+                return player.P.pylobB.gte(5)
             }
         },
     },
@@ -999,9 +1026,62 @@ addLayer("P", {
         "Power Pylons": {
             content: [
                 "main-display",
-                ["display-text", powerPylonText()],
-                "buyables",
+                "clickables",
             ]
+        },
+    },
+    clickables: {
+        11: {
+            style: {
+                height: '100px',
+                width: '200px'
+            },
+            title: "Power Pylon A",
+            display() {
+                return "Cost: " + coolDynamicFormat(new Decimal(1.5).pow(player.P.pylobA), 1)
+                + "<br>Count: " + coolDynamicFormat(player.P.pylonA, 2) + " [" + coolDynamicFormat(player.P.pylobA, 0) + "]"
+                + "<br>Producing +" + coolDynamicFormat(this.effect(), 3) + " Power/s"
+            },
+            canClick() { return player[this.layer].points.gte(new Decimal(1.5).pow(player.P.pylobA)) },
+            onClick() {
+                player[this.layer].points = player[this.layer].points.sub(new Decimal(1.5).pow(player.P.pylobA));
+                player.P.pylonA = player.P.pylonA.add(1)
+                player.P.pylobA = player.P.pylobA.add(1)
+            },
+            unlocked() {
+                return hasMilestone('P', 0)
+            },
+            effect() {
+                let effect = player.P.pylonA.div(10)
+                if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobA))
+                return effect
+            }
+        },
+        12: {
+            style: {
+                height: '100px',
+                width: '200px'
+            },
+            title: "Power Pylon B",
+            display() {
+                return "Cost: " + coolDynamicFormat(new Decimal(2).pow(player.P.pylobB), 1)
+                + "<br>Count: " + coolDynamicFormat(player.P.pylonB, 2) + " [" + coolDynamicFormat(player.P.pylobB, 0) + "]"
+                + "<br>Producing +" + coolDynamicFormat(this.effect(), 3) + " PPyA/s"
+            },
+            canClick() { return player[this.layer].pylonA.gte(new Decimal(2).pow(player.P.pylobB)) },
+            onClick() {
+                player[this.layer].pylonA = player[this.layer].pylonA.sub(new Decimal(2).pow(player.P.pylobB));
+                player.P.pylonB = player.P.pylonB.add(1)
+                player.P.pylobB = player.P.pylobB.add(1)
+            },
+            unlocked() {
+                return hasMilestone('P', 2)
+            },
+            effect() {
+                let effect = player.P.pylonB.div(10)
+                if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobB))
+                return effect
+            }
         },
     },
 })
