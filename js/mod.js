@@ -14,7 +14,7 @@ let modInfo = {
 // Set your version in num and name
 let VERSION = {
 	num: "0.2.1",
-	name: "Super Rebirth",
+	name: "Power",
 }
 
 let changelog = `<h1>Changelog:</h1><br><br>
@@ -64,6 +64,7 @@ function getPointGen() {
 	if (getClickableState('U', 12)) gain = gain.times(3)
 	if (getClickableState('U', 13)) gain = gain.times(2)
 	if (hasUpgrade('R', 32)) gain = gain.times(1.3)
+	gain = gain.times(layers.P.effect())
 
 	if (hasUpgrade('U', 21)) gain = gain.pow(1.25)
 
@@ -100,36 +101,23 @@ function isEndgame() {
 	return player.SR.points.gte(new Decimal("800000"))
 }
 
-function setLayerCurrencyToPoints(layer) {
-    let points = player.points;
-    
-    player[layer].points = new Decimal(points);
-}
-
 function machineBonuses() {
 	let bonus = new Decimal(1);
 	if(hasUpgrade('R', 32)) bonus = bonus.times(1.3);
+	bonus = bonus.times(layers.P.effect())
 	return bonus
 }
 
 function everyTick() {
+	// meh
+}
 
-	// Challenge Effect
-	// SR1
-	if(false) {
-		makeParticles({
-			spread: 20,
-			gravity: 2,
-			time: 3,
-			speed() { // Randomize speed a bit
-				return (Math.random() + 1.2) * 8 
-			},
-		}, 1)
-	}
+function powerPylonText() {
+	display = ""
+	if (hasMilestone('P', 0)) display = "You have " + coolDynamicFormat(player.P.pylonA, 0) + " Power Pylon A"
+	if (hasMilestone('P', 2)) display = display + "You have " + coolDynamicFormat(player.P.pylonB, 0) + " Power Pylon B"
 
-
-	// Automation and Value fixing
-	// $ Layer ('U')
+	return display
 }
 
 // Less important things beyond this point!

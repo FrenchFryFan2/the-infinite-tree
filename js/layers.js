@@ -307,7 +307,7 @@ addLayer("U", {
         };
     },
     automate() {
-        setLayerCurrencyToPoints("U");
+        player.U.points = player.points
         if(hasUpgrade('R', 12) || hasAchievement('A', 43)) {
             buyUpgrade('U', 11)
             buyUpgrade('U', 12)
@@ -337,6 +337,10 @@ addLayer("U", {
             setClickableState('U', 12, true)
             setClickableState('U', 13, true)
         };
+        if(layers.U.buyables[11].canAfford() && hasMilestone('SR', 7)) {
+            player.U.points = player.U.points.sub(layers.U.buyables[11].cost())
+            setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(1))
+        }
     }
 })
 
@@ -502,24 +506,24 @@ addLayer("A", {
             },
         },
         45: {
-            name: "Kilometrerock",
-            tooltip: "Get all SRP milestones (currently unobtainable)",
+            name: "The Ninth Milestone is a lie",
+            tooltip: "Get Super Rebirth Milestone 8",
             done() {
-                if (hasMilestone('SR', 8)) return true
+                if (hasMilestone('SR', 7)) return true
             },
         },
         51: {
-            name: "Unchallenged (ENDGAME)",
+            name: "Unchallenged",
             tooltip: "Complete a challenge",
             done() {
                 if (hasChallenge('SR', 11)) return true
             },
         },
         52: {
-            name: "PLACEHOLDER",
-            tooltip: "Unobtainable",
+            name: "Powerful",
+            tooltip: "Unlock Power",
             done() {
-                if (false) return true
+                if (hasMilestone('SR', 8)) return true
             },
         },
         53: {
@@ -577,6 +581,7 @@ addLayer("R", {
         if (hasUpgrade('R', 32)) remult = remult.times(1.3)
         remult = remult.times(layers.SR.effect()[0])
         remult = remult.times(layers.U.buyables[11].effect())
+        remult = remult.times(layers.P.effect())
         return remult
     },
     exponent() {
@@ -586,9 +591,11 @@ addLayer("R", {
     color: "#ba0022",
     branches: ['U'],
     effect() {
-        if (!hasUpgrade('U', 33) && !hasUpgrade('U', 42)) return player.R.points.pow(0.6).add(1)
-        if (hasUpgrade('U', 33) && hasUpgrade('U', 42)) return player.R.points.pow(0.8).add(1)
-        if (hasUpgrade('U', 33) || hasUpgrade('U', 42)) return player.R.points.pow(0.7).add(1)
+        let power = 0.6
+        if (hasUpgrade('U', 33)) power = power + 0.1
+        if (hasUpgrade('U', 42)) power = power + 0.1
+        if (hasUpgrade('R', 33)) power = power + 0.2
+        return player.R.points.pow(power).add(1)
     },
     layerShown() { return hasAchievement('A', 12) },
     startData() { return {
@@ -667,6 +674,23 @@ addLayer("R", {
                 return hasUpgrade('R', 24)
             },
         },
+        33: {
+            title: "Rebirth Empowerment",
+            description: "Boost RP effect, again",
+            cost: new Decimal("1e23"),
+            unlocked() {
+                return hasMilestone('SR', 6)
+            },
+            tooltip: "^0.8 -> ^1",
+        },
+        34: {
+            title: "Super Rebirth Empowerment",
+            description: "Boost SRP's boost to Cash",
+            cost: new Decimal("1e25"),
+            unlocked() {
+                return hasMilestone('SR', 6)
+            },
+        },
     },
     buyables: {
         11: {
@@ -732,6 +756,16 @@ addLayer("R", {
         if(hasChallenge('SR', 11)) passive = passive.add(0.2)
         return passive
     },
+    automate() {
+        if(layers.R.buyables[11].canAfford() && hasMilestone('SR', 7)) {
+            if(!hasMilestone('SR', 0)) player.R.points = player.R.points.sub(layers.R.buyables[11].cost())
+            setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
+        }
+        if(layers.R.buyables[12].canAfford() && hasMilestone('SR', 7)) {
+            if(!hasMilestone('SR', 0)) player.R.points = player.R.points.sub(layers.R.buyables[12].cost())
+            setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
+        }
+    },
 })
 
 addLayer("SR", {
@@ -778,7 +812,9 @@ addLayer("SR", {
         return hasAchievement('A', 41)
     },
     effect() {
-        return [player.SR.points.times(1.5).add(1),
+        let pow = 1
+        if (hasUpgrade('R', 34)) pow = pow + 1
+        return [player.SR.points.pow(pow).times(1.5).add(1),
         player.SR.points.pow(0.5).add(1)]
     },
     effectDescription() {
@@ -836,6 +872,20 @@ addLayer("SR", {
                 return player.SR.points.gte(18)
             },
         },
+        7: {
+            requirementDescription: "20 SRP",
+            effectDescription: "Automate all currently unlocked buyables",
+            done() {
+                return player.SR.points.gte(20)
+            },
+        },
+        8: {
+            requirementDescription: "25 SRP",
+            effectDescription: "Unlock Power",
+            done() {
+                return player.SR.points.gte(25)
+            },
+        },
     },
     challenges: {
         11: {
@@ -847,7 +897,7 @@ addLayer("SR", {
             goalDescription: "Reach 30,000,000 $"
         },
         12: {
-            name: "A Low Income Family in the Midst of Inflation",
+            name: "A Low Income Family<br>in the Midst of<br>Inflation",
             challengeDescription: "$ gain ^0.5 and Rebirth requirement x10,000",
             canComplete() { return player.R.points.gte("1e15") },
             unlocked() { return hasMilestone(this.layer, 3) },
@@ -855,6 +905,7 @@ addLayer("SR", {
             goalDescription: "Reach 1e15 RP"
         },
     },
+    position: 0,
 })
 
 addLayer("SA", {
@@ -878,6 +929,79 @@ addLayer("SA", {
             tooltip: "Buy $ upgrade 7 before $ upgrade 3",
             unlocked() { return hasAchievement('SA', 11) },
             done() { return !hasUpgrade('U', 13) && hasUpgrade('U', 23) }
+        },
+    },
+})
+
+addLayer("P", {
+    name: "power",
+    symbol: "P",
+    row: "2",
+    resource: "Power",
+    color: "#FFFF00",
+    unlocked() { return hasAchievement('A', 52) },
+    type: "none",
+    branches: ['SR'],
+    layerShown() { return hasAchievement('A', 52) },
+    startData() {
+        return {
+            unlocked: false,
+            points: new Decimal(0),
+            pylonA: new Decimal(1),
+            pylonB: new Decimal(0),
+            pylonC: new Decimal(0),
+            pylonD: new Decimal(0),
+            pylonE: new Decimal(0),
+            pylonF: new Decimal(0),
+        }
+    },
+    update(diff) {
+        if (hasMilestone('SR', 8)) player.P.points = player.P.points.add(player.P.pylonA.div(10).times(diff))
+    },
+    effect() {
+        return player.P.points.div(100).add(1)
+    },
+    effectDescription() {
+        return "boosting The Machine by x" + coolDynamicFormat(layers.P.effect(), 3)
+    },
+    position: 1,
+    milestones: {
+        0: {
+            requirementDescription: "1 Power",
+            effectDescription: "Unlock Power Pylons",
+            done() {
+                return player.P.points.gte(1)
+            }
+        },
+        1: {
+            requirementDescription: "2 Power Pylon A",
+            effectDescription: "Unlock another challenge",
+            done() {
+                return player.P.pylonA.gte(2)
+            }
+        },
+        2: {
+            requirementDescription: "20 Power",
+            effectDescription: "Unlock Power Pylon B",
+            done() {
+                return player.P.points.gte(20)
+            }
+        },
+    },
+    tabFormat: {
+        "Main": {
+            content: [
+                "main-display",
+                "milestones",
+                "upgrades",
+            ]
+        },
+        "Power Pylons": {
+            content: [
+                "main-display",
+                ["display-text", powerPylonText()],
+                "buyables",
+            ]
         },
     },
 })
