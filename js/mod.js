@@ -115,7 +115,7 @@ function everyTick() {
 
 	// Challenge Effect
 	// SR1
-	if(inChallenge('SR', 11)) {
+	if(false) {
 		makeParticles({
 			spread: 20,
 			gravity: 2,
