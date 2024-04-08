@@ -58,6 +58,7 @@ function getPointGen() {
 	if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(10).log(10).pow(0.5))
 	if (hasUpgrade('U', 41)) gain = gain.times(10)
 	if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(10).log(10))
+	if (hasUpgrade('U', 51)) gain = gain.times(player.P.points)
 
 	// The Machine
 	if (getClickableState('U', 11)) gain = gain.times(4)
@@ -79,6 +80,7 @@ function getPointGen() {
 	gain = gain.times(layers.SR.effect()[0])
 	if (hasMilestone('SR', 4)) gain = gain.pow(1.1)
 	if (inChallenge('SR', 12)) gain = gain.pow(0.5)
+	gain = gain.times(layers.SR.milestones[9].effect())
 
 
 	// Dunno were else to put this

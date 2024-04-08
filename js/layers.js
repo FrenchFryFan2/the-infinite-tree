@@ -195,6 +195,39 @@ addLayer("U", {
                 return hasUpgrade('R', 24)
             },
         },
+        51: {
+            title: "Tesla Coils",
+            description: "Multiply $ gain by Power",
+            cost: new Decimal("1e95"),
+            currencyDisplayName: "$",
+            currencyInternalName: "points",
+            unlocked() {
+                return hasMilestone('P', 6)
+            },
+            effectDisplay() { return "x" + coolDynamicFormat(player.P.points, 2)}
+        },
+        52: {
+            title: "Heavenly Batteries",
+            description: "Multiply RP gain based on Power",
+            cost: new Decimal("1e130"),
+            currencyDisplayName: "$",
+            currencyInternalName: "points",
+            tooltip: "log3(Power + 3)",
+            unlocked() {
+                return hasMilestone('P', 6)
+            },
+            effectDisplay() { return "x" + coolDynamicFormat(player.P.points.add(3).log(3), 2)}
+        },
+        53: {
+            title: "Maybe too much inflation",
+            description: "Unlock another challenge<br>The challenge is permanently unlocked after buying this upgrade",
+            cost: new Decimal("1e134"),
+            currencyDisplayName: "$",
+            currencyInternalName: "points",
+            unlocked() {
+                return hasMilestone('P', 6)
+            },
+        },
     },
     layerShown(){return true},
     automate() {
@@ -372,9 +405,9 @@ addLayer("A", {
         "Secrets": {
             content: [
                 ["layer-proxy", ["SA", [
-                    ["display-text", "Secret Achievements are only visible once completed<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement will also eventually have its own exclusive visual theme (available in options) once I figure out how to do that<br>There will be a surprise for getting all of them once there are enough of them for it to be interesting"],
-                    ["display-text", "<br>There is currently 1 Secret Achievement<br>Every Secret Achievement has hints hidden around the game to make them possible to obtain without searching up the answers (you'll do it anyways)"],
-                    "blank",
+                    ["display-text", "Secret Achievements only say what to do to get them after obtaining them<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement will also eventually have its own exclusive visual theme (available in options) once I figure out how to do that<br>There will be a surprise for getting all of them once there are enough of them for it to be interesting"],
+                    ["display-text", "<br>There is currently 1 Secret Achievement<br>Every Secret Achievement has a hint when hovering over them to make them possible to obtain without searching up the answers (you'll do it anyways)"],
+                    "h-line",
                     "achievements"]]]
             ]
         }
@@ -590,6 +623,7 @@ addLayer("R", {
         remult = remult.times(layers.SR.effect()[0])
         remult = remult.times(layers.U.buyables[11].effect())
         remult = remult.times(layers.P.effect())
+        if (hasUpgrade('U', 52)) remult = remult.times(player.P.points.add(3).log(3))
         return remult
     },
     exponent() {
@@ -905,6 +939,68 @@ addLayer("SR", {
                 return player.SR.points.gte(25)
             },
         },
+        9: {
+            requirementDescription: "100 SRP",
+            effectDescription: "Every bought upgrade before Super Rebirth increases $ gain by 40% (exponential)",
+            done() {
+                return player.SR.points.gte(100)
+            },
+            effect() {
+                let upgs = new Decimal(1)
+
+                if(hasUpgrade('U', 11)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 12)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 13)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 14)) upgs = upgs.times(1.4)
+
+                if(hasUpgrade('U', 21)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 22)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 23)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 24)) upgs = upgs.times(1.4)
+
+                if(hasUpgrade('U', 31)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 32)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 33)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 34)) upgs = upgs.times(1.4)
+
+                if(hasUpgrade('U', 41)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 42)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 43)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 44)) upgs = upgs.times(1.4)
+
+                if(hasUpgrade('U', 51)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 52)) upgs = upgs.times(1.4)
+
+                
+                if(hasUpgrade('R', 11)) upgs = upgs.times(1.4)
+                if(hasUpgrade('R', 12)) upgs = upgs.times(1.4)
+                if(hasUpgrade('R', 13)) upgs = upgs.times(1.4)
+                if(hasUpgrade('R', 14)) upgs = upgs.times(1.4)
+
+                if(hasUpgrade('R', 21)) upgs = upgs.times(1.4)
+                if(hasUpgrade('R', 22)) upgs = upgs.times(1.4)
+                if(hasUpgrade('R', 23)) upgs = upgs.times(1.4)
+                if(hasUpgrade('R', 24)) upgs = upgs.times(1.4)
+
+                if(hasUpgrade('R', 31)) upgs = upgs.times(1.4)
+                if(hasUpgrade('R', 32)) upgs = upgs.times(1.4)
+                if(hasUpgrade('R', 33)) upgs = upgs.times(1.4)
+                if(hasUpgrade('R', 34)) upgs = upgs.times(1.4)
+
+                return upgs
+            },
+            tooltip() {
+                return "Currently: x" + coolDynamicFormat(this.effect(), 2)
+            }
+        },
+        10: {
+            requirementDescription: "Unlock the Fourth Challenge",
+            effectDescription: "Keep the fourth challenge unlocked even when $ Upgrade 5:3 is locked or removed",
+            done() {
+                return hasUpgrade('U', 53)
+            },
+            unlocked() { return hasUpgrade('U', 53) }
+        }
     },
     challenges: {
         11: {
@@ -952,16 +1048,16 @@ addLayer("SA", {
     tooltip: "SecretAchievements",
     tabFormat: [
         ["display-text", "Secret Achievements are only visible once completed<br>Most Secret Achievements will become impossible if too much progression is made before unlocking them<br>Each Secret Achievement will also eventually have its own exclusive visual theme (available in options) once I figure out how to do that<br>There will be a surprise for getting all of them once there are enough of them for it to be interesting"],
-        ["display-text", "<br>There is currently 1 Secret Achievement<br>Every Secret Achievement has hints hidden around the game to make them possible to obtain without searching up the answers (you'll do it anyways)"],
-        "blank",
+        ["display-text", "<br>There is currently 1 Secret Achievement<br>Every Secret Achievement has a hint when hovering over them to make them possible to obtain without searching up the answers (you'll do it anyways)"],
+        "h-line",
         "achievements"
     ],
     unlocked: true,
     achievements: {
         11: {
             name: "Out of Order",
-            tooltip: "Buy $ upgrade 7 before $ upgrade 3",
-            unlocked() { return hasAchievement('SA', 11) },
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "That's not going to do anything"; else return "Buy $ Upgrade 7 before $ Upgrade 3<br>That's not going to do anything"},
+            unlocked() { return true },
             done() { return !hasUpgrade('U', 13) && hasUpgrade('U', 23) }
         },
     },
@@ -1053,9 +1149,9 @@ addLayer("P", {
                 return player.P.points.gte(500000000)
             }
         },
-        5: {
+        6: {
             requirementDescription: "1e9 Power",
-            effectDescription: "Slightly reduce Power Pylon Costs and unlock some more upgrades",
+            effectDescription: "Slightly reduce Power Pylon Costs, unlock some more upgrades",
             done() {
                 return player.P.points.gte("1e9")
             }
@@ -1105,7 +1201,7 @@ addLayer("P", {
             },
             cost() {
                 let expo = new Decimal(1.5)
-                if(hasMilestone('P', 5)) expo = expo.sub(0.05)
+                if(hasMilestone('P', 6)) expo = expo.sub(0.05)
                 return expo.pow(player.P.pylobA)
             }
         },
@@ -1136,7 +1232,7 @@ addLayer("P", {
             },
             cost() {
                 let expo = new Decimal(2)
-                if(hasMilestone('P', 5)) expo = expo.sub(0.05)
+                if(hasMilestone('P', 6)) expo = expo.sub(0.05)
                 return expo.pow(player.P.pylobB)
             }
         },
@@ -1167,7 +1263,7 @@ addLayer("P", {
             },
             cost() {
                 let expo = new Decimal(2.5)
-                if(hasMilestone('P', 5)) expo = expo.sub(0.05)
+                if(hasMilestone('P', 6)) expo = expo.sub(0.05)
                 return expo.pow(player.P.pylobC)
             }
         },
