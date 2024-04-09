@@ -102,7 +102,7 @@ function getPointGen() {
 
 	// SR Layer
 	gain = gain.times(layers.SR.effect()[0])
-	gain = gain.times(layers.SR.milestones[9].effect())
+	if (hasMilestone('SR', 9)) gain = gain.times(layers.SR.milestones[9].effect())
 	if (hasMilestone('SR', 4)) gain = gain.pow(1.1)
 	if (inChallenge('SR', 12)) gain = gain.pow(0.5)
 	if (inChallenge('SR', 31)) gain = gain.div(player.SR.tax)

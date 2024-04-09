@@ -1287,7 +1287,7 @@ addLayer("SR", {
             unlocked() { return hasUpgrade('SR', 14) },
             title: "Ω - Omega",
             description: "Beat the game",
-            cost: new Decimal(50000)
+            cost: new Decimal(80000)
         }
     }
 })
@@ -1446,7 +1446,7 @@ addLayer("P", {
         },
         11: {
             requirementDescription: "1e400 Power",
-            effectDescription: "Automate Power Pylons",
+            effectDescription: "Automate Power Pylons, automatically bought Pylons spend nothing",
             done() {
                 return player.P.points.gte("1e400")
             }
@@ -1470,32 +1470,26 @@ addLayer("P", {
     automate() {
         if(hasMilestone('P', 11)) {
             if(player.P.points.gte(layers.P.clickables[11].cost())) {
-                player.P.points = player.P.points.sub(layers.P.clickables[11].cost())
                 player.P.pylonA = player.P.pylonA.add(1)
                 player.P.pylobA = player.P.pylobA.add(1)
             }
             if(player.P.pylonA.gte(layers.P.clickables[12].cost())) {
-                player.P.pylonA = player.P.pylonA.sub(layers.P.clickables[12].cost())
                 player.P.pylonB = player.P.pylonB.add(1)
                 player.P.pylobB = player.P.pylobB.add(1)
             }
             if(player.P.pylonB.gte(layers.P.clickables[13].cost())) {
-                player.P.pylonB = player.P.pylonB.sub(layers.P.clickables[13].cost())
                 player.P.pylonC = player.P.pylonC.add(1)
                 player.P.pylobC = player.P.pylobC.add(1)
             }
             if(player.P.pylonC.gte(layers.P.clickables[14].cost())) {
-                player.P.pylonC = player.P.pylonC.sub(layers.P.clickables[14].cost())
                 player.P.pylonD = player.P.pylonD.add(1)
                 player.P.pylobD = player.P.pylobD.add(1)
             }
             if(player.P.pylonD.gte(layers.P.clickables[15].cost())) {
-                player.P.pylonD = player.P.pylonD.sub(layers.P.clickables[15].cost())
                 player.P.pylonE = player.P.pylonE.add(1)
                 player.P.pylobE = player.P.pylobE.add(1)
             }
             if(player.P.pylonE.gte(layers.P.clickables[16].cost())) {
-                player.P.pylonE = player.P.pylonE.sub(layers.P.clickables[16].cost())
                 player.P.pylonF = player.P.pylonF.add(1)
                 player.P.pylobF = player.P.pylobF.add(1)
             }
@@ -1536,7 +1530,7 @@ addLayer("P", {
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
                 if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(6))
-                if(player.P.pylobA.gte(1000)) expo = expo.add(player.P.pylobA.sub(1000).div(500))
+                if(player.P.pylobA.gte(1001)) expo = expo.add(player.P.pylobA.sub(1000).div(500))
                 return expo.pow(player.P.pylobA).div(divi)
             }
         },
@@ -1573,7 +1567,7 @@ addLayer("P", {
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
                 if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(5))
-                if(player.P.pylobA.gte(1000)) expo = expo.add(player.P.pylobA.sub(1000).div(333))
+                if(player.P.pylobB.gte(1001)) expo = expo.add(player.P.pylobB.sub(1000).div(333))
                 return expo.pow(player.P.pylobB).div(divi)
             }
         },
@@ -1610,7 +1604,7 @@ addLayer("P", {
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
                 if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(4))
-                if(player.P.pylobA.gte(1000)) expo = expo.add(player.P.pylobA.sub(1000).div(250))
+                if(player.P.pylobC.gte(1001)) expo = expo.add(player.P.pylobC.sub(1000).div(250))
                 return expo.pow(player.P.pylobC).div(divi)
             }
         },
@@ -1646,7 +1640,7 @@ addLayer("P", {
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
                 if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(3))
-                if(player.P.pylobA.gte(1000)) expo = expo.add(player.P.pylobA.sub(1000).div(167))
+                if(player.P.pylobD.gte(1001)) expo = expo.add(player.P.pylobD.sub(1000).div(167))
                 return expo.pow(player.P.pylobD).div(divi)
             }
         },
@@ -1682,7 +1676,7 @@ addLayer("P", {
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
                 if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(2))
-                if(player.P.pylobA.gte(1000)) expo = expo.add(player.P.pylobA.sub(1000).div(100))
+                if(player.P.pylobE.gte(1001)) expo = expo.add(player.P.pylobE.sub(1000).div(100))
                 return expo.pow(player.P.pylobE).div(divi)
             }
         },
@@ -1718,7 +1712,7 @@ addLayer("P", {
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
                 if(hasMilestone('P', 9)) divi = divi.times(player.SR.points)
-                if(player.P.pylobA.gte(1000)) expo = expo.add(player.P.pylobA.sub(1000).div(66))
+                if(player.P.pylobF.gte(1001)) expo = expo.add(player.P.pylobF.sub(1000).div(66))
                 return expo.pow(player.P.pylobF).div(divi)
             }
         },
