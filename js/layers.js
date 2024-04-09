@@ -389,7 +389,7 @@ addLayer("U", {
         },
         12: {
             cost(x) {
-                return new Decimal("1e450").times(new Decimal(100000).pow(x).pow(0.1).pow(x))
+                return new Decimal("1e400").times(new Decimal(100000).pow(x).pow(0.1).pow(x))
             },
             title: "Time Manipulator",
             effect(x) {
@@ -805,7 +805,7 @@ addLayer("R", {
     },
     gainExp() {
         let expo = new Decimal(1)
-        if(hasUpgrade('SR', 11)) expo = expo.times(1.1)
+        if(hasUpgrade('SR', 11)) expo = expo.times(1.05)
         return expo
     },
     color: "#ba0022",
@@ -1198,7 +1198,7 @@ addLayer("SR", {
         },
         12: {
             name: "A Low Income Family<br>in the Midst of<br>Inflation",
-            challengeDescription: "$ gain ^0.5 and Rebirth requirement x10,000",
+            challengeDescription: "$ gain ^0.5 and Rebirth requirement x10",
             canComplete() { return player.R.points.gte("1e15") },
             unlocked() { return hasMilestone(this.layer, 3) },
             rewardDescription: "Rebirth Requirement /10",
@@ -1262,7 +1262,7 @@ addLayer("SR", {
     gainExp() {
         let expo = new Decimal(1)
         if(hasChallenge('SR', 22)) expo = expo.times(player.points.add(10).log(10).pow(0.1))
-        if(hasUpgrade('SR', 12)) expo = expo.times(2.5)
+        if(hasUpgrade('SR', 12)) expo = expo.times(1.5)
         return expo
     },
     update(diff) {
@@ -1277,27 +1277,27 @@ addLayer("SR", {
             currencyDisplayName: "$",
             currencyInternalName: "points",
             title: "Δ - Delta",
-            description: "Raise RP gain by ^1.1"
+            description: "Raise RP gain by ^1.05"
         },
         12: {
             unlocked() { return hasMilestone('P', 10) },
-            cost: new Decimal("1e280"),
+            cost: new Decimal("1e265"),
             currencyDisplayName: "RP",
             currencyInternalName: "points",
             currencyLayer() { return 'R' },
             title: "Σ - Sigma",
-            description: "Raise SRP cost by ^0.4"
+            description: "Raise SRP cost by ^0.66"
         },
         13: {
             unlocked() { return hasMilestone('P', 10) },
-            cost: new Decimal(4300),
+            cost: new Decimal(2600),
             currencyDisplayName: "SRP",
             title: "Ψ - Phi",
-            description: "Raise Power Pylon effect by ^2"
+            description: "Raise Power Pylon effect by ^1.2"
         },
         14: {
             unlocked() { return hasMilestone('P', 10) },
-            cost: new Decimal("1e1000"),
+            cost: new Decimal("1e200"),
             currencyDisplayName: "Power",
             currencyInternalName: "points",
             currencyLayer() { return 'P' },
@@ -1312,7 +1312,7 @@ addLayer("SR", {
             unlocked() { return hasUpgrade('SR', 14) },
             title: "Ω - Omega",
             description: "Beat the game",
-            cost: new Decimal(150000)
+            cost: new Decimal(6000)
         }
     }
 })
@@ -1479,10 +1479,17 @@ addLayer("P", {
             }
         },
         11: {
-            requirementDescription: "1e400 Power",
-            effectDescription: "Automate Power Pylons, automatically bought Pylons spend nothing",
+            requirementDescription: "1e60 Power",
+            effectDescription: "Automate Power Pylons A-C",
             done() {
-                return player.P.points.gte("1e400")
+                return player.P.points.gte("1e60")
+            }
+        },
+        12: {
+            requirementDescription: "1e120 Power",
+            effectDescription: "Automate Power Pylons D and E",
+            done() {
+                return player.P.points.gte("1e120")
             }
         },
     },
@@ -1517,6 +1524,8 @@ addLayer("P", {
                 player.P.pylonC = player.P.pylonC.add(1)
                 player.P.pylobC = player.P.pylobC.add(1)
             }
+        }
+        if(hasMilestone('P', 12)) {
             if(player.P.pylonC.gte(layers.P.clickables[14].cost())) {
                 player.P.pylonD = player.P.pylonD.add(1)
                 player.P.pylobD = player.P.pylobD.add(1)
@@ -1524,10 +1533,6 @@ addLayer("P", {
             if(player.P.pylonD.gte(layers.P.clickables[15].cost())) {
                 player.P.pylonE = player.P.pylonE.add(1)
                 player.P.pylobE = player.P.pylobE.add(1)
-            }
-            if(player.P.pylonE.gte(layers.P.clickables[16].cost())) {
-                player.P.pylonF = player.P.pylonF.add(1)
-                player.P.pylobF = player.P.pylobF.add(1)
             }
         }
     },
@@ -1558,8 +1563,8 @@ addLayer("P", {
                 if(hasMilestone('P', 4)) effect = effect.times(5)
                 if(hasUpgrade('U', 54)) effect = effect.times(2)
                 if(hasChallenge('SR', 31)) effect = effect.times(player.P.points.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-                if(hasUpgrade('SR', 13)) effect = effect.pow(2)
                 effect = effect.times(layers.U.buyables[12].effect())
+                if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
                 return effect
             },
             cost() {
@@ -1596,8 +1601,8 @@ addLayer("P", {
                 if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobB))
                 if(hasUpgrade('U', 54)) effect = effect.times(2)
                 if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonA.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-                if(hasUpgrade('SR', 13)) effect = effect.pow(2)
                 effect = effect.times(layers.U.buyables[12].effect())
+                if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
                 return effect
             },
             cost() {
@@ -1634,8 +1639,8 @@ addLayer("P", {
                 if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobC))
                 if(hasUpgrade('U', 54)) effect = effect.times(2)
                 if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonB.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-                if(hasUpgrade('SR', 13)) effect = effect.pow(2)
                 effect = effect.times(layers.U.buyables[12].effect())
+                if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
                 return effect
             },
             cost() {
@@ -1671,8 +1676,8 @@ addLayer("P", {
                 let effect = player.P.pylonD.div(10)
                 if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobD))
                 if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonC.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-                if(hasUpgrade('SR', 13)) effect = effect.pow(2)
                 effect = effect.times(layers.U.buyables[12].effect())
+                if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
                 return effect
             },
             cost() {
@@ -1708,8 +1713,8 @@ addLayer("P", {
                 let effect = player.P.pylonE.div(10)
                 if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobE))
                 if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonD.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-                if(hasUpgrade('SR', 13)) effect = effect.pow(2)
                 effect = effect.times(layers.U.buyables[12].effect())
+                if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
                 return effect
             },
             cost() {
@@ -1745,8 +1750,8 @@ addLayer("P", {
                 let effect = player.P.pylonF.div(10)
                 if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobF))
                 if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonE.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-                if(hasUpgrade('SR', 13)) effect = effect.pow(2)
                 effect = effect.times(layers.U.buyables[12].effect())
+                if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
                 return effect
             },
             cost() {
