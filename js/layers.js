@@ -189,8 +189,8 @@ addLayer("U", {
         34: {
             title: "THE MACHINE",
             description() {
-                if(!hasMilestone('P', 8)) "Unlock The Machine"
-                if(hasMilestone('P', 8)) "Unlock The Machine<br>Boosts to the machine are raised ^1.25"
+                if(!hasMilestone('P', 8)) return "Unlock The Machine"
+                if(hasMilestone('P', 8)) return "Unlock The Machine<br>Boosts to the machine are raised ^1.25"
             },
             cost: new Decimal("1e9"),
             currencyDisplayName: "$",
@@ -1329,8 +1329,17 @@ addLayer("P", {
     row: "2",
     resource: "Power",
     color: "#d6c611",
-    unlocked() { return hasAchievement('A', 52) },
-    type: "none",
+    type: "static",
+    baseAmount() { return player.SR.points },
+    baseResource: "SRP",
+    resetsNothing: true,
+    exponent: new Decimal("1ee10"),
+    requires: new Decimal(5),
+    base: new Decimal("1ee10"),
+    tooltip() { return coolDynamicFormat(player.P.points, 2) + " Power" },
+    prestigeButtonText() {
+        return "Unlock Power"
+    },
     branches: [['SR', 2]],
     layerShown() { return hasAchievement('A', 52) },
     startData() {
@@ -1352,7 +1361,7 @@ addLayer("P", {
         }
     },
     update(diff) {
-        if (hasMilestone('SR', 8)) player.P.points = player.P.points.add(layers.P.clickables[11].effect().times(diff))
+        if (player.P.points.gte(1) || player.P.pylobA.gte(1)) player.P.points = player.P.points.add(layers.P.clickables[11].effect().times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonA = player.P.pylonA.add(layers.P.clickables[12].effect().times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonB = player.P.pylonB.add(layers.P.clickables[13].effect().times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonC = player.P.pylonC.add(layers.P.clickables[14].effect().times(diff))
@@ -1456,6 +1465,8 @@ addLayer("P", {
         "Main": {
             content: [
                 "main-display",
+                "prestige-button",
+                "blank",
                 "milestones",
                 "upgrades",
             ]
