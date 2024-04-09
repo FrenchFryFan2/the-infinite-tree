@@ -13,8 +13,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2.0.1",
-	name: "Super Rebirth",
+	num: "0.2.1.1",
+	name: "Power",
 }
 
 let changelog = `<h1>Changelog:</h1><br><br>
@@ -47,25 +47,51 @@ function getPointGen() {
 
 
 	// $ Layer ('U')
-	if (hasUpgrade('U', 11)) gain = gain.add(1)
+	if(!hasMilestone('P', 8)) {
+		if (hasUpgrade('U', 11) || inChallenge('SR', 22)) gain = gain.add(1)
 
-	if (hasUpgrade('U', 12)) gain = gain.times(4)
-	if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(5).log(5))
-	if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(player.points.add(3).log(3))
-	if (hasUpgrade('U', 14)) gain = gain.times(2)
-	if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(2).add(8).log(8).pow(0.5))
-	if (hasUpgrade('U', 24)) gain = gain.times(1.5)
-	if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(10).log(10).pow(0.5))
-	if (hasUpgrade('U', 41)) gain = gain.times(10)
-	if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(10).log(10))
+		if (hasUpgrade('U', 12)) gain = gain.times(4)
+		if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(5).log(5))
+		if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(player.points.add(3).log(3))
+		if (hasUpgrade('U', 14)) gain = gain.times(2)
+		if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(1.5).add(8).log(8).pow(0.5))
+		if (hasUpgrade('U', 24)) gain = gain.times(1.5)
+		if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(10).log(10).pow(0.5))
+		if (hasUpgrade('U', 41)) gain = gain.times(10)
+		if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(10).log(10))
+	}
+
+	if(hasMilestone('P', 8)) {
+		if (hasUpgrade('U', 11) || inChallenge('SR', 22)) gain = gain.add(100)
+
+		if (hasUpgrade('U', 12)) gain = gain.times(5)
+		if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(4.5).log(3.5))
+		if (hasUpgrade('U', 13) && hasUpgrade('U', 23)) gain = gain.times(player.points.add(2.5).log(2.5))
+		if (hasUpgrade('U', 14)) gain = gain.times(3)
+		if (hasUpgrade('U', 22)) gain = gain.times(player.points.pow(1.55).add(7).log(7).pow(0.5))
+		if (hasUpgrade('U', 24)) gain = gain.times(2)
+		if (hasUpgrade('U', 31)) gain = gain.times(player.points.add(8).log(8).pow(0.5))
+		if (hasUpgrade('U', 41)) gain = gain.times(1000)
+		if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(8).log(8))
+	}
+
+	if (hasUpgrade('U', 51)) gain = gain.times(player.P.points)
 
 	// The Machine
-	if (getClickableState('U', 11)) gain = gain.times(4)
-	if (getClickableState('U', 12)) gain = gain.times(3)
-	if (getClickableState('U', 13)) gain = gain.times(2)
-	if (hasUpgrade('R', 32)) gain = gain.times(1.3)
+	if(!inChallenge('SR', 22)) {
+		if (getClickableState('U', 11)) gain = gain.times(4)
+		if (getClickableState('U', 12)) gain = gain.times(3)
+		if (getClickableState('U', 13)) gain = gain.times(2)
 
-	if (hasUpgrade('U', 21)) gain = gain.pow(1.25)
+		let machineBoost = new Decimal(1)
+		if (hasUpgrade('R', 32)) machineBoost = machineBoost.times(1.3)
+		machineBoost = machineBoost.times(layers.P.effect())
+		if(hasMilestone('P', 8) && hasUpgrade('U', 34)) machineBoost = machineBoost.pow(1.25)
+		gain = gain.times(machineBoost)
+	}
+
+	if(!hasMilestone('P', 8)) { if (hasUpgrade('U', 21)) gain = gain.pow(1.25) }
+	if(hasMilestone('P', 8)) { if (hasUpgrade('U', 21)) gain = gain.pow(1.3) }
 
 
 	// R Layer
@@ -76,7 +102,10 @@ function getPointGen() {
 
 	// SR Layer
 	gain = gain.times(layers.SR.effect()[0])
+	if (hasMilestone('SR', 9)) gain = gain.times(layers.SR.milestones[9].effect())
 	if (hasMilestone('SR', 4)) gain = gain.pow(1.1)
+	if (inChallenge('SR', 12)) gain = gain.pow(0.5)
+	if (inChallenge('SR', 31)) gain = gain.div(player.SR.tax)
 
 
 	// Dunno were else to put this
@@ -92,83 +121,25 @@ function addedPlayerData() { return {
 
 // Display extra things at the top of the page
 var displayThings = [
+	
 ]
+
+
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.SR.points.gte(new Decimal("8"))
-}
-
-function setLayerCurrencyToPoints(layer) {
-    let points = player.points;
-    
-    player[layer].points = new Decimal(points);
+	return hasUpgrade('SR', 21)
 }
 
 function machineBonuses() {
 	let bonus = new Decimal(1);
 	if(hasUpgrade('R', 32)) bonus = bonus.times(1.3);
+	bonus = bonus.times(layers.P.effect())
 	return bonus
 }
 
 function everyTick() {
-
-	// Challenge Effect
-	// SR1
-	if(false) {
-		makeParticles({
-			spread: 20,
-			gravity: 2,
-			time: 3,
-			speed() { // Randomize speed a bit
-				return (Math.random() + 1.2) * 8 
-			},
-		}, 1)
-	}
-
-
-	// Automation and Value fixing
-	// $ Layer ('U')
-	setLayerCurrencyToPoints("U");
-
-	if(hasUpgrade('R', 12) || hasAchievement('A', 43)) {
-		buyUpgrade('U', 11)
-		buyUpgrade('U', 12)
-		buyUpgrade('U', 13)
-		buyUpgrade('U', 14)
-		buyUpgrade('U', 21)
-		buyUpgrade('U', 22)
-		buyUpgrade('U', 23)
-		buyUpgrade('U', 24)
-	};
-	if(hasAchievement('A', 31)) {
-		buyUpgrade('U', 31)
-	};
-	if(hasAchievement('A', 33)) {
-		buyUpgrade('U', 32)
-		buyUpgrade('U', 33)
-		buyUpgrade('U', 34)
-	};
-	
-	if(!hasUpgrade('U', 34)) {
-		setClickableState('U', 11, false)
-		setClickableState('U', 12, false)
-		setClickableState('U', 13, false)
-	};
-	if(hasUpgrade('R', 32)) {
-		setClickableState('U', 11, true)
-		setClickableState('U', 12, true)
-		setClickableState('U', 13, true)
-	};
-
-
-	// Rebirth Layer
-
-
-	// Super Rebrith Layer
-
-
-	// Hyper Rebirth Layer
+	// meh
 }
 
 // Less important things beyond this point!
