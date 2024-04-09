@@ -1312,7 +1312,7 @@ addLayer("SR", {
             unlocked() { return hasUpgrade('SR', 14) },
             title: "Ω - Omega",
             description: "Beat the game",
-            cost: new Decimal(600000)
+            cost: new Decimal(150000)
         }
     }
 })
