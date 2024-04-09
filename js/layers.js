@@ -7,6 +7,13 @@ addLayer("U", {
 		points: new Decimal(0),
     }},
     color: "#157307",
+    tooltip() {
+        if(inChallenge('SR', 31)) return coolDynamicFormat(player.SR.tax, 2) + " Tax";
+        else return coolDynamicFormat(player.points, 2) + " $"
+    },
+    deactivated() {
+        return inChallenge('SR', 22)
+    },
     resource: "$",
     type: "none",
     row: 0, // Row the layer is in on the tree (0 is the first row)
@@ -222,6 +229,16 @@ addLayer("U", {
             title: "Maybe too much inflation",
             description: "Unlock another challenge<br>The challenge is permanently unlocked after buying this upgrade",
             cost: new Decimal("1e134"),
+            currencyDisplayName: "$",
+            currencyInternalName: "points",
+            unlocked() {
+                return hasMilestone('P', 6)
+            },
+        },
+        54: {
+            title: "Powerup",
+            description: "Double efficiency of the first three Power Pylons",
+            cost: new Decimal("1e145"),
             currencyDisplayName: "$",
             currencyInternalName: "points",
             unlocked() {
@@ -588,6 +605,41 @@ addLayer("A", {
                 if (player.P.pylobF.gte(1)) return true
             },
         },
+        61: {
+            name: "Duo-Googology",
+            tooltip: "Reach e200 $",
+            done() {
+                if (player.points.gte("1e200")) return true
+            },
+        },
+        62: {
+            name: "Afterlife Google",
+            tooltip: "Reach e100 RP",
+            done() {
+                if (player.R.points.gte("1e100")) return true
+            },
+        },
+        63: {
+            name: "Power Hungry",
+            tooltip: "Reach 1e50 Power",
+            done() {
+                if (player.P.points.gte("1e50")) return true
+            },
+        },
+        64: {
+            name: "Hyper Rebirthed",
+            tooltip: "Reach 500 SRP",
+            done() {
+                if (player.SR.points.gte(500)) return true
+            },
+        },
+        65: {
+            name: "To Inifinity, and Beyond!",
+            tooltip: "Reach Infinity",
+            done() {
+                if (player.points.gte(new Decimal(2).pow(1024))) return true
+            },
+        },
     }
 })
 
@@ -803,8 +855,10 @@ addLayer("R", {
     },
     passiveGeneration() {
         let passive = new Decimal(0)
-        if(hasChallenge('SR', 11)) passive = passive.add(0.2)
-        if(hasChallenge('SR', 21)) passive = passive.times(10)
+        if(!inChallenge('SR', 21)) {
+            if(hasChallenge('SR', 11)) passive = passive.add(0.2)
+            if(hasChallenge('SR', 21)) passive = passive.times(10)
+        }
         return passive
     },
     automate() {
@@ -826,6 +880,7 @@ addLayer("SR", {
         unlocked: false,
         points: new Decimal(0),
         best: new Decimal(0),
+        tax: new Decimal(1),
     }},
     row: "2",
     canBuyMax() {
@@ -970,6 +1025,8 @@ addLayer("SR", {
 
                 if(hasUpgrade('U', 51)) upgs = upgs.times(1.4)
                 if(hasUpgrade('U', 52)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 53)) upgs = upgs.times(1.4)
+                if(hasUpgrade('U', 54)) upgs = upgs.times(1.4)
 
                 
                 if(hasUpgrade('R', 11)) upgs = upgs.times(1.4)
@@ -1034,8 +1091,56 @@ addLayer("SR", {
                 setBuyableAmount('R', 12, new Decimal(0))
             }
         },
+        22: {
+            name: "Sold Out",
+            challengeDescription: "All $ Upgrades and The Machine are disabled, but, you passively gain 1 $ per second",
+            canComplete() { return player.R.points.gte("1e45") },
+            unlocked() { return hasMilestone('SR', 10) },
+            rewardDescription: "Unlock Power Pylon D, and $ boosts SRP gain slightly",
+            goalDescription: "Reach 1e45 RP",
+            rewardEffect() {
+                return player.points.add(10).log(10).pow(0.1)
+            },
+            rewardDisplay() {
+                return "Raising SRP cost by ^" + coolDynamicFormat(new Decimal(1).div(this.rewardEffect()), 4)
+            }
+        },
+        31: {
+            name: "Tax Evasion Simulator",
+            challengeDescription: "There is rapidly increasing Tax that divides $ gain<br>Can be completed 4 times",
+            canComplete() { return player.R.points.gte(new Decimal("1e50").times(new Decimal(100000).pow(challengeCompletions('SR', 31)))) },
+            unlocked() { return hasMilestone('P', 7) },
+            rewardDescription: "Boost each Power Pylon based on the previous Power Pylon<br>On first completion unlock Power Pylon E<br>On final completion unlock Power Pylon F",
+            goalDescription() {
+                let goal = new Decimal("1e50").times(new Decimal(100000).pow(challengeCompletions('SR', 31)))
+                return "Reach " + coolDynamicFormat(goal, 0) + " RP"
+            },
+            rewardEffect() {
+                return new Decimal(50).div(new Decimal(1.5).pow(challengeCompletions('SR', 31)))
+            },
+            rewardDisplay() {
+                return "Multiplies by log" + coolDynamicFormat(this.rewardEffect(), 0) + " of previous Pylon"
+            },
+            completionLimit: new Decimal(4),
+            onEnter() {
+                player.SR.tax = new Decimal(10).pow(challengeCompletions('SR', 31))
+            },
+            style: {
+                width: "450px"
+            }
+        },
     },
     position: 0,
+    gainExp() {
+        let expo = new Decimal(1)
+        if(hasChallenge('SR', 22)) expo = expo.times(player.points.add(10).log(10).pow(0.1))
+        return expo
+    },
+    update(diff) {
+        if(inChallenge('SR', 31)) {
+            player.SR.tax = player.SR.tax.times(new Decimal(0.2).times(new Decimal(2).pow(challengeCompletions('SR', 31))).add(1).pow(diff))
+        }
+    }
 })
 
 addLayer("SA", {
@@ -1059,6 +1164,12 @@ addLayer("SA", {
             tooltip() { if(!hasAchievement(this.layer, this.id)) return "That's not going to do anything"; else return "Buy $ Upgrade 7 before $ Upgrade 3<br>That's not going to do anything"},
             unlocked() { return true },
             done() { return !hasUpgrade('U', 13) && hasUpgrade('U', 23) }
+        },
+        12: {
+            name: "Minimum Wage",
+            tooltip() { if(!hasAchievement(this.layer, this.id)) return "Infinite Tax"; else return "Get 1e308 tax<br>Infinite Tax"},
+            unlocked() { return true },
+            done() { return player.SR.tax.gte("1e308") }
         },
     },
 })
@@ -1095,8 +1206,8 @@ addLayer("P", {
         if (hasMilestone('SR', 8)) player.P.points = player.P.points.add(layers.P.clickables[11].effect().times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonA = player.P.pylonA.add(layers.P.clickables[12].effect().times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonB = player.P.pylonB.add(layers.P.clickables[13].effect().times(diff))
-        if (hasMilestone('SR', 8)) player.P.pylonC = player.P.pylonC.add(player.P.pylonD.div(10).times(diff))
-        if (hasMilestone('SR', 8)) player.P.pylonD = player.P.pylonD.add(player.P.pylonE.div(10).times(diff))
+        if (hasMilestone('SR', 8)) player.P.pylonC = player.P.pylonC.add(layers.P.clickables[14].effect().times(diff))
+        if (hasMilestone('SR', 8)) player.P.pylonD = player.P.pylonD.add(layers.P.clickables[15].effect().times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonE = player.P.pylonE.add(player.P.pylonF.div(10).times(diff))
     },
     effect() {
@@ -1156,6 +1267,27 @@ addLayer("P", {
                 return player.P.points.gte("1e9")
             }
         },
+        7: {
+            requirementDescription: "1e16 Power",
+            effectDescription: "Unlock the final challenge",
+            done() {
+                return player.P.points.gte("1e16")
+            }
+        },
+        8: {
+            requirementDescription: "1e22 Power",
+            effectDescription: "Boost the first 16 $ upgrades",
+            done() {
+                return player.P.points.gte("1e22")
+            }
+        },
+        9: {
+            requirementDescription: "1e40 Power",
+            effectDescription: "Divide PPyF cost by SRP, PPyE by SRP^2, PPyD by SRP^3, PPyC by SRP^4, PPyB by SRP^5, PPyA by SRP^6",
+            done() {
+                return player.P.points.gte("1e40")
+            }
+        },
     },
     tabFormat: {
         "Main": {
@@ -1197,12 +1329,16 @@ addLayer("P", {
                 let effect = player.P.pylonA.div(10)
                 if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobA))
                 if(hasMilestone('P', 4)) effect = effect.times(5)
+                if(hasUpgrade('U', 54)) effect = effect.times(2)
+                if(hasChallenge('SR', 31)) effect = effect.times(player.P.points.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
                 return effect
             },
             cost() {
                 let expo = new Decimal(1.5)
+                let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
-                return expo.pow(player.P.pylobA)
+                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(6))
+                return expo.pow(player.P.pylobA).div(divi)
             }
         },
         12: {
@@ -1228,12 +1364,16 @@ addLayer("P", {
             effect() {
                 let effect = player.P.pylonB.div(10)
                 if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobB))
+                if(hasUpgrade('U', 54)) effect = effect.times(2)
+                if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonA.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
                 return effect
             },
             cost() {
                 let expo = new Decimal(2)
+                let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
-                return expo.pow(player.P.pylobB)
+                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(5))
+                return expo.pow(player.P.pylobB).div(divi)
             }
         },
         13: {
@@ -1259,12 +1399,118 @@ addLayer("P", {
             effect() {
                 let effect = player.P.pylonC.div(10)
                 if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobC))
+                if(hasUpgrade('U', 54)) effect = effect.times(2)
+                if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonB.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
                 return effect
             },
             cost() {
                 let expo = new Decimal(2.5)
+                let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
-                return expo.pow(player.P.pylobC)
+                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(4))
+                return expo.pow(player.P.pylobC).div(divi)
+            }
+        },
+        14: {
+            style: {
+                height: '100px',
+                width: '200px'
+            },
+            title: "Power Pylon D",
+            display() {
+                return "Cost: " + coolDynamicFormat(this.cost(), 2) + " PPyC"
+                + "<br>Count: " + coolDynamicFormat(player.P.pylonD, 2) + " [" + coolDynamicFormat(player.P.pylobD, 0) + "]"
+                + "<br>Producing +" + coolDynamicFormat(this.effect(), 3) + " PPyC/s"
+            },
+            canClick() { return player[this.layer].pylonC.gte(this.cost()) },
+            onClick() {
+                player[this.layer].pylonC = player[this.layer].pylonC.sub(this.cost());
+                player.P.pylonD = player.P.pylonD.add(1)
+                player.P.pylobD = player.P.pylobD.add(1)
+            },
+            unlocked() {
+                return hasMilestone('P', 5)
+            },
+            effect() {
+                let effect = player.P.pylonD.div(10)
+                if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobD))
+                if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonC.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
+                return effect
+            },
+            cost() {
+                let expo = new Decimal(3)
+                let divi = new Decimal(1)
+                if(hasMilestone('P', 6)) expo = expo.sub(0.05)
+                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(3))
+                return expo.pow(player.P.pylobD).div(divi)
+            }
+        },
+        15: {
+            style: {
+                height: '100px',
+                width: '200px'
+            },
+            title: "Power Pylon E",
+            display() {
+                return "Cost: " + coolDynamicFormat(this.cost(), 2) + " PPyD"
+                + "<br>Count: " + coolDynamicFormat(player.P.pylonE, 2) + " [" + coolDynamicFormat(player.P.pylobE, 0) + "]"
+                + "<br>Producing +" + coolDynamicFormat(this.effect(), 3) + " PPyD/s"
+            },
+            canClick() { return player[this.layer].pylonD.gte(this.cost()) },
+            onClick() {
+                player[this.layer].pylonD = player[this.layer].pylonD.sub(this.cost());
+                player.P.pylonE = player.P.pylonE.add(1)
+                player.P.pylobE = player.P.pylobE.add(1)
+            },
+            unlocked() {
+                return hasChallenge('SR', 31)
+            },
+            effect() {
+                let effect = player.P.pylonE.div(10)
+                if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobE))
+                if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonD.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
+                return effect
+            },
+            cost() {
+                let expo = new Decimal(3.5)
+                let divi = new Decimal(1)
+                if(hasMilestone('P', 6)) expo = expo.sub(0.05)
+                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(2))
+                return expo.pow(player.P.pylobE).div(divi)
+            }
+        },
+        16: {
+            style: {
+                height: '100px',
+                width: '200px'
+            },
+            title: "Power Pylon F",
+            display() {
+                return "Cost: " + coolDynamicFormat(this.cost(), 2) + " PPyE"
+                + "<br>Count: " + coolDynamicFormat(player.P.pylonF, 2) + " [" + coolDynamicFormat(player.P.pylobF, 0) + "]"
+                + "<br>Producing +" + coolDynamicFormat(this.effect(), 3) + " PPyE/s"
+            },
+            canClick() { return player[this.layer].pylonE.gte(this.cost()) },
+            onClick() {
+                player[this.layer].pylonE = player[this.layer].pylonE.sub(this.cost());
+                player.P.pylonF = player.P.pylonF.add(1)
+                player.P.pylobF = player.P.pylobF.add(1)
+            },
+            unlocked() {
+                return maxedChallenge('SR', 31)
+            },
+            effect() {
+                let effect = player.P.pylonF.div(10)
+                if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobF))
+                if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonE.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
+                return effect
+            },
+            cost() {
+                let expo = new Decimal(3.5)
+                let divi = new Decimal(1)
+                if(hasMilestone('P', 6)) expo = expo.sub(0.05)
+                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points)
+                return expo.pow(player.P.pylobF).div(divi)
             }
         },
     },

@@ -47,7 +47,7 @@ function getPointGen() {
 
 
 	// $ Layer ('U')
-	if (hasUpgrade('U', 11)) gain = gain.add(1)
+	if (hasUpgrade('U', 11) || inChallenge('SR', 22)) gain = gain.add(1)
 
 	if (hasUpgrade('U', 12)) gain = gain.times(4)
 	if (hasUpgrade('U', 13) && !hasUpgrade('U', 23)) gain = gain.times(player.points.add(5).log(5))
@@ -61,11 +61,13 @@ function getPointGen() {
 	if (hasUpgrade('U', 51)) gain = gain.times(player.P.points)
 
 	// The Machine
-	if (getClickableState('U', 11)) gain = gain.times(4)
-	if (getClickableState('U', 12)) gain = gain.times(3)
-	if (getClickableState('U', 13)) gain = gain.times(2)
-	if (hasUpgrade('R', 32)) gain = gain.times(1.3)
-	gain = gain.times(layers.P.effect())
+	if(!inChallenge('SR', 22)) {
+		if (getClickableState('U', 11)) gain = gain.times(4)
+		if (getClickableState('U', 12)) gain = gain.times(3)
+		if (getClickableState('U', 13)) gain = gain.times(2)
+		if (hasUpgrade('R', 32)) gain = gain.times(1.3)
+		gain = gain.times(layers.P.effect())
+	}
 
 	if (hasUpgrade('U', 21)) gain = gain.pow(1.25)
 
@@ -78,9 +80,10 @@ function getPointGen() {
 
 	// SR Layer
 	gain = gain.times(layers.SR.effect()[0])
+	gain = gain.times(layers.SR.milestones[9].effect())
 	if (hasMilestone('SR', 4)) gain = gain.pow(1.1)
 	if (inChallenge('SR', 12)) gain = gain.pow(0.5)
-	gain = gain.times(layers.SR.milestones[9].effect())
+	if (inChallenge('SR', 31)) gain = gain.div(player.SR.tax)
 
 
 	// Dunno were else to put this
@@ -96,7 +99,10 @@ function addedPlayerData() { return {
 
 // Display extra things at the top of the page
 var displayThings = [
+	
 ]
+
+
 
 // Determines when the game "ends"
 function isEndgame() {
