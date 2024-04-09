@@ -1350,7 +1350,7 @@ addLayer("SA", {
 
 addLayer("P", {
     name: "power",
-    symbol: "CURRENTLY BROKEN, SORRY",
+    symbol: "P",
     row: "2",
     resource: "Power",
     color: "#d6c611",
