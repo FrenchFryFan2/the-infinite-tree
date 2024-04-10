@@ -1858,6 +1858,33 @@ addLayer("P", {
 
 addLayer('HC', {
     name: "hyper-rebirth",
+    tabFormat: {
+        "Main": {
+            content: [
+                "main-display",
+                "prestige-button",
+                "resource-display",
+                "milestones"
+            ]
+        },
+        "Paths": {
+            content: [
+
+            ]
+        },
+        "Hyper Cash": {
+            content: [
+                ["display-text", "You have " + player.HC.hyperCash + " Hyper Cash"]
+            ],
+            unlocked() { return hasAchievement('A', 81) }
+        },
+        "Matter Combustor": {
+            content: [
+
+            ],
+            unlocked() { return hasAchievement('A', 101) }
+        }
+    },
     symbol: "HR",
     row: "3",
     resource: "Hyper Rebirth Points",
@@ -1866,6 +1893,11 @@ addLayer('HC', {
     update(diff) {
         player.HC.hyperNumber = player.points.add(10).log(10).pow(0.6).times(player.SR.points.add(1).pow(0.4)).times(player.P.points.add(10).log(10)).pow(0.25)
         if(hasMilestone('HC', 0)) player.HC.hyperCash = player.HC.hyperCash.add(new Decimal(0.1).times(diff))
+    },
+    effect() {
+        return [new Decimal(3).pow(player['HC'].points.add(1)).div(3),
+            player['HC'].points.add(25).div(25).pow(0.5),
+            new Decimal(2).pow(player['HC'].points.add(2).div(2)).div(2)]
     },
     baseAmount() { return player.HC.hyperNumber },
     baseResource: "Numerical Essence",
@@ -1894,38 +1926,6 @@ addLayer('HC', {
         if(!this.getResetGain().gte(1024)) return "Go Hyper for " + coolDynamicFormat(this.getResetGain(), 0) + " Hyper Rebirth Points"
         + "<br><br>Next at " + coolDynamicFormat(this.getNextAt(), 0) + " Numerical Essence"
         if(this.getResetGain().gte(1024)) return "Reset for " + coolDynamicFormat(this.getResetGain(), 2) + " Hyper Rebirth Points"
-    },
-    effect() {
-        return [new Decimal(3).pow(player['HC'].points.add(1)).div(3),
-            player['HC'].points.add(25).div(25).pow(0.5),
-            new Decimal(2).pow(player['HC'].points.add(2).div(2)).div(2)]
-    },
-    tabFormat: {
-        "Main": {
-            content: [
-                "main-display",
-                "prestige-button",
-                "resource-display",
-                "milestones"
-            ]
-        },
-        "Paths": {
-            content: [
-
-            ]
-        },
-        "Hyper Cash": {
-            content: [
-                ["display-text", "You have " + player.HC.hyperCash + " Hyper Cash"]
-            ],
-            unlocked() { return hasAchievement('A', 81) }
-        },
-        "Matter Combustor": {
-            content: [
-
-            ],
-            unlocked() { return hasAchievement('A', 101) }
-        }
     },
     milestones: {
         0: {
