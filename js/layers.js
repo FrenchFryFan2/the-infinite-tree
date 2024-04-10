@@ -430,6 +430,12 @@ addLayer("U", {
             }
             if(inChallenge('SR', 21)) player.U.upgrades = []
         };
+        if(resetlayer == 'HC') {
+            player.U.points = new Decimal(0)
+            player.U.upgrades = []
+            setBuyableAmount('U', 11, new Decimal(0))
+            setBuyableAmount('U', 12, new Decimal(0))
+        }
         if(!hasUpgrade('R', 32)) {
             setClickableState('U', 11, false)
             setClickableState('U', 12, false)
@@ -752,10 +758,87 @@ addLayer("A", {
             },
         },
         75: {
-            name: "Just getting started (ENDGAME)",
+            name: "Just getting started",
             tooltip: "Purchase Omega",
             done() {
                 if (hasUpgrade('SR', 21)) return true
+            },
+        },
+        81: {
+            name: "Hyper Rebirth?",
+            tooltip: "Go Hyper",
+            done() {
+                if (player.HC.points.gte(1)) return true
+            },
+        },
+        82: {
+            name: "The Basic Path",
+            tooltip: "Start the Basic Path",
+            done() {
+                if (false) return true
+            },
+        },
+        83: {
+            name: "The Machine's Path",
+            tooltip: "Start the Machine's Path",
+            done() {
+                if (false) return true
+            },
+        },
+        84: {
+            name: "The Numeracy Path",
+            tooltip: "Start the Numeracy Path",
+            done() {
+                if (false) return true
+            },
+        },
+        85: {
+            name: "The Combined Path",
+            tooltip: "Start the Combined Path",
+            done() {
+                if (false) return true
+            },
+        },
+        91: {
+            name: "Learning the Basics",
+            tooltip: "Complete the Basic Path",
+            done() {
+                if (false) return true
+            },
+        },
+        92: {
+            name: "Complex Machinery",
+            tooltip: "Complete the Machine's Path",
+            done() {
+                if (false) return true
+            },
+        },
+        93: {
+            name: "",
+            tooltip: "Complete the Numeracy Path",
+            done() {
+                if (false) return true
+            },
+        },
+        94: {
+            name: "By Our Power Combined",
+            tooltip: "Complete the Combined Path",
+            done() {
+                if (false) return true
+            },
+        },
+        95: {
+            name: "Master of Reality",
+            tooltip: "Complete all Paths",
+            done() {
+                if (false) return true
+            },
+        },
+        101: {
+            name: "Material Possesions",
+            tooltip: "Unlock the Matter Combustor",
+            done() {
+                if (false) return true
             },
         },
     }
@@ -981,6 +1064,12 @@ addLayer("R", {
             }
             if(inChallenge('SR', 21)) player.R.upgrades = []
         }
+        if(resetlayer == 'HC') {
+            player.R.points = new Decimal(0)
+            player.R.upgrades = []
+            setBuyableAmount('R', 11, new Decimal(0))
+            setBuyableAmount('R', 12, new Decimal(0))
+        }
     },
     passiveGeneration() {
         let passive = new Decimal(0)
@@ -1048,10 +1137,10 @@ addLayer("SR", {
         return hasAchievement('A', 41)
     },
     effect() {
-        let pow = 1
-        if (hasUpgrade('R', 34)) pow = pow + 1
+        let pow = new Decimal(1)
+        if (hasUpgrade('R', 34)) pow = pow.add(1)
         return [player.SR.points.pow(pow).times(1.5).add(1),
-        player.SR.points.pow(0.5).add(1)]
+        player.SR.points.pow(pow.sub(0.5)).add(1)]
     },
     effectDescription() {
         return "multiplying RP gain by " + coolDynamicFormat(this.effect()[1], 2)
@@ -1281,7 +1370,7 @@ addLayer("SR", {
         },
         12: {
             unlocked() { return hasMilestone('P', 10) },
-            cost: new Decimal("1e265"),
+            cost: new Decimal("1e270"),
             currencyDisplayName: "RP",
             currencyInternalName: "points",
             currencyLayer() { return 'R' },
@@ -1311,8 +1400,8 @@ addLayer("SR", {
             },
             unlocked() { return hasUpgrade('SR', 14) },
             title: "Ω - Omega",
-            description: "Beat the game",
-            cost: new Decimal(6000)
+            description: "Start calculating Numerical Essence<br>Numerical Essence is calculated based on log($), SRP, and log(Power)<br>Unlock another prestige layer...",
+            cost: new Decimal(6000),
         }
     }
 })
@@ -1354,19 +1443,20 @@ addLayer("P", {
     row: "2",
     resource: "Power",
     color: "#d6c611",
-    type: "static",
+    type: "custom",
     baseAmount() { return player.SR.points },
     baseResource: "SRP",
     resetsNothing: true,
-    exponent: new Decimal("1ee10"),
     requires: new Decimal(25),
-    base: new Decimal("1ee10"),
+    getResetGain() { return new Decimal(1) },
+    getNextAt() { return new Decimal(25) },
+    canReset() { return !hasMilestone('P', 0) && player.SR.points.gte(25) },
     tooltip() { return coolDynamicFormat(player.P.points, 2) + " Power" },
     prestigeButtonText() {
         return "Unlock Power"
     },
     branches: [['SR', 2]],
-    layerShown() { return hasAchievement('A', 52) },
+    layerShown() { return hasAchievement('A', 45) },
     startData() {
         return {
             unlocked: false,
@@ -1764,4 +1854,86 @@ addLayer("P", {
             }
         },
     },
+})
+
+addLayer('HC', {
+    name: "hyper-rebirth",
+    symbol: "HR",
+    row: "3",
+    resource: "Hyper Rebirth Points",
+    color: "#2ed5e8",
+    type: "custom",
+    update(diff) {
+        player.HC.hyperNumber = player.points.add(10).log(10).pow(0.6).times(player.SR.points.add(1).pow(0.4)).times(player.P.points.add(10).log(10)).pow(0.25)
+        if(hasMilestone('HC', 0)) player.HC.hyperCash = player.HC.hyperCash.add(new Decimal(0.1).times(diff))
+    },
+    baseAmount() { return player.HC.hyperNumber },
+    baseResource: "Numerical Essence",
+    branches: ['SR', 'P'],
+    layerShown() { return hasAchievement('A', 75) },
+    startData() {
+        return {
+            unlocked: false,
+            points: new Decimal(0),
+            hyperNumber: new Decimal(1),
+            hyperCash: new Decimal(0)
+        }
+    },
+    getResetGain() {
+        return player.HC.hyperNumber.add(1).div(25).pow(0.8).floor()
+    },
+    getNextAt() {
+        return this.getResetGain().add(1).pow(1.25).times(25).floor()
+    },
+    requires: new Decimal(25),
+    canReset() {
+        return player.HC.hyperNumber.gte(25) && hasUpgrade('SR', 21)
+    },
+    prestigeNotify() { return this.canReset() },
+    prestigeButtonText() {
+        if(!this.getResetGain().gte(1024)) return "Go Hyper for " + coolDynamicFormat(this.getResetGain(), 0) + " Hyper Rebirth Points"
+        + "<br><br>Next at " + coolDynamicFormat(this.getNextAt(), 0) + " Numerical Essence"
+        if(this.getResetGain().gte(1024)) return "Reset for " + coolDynamicFormat(this.getResetGain(), 2) + " Hyper Rebirth Points"
+    },
+    effect() {
+        return [new Decimal(3).pow(player['HC'].points.add(1)).div(3),
+            player['HC'].points.add(25).div(25).pow(0.5),
+            new Decimal(2).pow(player['HC'].points.add(2).div(2)).div(2)]
+    },
+    tabFormat: {
+        "Main": {
+            content: [
+                "main-display",
+                "prestige-button",
+                "resource-display",
+                "milestones"
+            ]
+        },
+        "Paths": {
+            content: [
+
+            ]
+        },
+        "Hyper Cash": {
+            content: [
+                ["display-text", "You have " + player.HC.hyperCash + " Hyper Cash"]
+            ],
+            unlocked() { return hasAchievement('A', 81) }
+        },
+        "Matter Combustor": {
+            content: [
+
+            ],
+            unlocked() { return hasAchievement('A', 101) }
+        }
+    },
+    milestones: {
+        0: {
+            requirementDescription: "1 HRP",
+            effectDescription: "The Machine is now permanently unlocked, and unlock Hyper Cash",
+            done() {
+                return player.HC.points.gte(1)
+            }
+        },
+    }
 })

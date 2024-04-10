@@ -14,7 +14,7 @@ let modInfo = {
 // Set your version in num and name
 let VERSION = {
 	num: "0.3",
-	name: "Power",
+	name: "Numeracy",
 }
 
 let changelog = `<h1>Changelog:</h1><br><br>
@@ -75,7 +75,7 @@ function getPointGen() {
 		if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(8).log(8))
 	}
 
-	if (hasUpgrade('U', 51)) gain = gain.times(player.P.points)
+	if (hasUpgrade('U', 51)) gain = gain.times(player.P.points.add(1))
 
 	// The Machine
 	if(!inChallenge('SR', 22)) {
@@ -94,18 +94,22 @@ function getPointGen() {
 	if(hasMilestone('P', 8)) { if (hasUpgrade('U', 21)) gain = gain.pow(1.3) }
 
 
-	// R Layer
+	// Rebirth Layer
 	gain = gain.times(layers.R.effect())
 	if (hasUpgrade('R', 11)) gain = gain.times(5)
 	if (hasUpgrade('R', 14)) gain = gain.times(2)
 
 
-	// SR Layer
+	// Super Rebrith Layer
 	gain = gain.times(layers.SR.effect()[0])
 	if (hasMilestone('SR', 9)) gain = gain.times(layers.SR.milestones[9].effect())
 	if (hasMilestone('SR', 4)) gain = gain.pow(1.1)
 	if (inChallenge('SR', 12)) gain = gain.pow(0.5)
 	if (inChallenge('SR', 31)) gain = gain.div(player.SR.tax)
+
+
+	// Numeracy Layer
+	gain = gain.times(layers.HC.effect()[0])
 
 
 	// Dunno were else to put this
