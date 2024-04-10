@@ -75,7 +75,7 @@ function getPointGen() {
 		if (hasUpgrade('U', 43)) gain = gain.times(player.R.points.add(8).log(8))
 	}
 
-	if (hasUpgrade('U', 51)) gain = gain.times(player.P.points)
+	if (hasUpgrade('U', 51)) gain = gain.times(player.P.points.add(1))
 
 	// The Machine
 	if(!inChallenge('SR', 22)) {
@@ -108,7 +108,7 @@ function getPointGen() {
 	if (inChallenge('SR', 31)) gain = gain.div(player.SR.tax)
 
 
-	// Dunno were else to put this
+	// Dunno where else to put this
 
 	everyTick();
 
