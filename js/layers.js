@@ -1354,19 +1354,20 @@ addLayer("P", {
     row: "2",
     resource: "Power",
     color: "#d6c611",
-    type: "static",
+    type: "custom",
     baseAmount() { return player.SR.points },
     baseResource: "SRP",
     resetsNothing: true,
-    exponent: new Decimal("1ee10"),
     requires: new Decimal(25),
-    base: new Decimal("1ee10"),
+    getResetGain() { return new Decimal(1) },
+    getNextAt() { return new Decimal(25) },
+    canReset() { return !hasMilestone('P', 0) && player.SR.points.gte(25) },
     tooltip() { return coolDynamicFormat(player.P.points, 2) + " Power" },
     prestigeButtonText() {
         return "Unlock Power"
     },
     branches: [['SR', 2]],
-    layerShown() { return hasAchievement('A', 52) },
+    layerShown() { return hasAchievement('A', 45) },
     startData() {
         return {
             unlocked: false,
