@@ -108,8 +108,9 @@ function getPointGen() {
 	if (inChallenge('SR', 31)) gain = gain.div(player.SR.tax)
 
 
-	// Numeracy Layer
+	// Hyper Rebirth Layer
 	gain = gain.times(layers.HC.effect()[0])
+	gain = gain.pow(layers.C.effect())
 
 
 	// Dunno were else to put this
