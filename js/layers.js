@@ -841,7 +841,7 @@ addLayer("A", {
             name: "Material Possesions (ENDGAME)",
             tooltip: "Unlock the Matter Combustor",
             done() {
-                if (false) return true
+                if (hasUpgrade('HC', 41)) return true
             },
         },
     }
@@ -893,7 +893,7 @@ addLayer("R", {
     },
     directMult() {
         let remult = new Decimal(1)
-        if(hasUpgrade('HC', 21)) remult = remult.times(100)
+        if(hasUpgrade('HC', 21)) remult = remult.times(10000)
         return remult
     },
     exponent() {
@@ -1422,7 +1422,7 @@ addLayer("SR", {
             },
             unlocked() { return hasUpgrade('SR', 14) },
             title: "Ω - Omega",
-            description: "Start calculating Numerical Essence<br>Numerical Essence is calculated based on log($), SRP, and log(Power)<br>Unlock another prestige layer...",
+            description: "Start calculating Hyper Essence<br>Hyper Essence is calculated based on log($), SRP, and log(Power)<br>Unlock another prestige layer...",
             cost: new Decimal(6000),
         }
     }
@@ -1997,13 +1997,13 @@ addLayer('HC', {
     prestigeNotify() { return this.canReset() },
     prestigeButtonText() {
         if(!this.getResetGain().gte(1024)) return "Go Hyper for " + coolDynamicFormat(this.getResetGain(), 0) + " Hyper Rebirth Points"
-        + "<br><br>Next at " + coolDynamicFormat(this.getNextAt(), 0) + " Numerical Essence"
+        + "<br><br>Next at " + coolDynamicFormat(this.getNextAt(), 0) + " Hyper Essence"
         if(this.getResetGain().gte(1024)) return "Reset for " + coolDynamicFormat(this.getResetGain(), 2) + " Hyper Rebirth Points"
     },
     milestones: {
         0: {
             requirementDescription: "1 Total HRP",
-            effectDescription: "The Machine is now permanently unlocked, keep $ Upgrades v2 on Hyper Reset, and unlock Hyper Cash (0.1/s base gain)",
+            effectDescription: "The Machine is now permanently unlocked, keep $ Upgrades v2 on Hyper Reset, unlock Hyper Cash (0.1/s base gain), and keep all buyables and upgrades unlocked",
             done() {
                 return player.HC.total.gte(1)
             }
@@ -2049,7 +2049,7 @@ addLayer('HC', {
                 base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 1)))
                 return base
             },
-            description: "Multiply RP gain by 100",
+            description: "Multiply RP gain by 10,000",
 			branches: [11, 31],
             canAfford() { return hasUpgrade('HC', 11) }
         },
@@ -2091,7 +2091,7 @@ addLayer('HC', {
                 base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 2)))
                 return base
             },
-            description: "You start with all Power Pylons unlocked, and reduce Power Pylon scaling by a large amount",
+            description: "You start with all Power Pylons unlocked, and reduce Power Pylon scaling",
             canAfford() { return hasUpgrade('HC', 22) }
         },
 
@@ -2124,8 +2124,8 @@ addLayer('HC', {
                 base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 3)))
                 return base
             },
-            description: "Hyper Cash also boosts RP, SRP and Numerical Essence at drastically reduced rates",
-			tooltip: "RP: x(HC + 1)<br>SRP: x(log(log(HC + 10) + 10))<br>NE: x(HC^0.1 + 1)",
+            description: "Hyper Cash also boosts RP, SRP and Hyper Essence at drastically reduced rates",
+			tooltip: "RP: x(HC + 1)<br>SRP: x(log(log(HC + 10) + 10))<br>HE: x(HC^0.1 + 1)",
             canAfford() { return hasUpgrade('HC', 23) }
         },
 
@@ -2139,7 +2139,7 @@ addLayer('HC', {
                 player.HC.paths.push(4)
             },
             title: "The Combined Path",
-            description: "Multiply $, Power, and RP gain by 10"
+            description: "Multiply $, Power, and RP gain by 100"
         },
         24: {
             cost() {
@@ -2147,7 +2147,7 @@ addLayer('HC', {
                 base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 4)))
                 return base
             },
-            description: "Multiply $ gain and PPy effect by 20",
+            description: "Multiply $ gain and PPy effect by 200",
 			branches: [14, 34],
             canAfford() { return hasUpgrade('HC', 14) }
         },
