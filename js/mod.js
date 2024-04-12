@@ -110,6 +110,7 @@ function getPointGen() {
 
 	// Hyper Rebirth Layer
 	gain = gain.times(layers.HC.effect()[0])
+	if(hasUpgrade('HC', 11)) gain = gain.times(10000)
 	gain = gain.pow(layers.C.effect())
 
 
@@ -140,11 +141,17 @@ function machineBonuses() {
 	let bonus = new Decimal(1);
 	if(hasUpgrade('R', 32)) bonus = bonus.times(1.3);
 	bonus = bonus.times(layers.P.effect())
+	if(hasUpgrade('U', 34) && hasMilestone('P', 8)) bonus = bonus.pow(1.25)
 	return bonus
 }
 
 function everyTick() {
 	// meh
+}
+
+function findIndex(arr, x) {
+	const index = arr.indexOf(x);
+	return index !== -1 ? index : arr.length;
 }
 
 // Less important things beyond this point!

@@ -471,11 +471,13 @@ addLayer("U", {
             };
             if(layers.U.buyables[11].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
                 player.U.points = player.U.points.sub(layers.U.buyables[11].cost())
-                setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(1))
+                if(!hasMilestone('HC', 1)) setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(1))
+                if(hasMilestone('HC', 1)) setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(10))
             }
             if(layers.U.buyables[12].canAfford() && (hasUpgrade('SR', 14) || hasAchievement('A', 81))) {
                 player.U.points = player.U.points.sub(layers.U.buyables[12].cost())
-                setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(1))
+                if(!hasMilestone('HC', 1)) setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(1))
+                if(hasMilestone('HC', 1)) setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(10))
             }
         }
 
@@ -765,78 +767,78 @@ addLayer("A", {
                 if (hasUpgrade('SR', 21)) return true
             },
         },
-        81: {
+        83: {
             name: "Hyper Rebirth?",
             tooltip: "Go Hyper",
             done() {
                 if (player.HC.points.gte(1)) return true
             },
         },
-        82: {
+        81: {
             name: "The Basic Path",
             tooltip: "Start the Basic Path",
             done() {
-                if (false) return true
+                if (hasUpgrade('HC', 11)) return true
             },
         },
-        83: {
+        82: {
             name: "The Machine's Path",
             tooltip: "Start the Machine's Path",
             done() {
-                if (false) return true
+                if (hasUpgrade('HC', 12)) return true
             },
         },
         84: {
             name: "The Hyper Path",
             tooltip: "Start the Hyper Path",
             done() {
-                if (false) return true
+                if (hasUpgrade('HC', 13)) return true
             },
         },
         85: {
             name: "The Combined Path",
             tooltip: "Start the Combined Path",
             done() {
-                if (false) return true
+                if (hasUpgrade('HC', 14)) return true
             },
         },
         91: {
             name: "Learning the Basics",
             tooltip: "Complete the Basic Path",
             done() {
-                if (false) return true
+                if (hasUpgrade('HC', 31)) return true
             },
         },
         92: {
             name: "Complex Machinery",
             tooltip: "Complete the Machine's Path",
             done() {
-                if (false) return true
-            },
-        },
-        93: {
-            name: "God of Hyperdeath",
-            tooltip: "Complete the Hyper Path",
-            done() {
-                if (false) return true
+                if (hasUpgrade('HC', 32)) return true
             },
         },
         94: {
-            name: "By Our Power Combined",
-            tooltip: "Complete the Combined Path",
+            name: "God of Hyperdeath",
+            tooltip: "Complete the Hyper Path",
             done() {
-                if (false) return true
+                if (hasUpgrade('HC', 33)) return true
             },
         },
         95: {
+            name: "By Our Power Combined",
+            tooltip: "Complete the Combined Path",
+            done() {
+                if (hasUpgrade('HC', 34)) return true
+            },
+        },
+        93: {
             name: "Master of Reality",
             tooltip: "Complete all Paths",
             done() {
-                if (false) return true
+                if (hasUpgrade('HC', 31) && hasUpgrade('HC', 32) && hasUpgrade('HC', 33) && hasUpgrade('HC', 34)) return true
             },
         },
         101: {
-            name: "Material Possesions",
+            name: "Material Possesions (ENDGAME)",
             tooltip: "Unlock the Matter Combustor",
             done() {
                 if (false) return true
@@ -847,11 +849,14 @@ addLayer("A", {
 
 addLayer("R", {
     name: "rebirth",
-    softcap: new Decimal("1e17"),
+    softcap() {
+        cap = new Decimal("1e17")
+        if(player.points.gte("1e6363.2")) cap = new Decimal("e1686.89")
+        return cap
+    },
     softcapPower() {
         let softness = new Decimal(0.25)
-        let hardcap = new Decimal("1e2000")
-        if(getResetGain(this.layer, useType = "normal").gte(hardcap)) softness = softness.div(getResetGain(this.layer, useType = "normal").log(10).div(2000))
+        if(player.points.gte("1e6363.2")) softness = softness.div(5)
         return softness
     },
     symbol: "R",
@@ -884,6 +889,11 @@ addLayer("R", {
         remult = remult.times(layers.U.buyables[11].effect())
         remult = remult.times(layers.P.effect())
         if (hasUpgrade('U', 52)) remult = remult.times(player.P.points.add(3).log(3))
+        return remult
+    },
+    directMult() {
+        let remult = new Decimal(1)
+        if(hasUpgrade('HC', 21)) remult = remult.times(100)
         return remult
     },
     exponent() {
@@ -1090,11 +1100,13 @@ addLayer("R", {
         if(!inChallenge('SR', 21)) {
             if(layers.R.buyables[11].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
                 if(!hasMilestone('SR', 0)) player.R.points = player.R.points.sub(layers.R.buyables[11].cost())
-                setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
+                if(!hasMilestone('HC', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
+                if(hasMilestone('HC', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(10))
             }
             if(layers.R.buyables[12].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
                 if(!hasMilestone('SR', 0)) player.R.points = player.R.points.sub(layers.R.buyables[12].cost())
-                setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
+                if(!hasMilestone('HC', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
+                if(hasMilestone('HC', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(10))
             }
         }
     },
@@ -1331,7 +1343,7 @@ addLayer("SR", {
         },
         31: {
             name: "Tax Evasion Simulator",
-            challengeDescription: "There is rapidly increasing Tax that divides $ gain<br>Can be completed 4 times",
+            challengeDescription() { return "There is rapidly increasing Tax that divides $ gain<br>" + formatWhole(challengeCompletions('SR', 31)) + "/4 Completions" },
             canComplete() { return player.R.points.gte(new Decimal("1e50").times(new Decimal(1000).pow(challengeCompletions('SR', 31)))) },
             unlocked() { return hasMilestone('P', 7) },
             rewardDescription: "Boost each Power Pylon based on the previous Power Pylon<br>On first completion unlock Power Pylon E<br>On final completion unlock Power Pylon F",
@@ -1612,27 +1624,47 @@ addLayer("P", {
     },
     automate() {
         if(hasMilestone('P', 11) || hasAchievement('A', 81)) {
-            if(player.P.points.gte(layers.P.clickables[11].cost())) {
+            if(player.P.points.gte(layers.P.clickables[11].cost()) && hasMilestone('P', 0)) {
                 player.P.pylonA = player.P.pylonA.add(1)
                 player.P.pylobA = player.P.pylobA.add(1)
+                if(hasMilestone('HC', 1)) {
+                    player.P.pylonA = player.P.pylonA.add(9)
+                    player.P.pylobA = player.P.pylobA.add(9)
+                }
             }
-            if(player.P.pylonA.gte(layers.P.clickables[12].cost())) {
+            if(player.P.pylonA.gte(layers.P.clickables[12].cost()) && hasMilestone('P', 2)) {
                 player.P.pylonB = player.P.pylonB.add(1)
                 player.P.pylobB = player.P.pylobB.add(1)
+                if(hasMilestone('HC', 1)) {
+                    player.P.pylonB = player.P.pylonB.add(9)
+                    player.P.pylobB = player.P.pylobB.add(9)
+                }
             }
-            if(player.P.pylonB.gte(layers.P.clickables[13].cost())) {
+            if(player.P.pylonB.gte(layers.P.clickables[13].cost()) && hasMilestone('P', 5)) {
                 player.P.pylonC = player.P.pylonC.add(1)
                 player.P.pylobC = player.P.pylobC.add(1)
+                if(hasMilestone('HC', 1)) {
+                    player.P.pylonC = player.P.pylonC.add(9)
+                    player.P.pylobC = player.P.pylobC.add(9)
+                }
             }
         }
         if(hasMilestone('P', 12) || hasAchievement('A', 81)) {
-            if(player.P.pylonC.gte(layers.P.clickables[14].cost())) {
+            if(player.P.pylonC.gte(layers.P.clickables[14].cost()) && hasChallenge('SR', 22)) {
                 player.P.pylonD = player.P.pylonD.add(1)
                 player.P.pylobD = player.P.pylobD.add(1)
+                if(hasMilestone('HC', 1)) {
+                    player.P.pylonD = player.P.pylonD.add(9)
+                    player.P.pylobD = player.P.pylobD.add(9)
+                }
             }
-            if(player.P.pylonD.gte(layers.P.clickables[15].cost())) {
+            if(player.P.pylonD.gte(layers.P.clickables[15].cost()) && hasChallenge('SR', 31)) {
                 player.P.pylonE = player.P.pylonE.add(1)
                 player.P.pylobE = player.P.pylobE.add(1)
+                if(hasMilestone('HC', 1)) {
+                    player.P.pylonE = player.P.pylonE.add(9)
+                    player.P.pylobE = player.P.pylobE.add(9)
+                }
             }
         }
     },
@@ -1872,20 +1904,24 @@ addLayer("P", {
     },
     doReset(resetlayer) {
         if(resetlayer == 'HC') {
+
             player.P.milestones = [8]
             player.P.points = new Decimal(0)
+
             player.P.pylonA = new Decimal(1)
             player.P.pylonB = new Decimal(0)
             player.P.pylonC = new Decimal(0)
             player.P.pylonD = new Decimal(0)
             player.P.pylonE = new Decimal(0)
             player.P.pylonF = new Decimal(0)
+
             player.P.pylobA = new Decimal(0)
             player.P.pylobB = new Decimal(0)
             player.P.pylobC = new Decimal(0)
             player.P.pylobD = new Decimal(0)
             player.P.pylobE = new Decimal(0)
             player.P.pylobF = new Decimal(0)
+            if(hasUpgrade('HC', 12)) player.P.points = player.P.points.add(1)
         }
     }
 })
@@ -1898,6 +1934,7 @@ addLayer('HC', {
                 "main-display",
                 "prestige-button",
                 "resource-display",
+                "blank",
                 ["layer-proxy", ['C', ["main-display"]]],
                 "blank",
                 "milestones",
@@ -1905,8 +1942,9 @@ addLayer('HC', {
         },
         "Paths": {
             content: [
-                ["diplay-text", "Buying any path doubles to the cost of all locked paths"],
-				["upgrade-tree", [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34]]]
+                ["display-text", "Starting a path doubles the cost of all unstarted paths"],
+                "blank",
+				["upgrade-tree", [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41]]]
             ]
         },
         "Matter Combustor": {
@@ -1942,7 +1980,8 @@ addLayer('HC', {
             points: new Decimal(0),
             hyperNumber: new Decimal(1),
             hyperCash: new Decimal(0),
-			total: new Decimal(0)
+			total: new Decimal(0),
+            paths: []
         }
     },
     getResetGain() {
@@ -1963,75 +2002,172 @@ addLayer('HC', {
     },
     milestones: {
         0: {
-            requirementDescription: "1 HRP",
+            requirementDescription: "1 Total HRP",
             effectDescription: "The Machine is now permanently unlocked, keep $ Upgrades v2 on Hyper Reset, and unlock Hyper Cash (0.1/s base gain)",
             done() {
-                return player.HC.points.gte(1)
+                return player.HC.total.gte(1)
+            }
+        },
+        1: {
+            requirementDescription: "3 Total HRP",
+            effectDescription: "All Buyables (including Pylons) are bought 10 at a time",
+            done() {
+                return player.HC.total.gte(3)
+            }
+        },
+        2: {
+            requirementDescription: "10 Total HRP",
+            effectDescription: "Keep challenges on Hyper Reset",
+            done() {
+                return player.HC.total.gte(10)
+            }
+        },
+        3: {
+            requirementDescription: "100 Total HRP",
+            effectDescription: "Keep all Super and Power milestones on Hyper Reset",
+            done() {
+                return player.HC.total.gte(100)
             }
         },
     },
     upgrades: {
         11: {
-            cost: new Decimal(1),
+            cost() {
+                base = new Decimal(1)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 1)))
+                return base
+            },
+            onPurchase() {
+                player.HC.paths.push(1)
+            },
             title: "The Basic Path",
             description: "Multiply $ gain by 10,000"
         },
         21: {
-            cost: new Decimal(2),
+            cost() {
+                base = new Decimal(2)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 1)))
+                return base
+            },
             description: "Multiply RP gain by 100",
-			branches: [11, 31]
+			branches: [11, 31],
+            canAfford() { return hasUpgrade('HC', 11) }
         },
         31: {
-            cost: new Decimal(3),
-            description: "Start with 12 SRP, and reduce SRP base cost by 1e9"
+            cost() {
+                base = new Decimal(3)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 1)))
+                return base
+            },
+            description: "Start with 12 SRP, and reduce SRP base cost by 1e9",
+            canAfford() { return hasUpgrade('HC', 21) }
         },
 
         12: {
-            cost: new Decimal(1),
+            cost() {
+                base = new Decimal(1)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 2)))
+                return base
+            },
+            onPurchase() {
+                player.HC.paths.push(2)
+            },
             title: "The Machine's Path",
             description: "Start with Power unlocked and Power Pylons are twice as effective"
         },
         22: {
-            cost: new Decimal(2),
+            cost() {
+                base = new Decimal(2)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 2)))
+                return base
+            },
             description: "Power Pylons become 5 times more effective",
-			branches: [12, 32]
+			branches: [12, 32],
+            canAfford() { return hasUpgrade('HC', 12) }
         },
         32: {
-            cost: new Decimal(3),
-            description: "You start with all Power Pylons unlocked, and reduce Power Pylon scaling by a large amount"
+            cost() {
+                base = new Decimal(3)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 2)))
+                return base
+            },
+            description: "You start with all Power Pylons unlocked, and reduce Power Pylon scaling by a large amount",
+            canAfford() { return hasUpgrade('HC', 22) }
         },
 
         13: {
-            cost: new Decimal(1),
+            cost() {
+                base = new Decimal(1)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 3)))
+                return base
+            },
+            onPurchase() {
+                player.HC.paths.push(3)
+            },
             title: "The Hyper Path",
             description: "Multiply Hyper Cash gain based on $",
 			tooltip: "log10($ + 10)^0.4"
         },
         23: {
-            cost: new Decimal(2),
+            cost() {
+                base = new Decimal(2)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 3)))
+                return base
+            },
             description: "Multiply Hyper Cash gain by 10",
-			branches: [13, 33]
+			branches: [13, 33],
+            canAfford() { return hasUpgrade('HC', 13) }
         },
         33: {
-            cost: new Decimal(3),
+            cost() {
+                base = new Decimal(3)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 3)))
+                return base
+            },
             description: "Hyper Cash also boosts RP, SRP and Numerical Essence at drastically reduced rates",
-			tooltip: "RP: x(HC + 1)<br>SRP: x(log(log(HC + 10) + 10))<br>NE: x(HC^0.1 + 1)"
+			tooltip: "RP: x(HC + 1)<br>SRP: x(log(log(HC + 10) + 10))<br>NE: x(HC^0.1 + 1)",
+            canAfford() { return hasUpgrade('HC', 23) }
         },
 
         14: {
-            cost: new Decimal(1),
+            cost() {
+                base = new Decimal(1)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 4)))
+                return base
+            },
+            onPurchase() {
+                player.HC.paths.push(4)
+            },
             title: "The Combined Path",
             description: "Multiply $, Power, and RP gain by 10"
         },
         24: {
-            cost: new Decimal(2),
+            cost() {
+                base = new Decimal(2)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 4)))
+                return base
+            },
             description: "Multiply $ gain and PPy effect by 20",
-			branches: [14, 34]
+			branches: [14, 34],
+            canAfford() { return hasUpgrade('HC', 14) }
         },
         34: {
-            cost: new Decimal(3),
-            description: "Divide RP, SRP, and PPy cost by 10,000"
+            cost() {
+                base = new Decimal(3)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 4)))
+                return base
+            },
+            description: "Divide RP, SRP, and PPy cost by 10,000",
+            canAfford() { return hasUpgrade('HC', 24) }
         },
+
+        41: {
+            title: "The Matter Combustor",
+            cost: new Decimal(40),
+            description: "Unlock the Matter Paths",
+            canAfford() { return hasUpgrade('HC', 31) && hasUpgrade('HC', 32) && hasUpgrade('HC', 33) && hasUpgrade('HC', 34) },
+            branches: [31, 32, 33, 34]
+        }
 	// Wow, it's the year (This is definitely going to become outdated)
     },
 })
