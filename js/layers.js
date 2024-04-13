@@ -2052,9 +2052,9 @@ addLayer('HC', {
     },
     prestigeNotify() { return this.canReset() },
     prestigeButtonText() {
-        if(!this.getResetGain().gte(1024)) return "Go Hyper for " + coolDynamicFormat(this.getResetGain(), 0) + " Hyper Rebirth Points"
-        + "<br><br>Next at " + coolDynamicFormat(this.getNextAt(), 0) + " Hyper Essence"
-        if(this.getResetGain().gte(1024)) return "Reset for " + coolDynamicFormat(this.getResetGain(), 2) + " Hyper Rebirth Points"
+        if(!this.getResetGain().gte(1024)) return "Go Hyper for " + formatWhole(this.getResetGain(), 0) + " Hyper Rebirth Points"
+        + "<br><br>Next at " + formatWhole(this.getNextAt(), 0) + " Hyper Essence"
+        if(this.getResetGain().gte(1024)) return "Reset for " + formatWhole(this.getResetGain(), 2) + " Hyper Rebirth Points"
     },
     milestones: {
         0: {
