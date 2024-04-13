@@ -302,7 +302,7 @@ addLayer("SR", {
         },
         14: {
             unlocked() { return hasMilestone('P', 10) },
-            cost: new Decimal("1e200"),
+            cost: new Decimal("1e160"),
             currencyDisplayName: "Power",
             currencyInternalName: "points",
             currencyLayer() { return 'P' },
@@ -317,7 +317,7 @@ addLayer("SR", {
             unlocked() { return hasUpgrade('SR', 14) },
             title: "Ω - Omega",
             description: "Start calculating Hyper Essence<br>Hyper Essence is calculated based on log($), SRP, and log(Power)<br>Unlock another prestige layer...",
-            cost: new Decimal(6000),
+            cost: new Decimal(5000),
         }
     },
     doReset(resetlayer) {
