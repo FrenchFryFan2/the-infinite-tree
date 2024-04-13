@@ -111,7 +111,10 @@ function getPointGen() {
 	// Hyper Rebirth Layer
 	gain = gain.times(layers.HC.effect()[0])
 	if(hasUpgrade('HC', 11)) gain = gain.times(10000)
-	gain = gain.pow(layers.C.effect())
+	if(hasUpgrade('HC', 14)) gain = gain.times(100)
+	if(hasUpgrade('HC', 24)) gain = gain.times(200)
+
+	gain = gain.pow(layers.C.effect()[0])
 
 
 	// Dunno were else to put this
@@ -133,6 +136,7 @@ function pPylon(pylon, pylons, pylobs) {
 
 	// Super Layer
 	if(hasMilestone('P', 4) && pylon == 'A') effect = effect.times(5)
+	if(hasUpgrade('HC', 14) && pylon == 'A') effect = effect.times(100)
 	if(hasUpgrade('U', 54 && (pylon =='A' || pylon == 'B' || pylon == 'C'))) effect = effect.times(2)
 
 	if(hasChallenge('SR', 31) && pylon == 'A') effect = effect.times(player.P.points.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
@@ -149,13 +153,14 @@ function pPylon(pylon, pylons, pylobs) {
 	effect = effect.times(layers.HC.effect()[2])
 	if(hasUpgrade('HC', 12)) effect = effect.times(2)
 	if(hasUpgrade('HC', 22)) effect = effect.times(5)
+	if(hasUpgrade('HC', 24)) effect = effect.times(200)
 
 	return effect
 }
 
 // Display extra things at the top of the page
 var displayThings = [
-	"Endgame: Unlock Matter"
+	
 ]
 
 function taxDisplay() {
@@ -164,7 +169,7 @@ function taxDisplay() {
 
 // Determines when the game "ends"
 function isEndgame() {
-	return hasUpgrade('SR', 21)
+	return hasUpgrade('HC', 41)
 }
 
 function machineBonuses() {
