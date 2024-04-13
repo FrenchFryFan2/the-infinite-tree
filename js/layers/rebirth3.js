@@ -19,6 +19,16 @@ addLayer('HC', {
 				["upgrade-tree", [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41]]]
             ]
         },
+        // "Matter": {
+        //     content: [
+        //         ["tree", [
+        //             ["M", "blank", "AM"],
+        //             [],
+        //             ["DM", "blank", "EM"]
+        //         ]]
+        //     ],
+        //     unlocked() { return hasAchievement('A', 101) }
+        // }
     },
     symbol: "HR",
     row: "3",
@@ -29,7 +39,6 @@ addLayer('HC', {
         let hypEss = new Decimal(1)
         hypEss = hypEss.times(player.points.add(10).log(10).pow(0.6).times(player.SR.points.add(1).pow(0.4)).times(player.P.points.add(10).log(10)).pow(0.25))
         if(hasUpgrade('HC', 33)) hypEss = hypEss.times(layers.C.effect()[3])
-        hypEss = hypEss.times(layers.M.effect2())
         player.HC.hyperNumber = hypEss
     },
     effect() {

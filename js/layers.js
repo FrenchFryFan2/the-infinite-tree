@@ -348,34 +348,6 @@ addLayer("A", {
                 if (hasUpgrade('HC', 41)) return true
             },
         },
-        102: {
-            name: "Nothing Matters",
-            tooltip: "Anihilate Matter",
-            done() {
-                if (false) return true
-            },
-        },
-        103: {
-            name: "Antimatter Dimensions",
-            tooltip: "Anihilate Antimatter",
-            done() {
-                if (false) return true
-            },
-        },
-        104: {
-            name: "Born from Void",
-            tooltip: "Anihilate Dark Matter",
-            done() {
-                if (false) return true
-            },
-        },
-        105: {
-            name: "Dying Stars",
-            tooltip: "Anihilate Exotic Matter",
-            done() {
-                if (false) return true
-            },
-        },
     }
 })
 
@@ -424,11 +396,11 @@ addLayer("Sft", {
     infoboxes: {
         general: {
             title: "Overall Information",
-            body: "This tab contains spoilers, to a similar degree as reading the first few lines of every updates changelog<br><br>Softcaps have a start value and a power.<br>The power of a softcap is basically a divisor on the amount of OoM's (Order's of Magnitude) beyond the start value.<br>Some softcaps are also logarithmic, meaning that the amount of extra OoM's past the starting value is based on the log of OoM's past the start amount."
+            body: "Softcaps have a start value and a power.<br>The power of a softcap is basically a divisor on the amount of OoM's (Order's of Magnitude) beyond the start value.<br>Some softcaps are also logarithmic, meaning that the amount of extra OoM's past the starting value is based on the log of OoM's past the start amount."
         },
         rebirth: {
             title: "Rebirth Layer",
-            body: "Rebirth Point Gain<br>Beyond 1e17 Rebirth Points, gain is softcapped with a power of 4<br>Beyond 1e2000 Rebirth Points, gain is softcapped again with a power of 5, multiplying to 20<br>All multipliers from Hyper or further bypass the first two softcaps",
+            body: "Rebirth Point Gain<br>Beyond 1e17 Rebirth Points, gain is softcapped with a power of 4<br>Beyond 1e2000 Rebirth Points, gain is softcapped again with a power of 5, multiplying to 20",
             unlocked() { return player.R.unlocked }
         },
         hyper: {

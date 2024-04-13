@@ -7,8 +7,7 @@ var layoutInfo = {
         ["U"],
         ["R"],
         ["SR", "P"],
-        ["HC"],
-        ["M", "AM", "DM", "EM"]
+        ["HC"]
     ],
 
     
