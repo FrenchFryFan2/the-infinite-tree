@@ -320,17 +320,6 @@ addLayer("SR", {
             cost: new Decimal(5000),
         }
     },
-    doReset(resetlayer) {
-        if(resetlayer === 'HC') {
-            player.SR.points = new Decimal(0)
-            player.SR.milestones = []
-            player.SR.upgrades = []
-            if(!hasMilestone('HC', 2)) player.SR.challenges = {}
-            player.SR.milestones.push(2, 6, 7)
-            if(hasUpgrade('HC', 12)) player.SR.milestones.push(8)
-            if(hasUpgrade('HC', 31)) player.SR.points.add(12)
-        }
-    },
     automate() {
         if(hasMilestone('HC', 3)) {
             buyUpgrade('SR', 11)
@@ -350,13 +339,6 @@ addLayer("SR", {
             unlocked() {return player.SR.unlocked} // Determines if you can use the hotkey, optional
         }
     ],
-    onPrestige() {
-        if(inChallenge('SR', 11)) {
-            if(player.SR.activeChallenge === 11) {
-                
-            }
-        }
-    }
 })
 
 addLayer("P", {

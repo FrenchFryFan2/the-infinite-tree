@@ -19,16 +19,6 @@ addLayer('HC', {
 				["upgrade-tree", [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41]]]
             ]
         },
-        // "Matter": {
-        //     content: [
-        //         ["tree", [
-        //             ["M", "blank", "AM"],
-        //             [],
-        //             ["DM", "blank", "EM"]
-        //         ]]
-        //     ],
-        //     unlocked() { return hasAchievement('A', 101) }
-        // }
     },
     symbol: "HR",
     row: "3",
@@ -269,7 +259,16 @@ addLayer('HC', {
             onPress() { if (player.HC.unlocked) doReset("HC") },
             unlocked() {return player.HC.unlocked} // Determines if you can use the hotkey, optional
         }
-    ]
+    ],
+    onPrestige() {
+        player.SR.points = new Decimal(0)
+        player.SR.milestones = []
+        player.SR.upgrades = []
+        if(!hasMilestone('HC', 2)) player.SR.challenges = {}
+        player.SR.milestones.push(2, 6, 7)
+        if(hasUpgrade('HC', 12)) player.SR.milestones.push(8)
+        if(hasUpgrade('HC', 31)) player.SR.points.add(12)
+    }
 })
 
 addLayer('C', {
@@ -307,5 +306,5 @@ addLayer('C', {
         + ", multiplying Hyper Essence gain by  " + format(layers.C.effect()[3])
         + "<br>Producing " + format(hyperCashGain()) + "/sec"
     },
-    color: "#34eb67"
+    color: "#34eb67",
 })
