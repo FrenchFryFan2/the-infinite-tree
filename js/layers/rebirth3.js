@@ -257,8 +257,15 @@ addLayer('HC', {
             canAfford() { return hasUpgrade('HC', 31) && hasUpgrade('HC', 32) && hasUpgrade('HC', 33) && hasUpgrade('HC', 34) },
             branches: [31, 32, 33, 34]
         }
-	// Wow, it's the year (This is definitely going to become outdated)
     },
+    hotkeys: [
+        {
+            key: "h", // What the hotkey button is. Use uppercase if it's combined with shift, or "ctrl+x" for holding down ctrl.
+            description: "H: Hyper Rebirth, bringing inflation to another galaxy", // The description of the hotkey that is displayed in the game's How To Play tab
+            onPress() { if (player.HC.unlocked) doReset("HC") },
+            unlocked() {return player.HC.unlocked} // Determines if you can use the hotkey, optional
+        }
+    ]
 })
 
 addLayer('C', {

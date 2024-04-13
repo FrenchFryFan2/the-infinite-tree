@@ -341,7 +341,15 @@ addLayer("SR", {
     },
     milestonePopups() { return !hasMilestone('HC', 1) },
     resetsNothing() { return hasMilestone('HC', 4) },
-    autoPrestige() { return hasMilestone('HC', 5) }
+    autoPrestige() { return hasMilestone('HC', 5) },
+    hotkeys: [
+        {
+            key: "s", // What the hotkey button is. Use uppercase if it's combined with shift, or "ctrl+x" for holding down ctrl.
+            description: "S: Super Rebirth up the heavenly hierarchy", // The description of the hotkey that is displayed in the game's How To Play tab
+            onPress() { if (player.SR.unlocked) doReset("SR") },
+            unlocked() {return player.SR.unlocked} // Determines if you can use the hotkey, optional
+        }
+    ]
 })
 
 addLayer("P", {
