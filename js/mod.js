@@ -3,24 +3,26 @@ let modInfo = {
 	id: "nhug dkjldgsgrcinhgrv",
 	author: "BanaCubed (Coding), and many people (Concepts)",
 	pointsName: "$",
-	modFiles: ["layers.js", "tree.js"],
+	modFiles: ["layers.js", "tree.js", "layers/cash.js", "layers/rebirth.js", "layers/rebirth2.js", "layers/rebirth3.js"],
 
 	discordName: "",
 	discordLink: "",
 	initialStartPoints: new Decimal(0), // Used for hard resets and new players
-	offlineLimit: 1024,  // In hours
+	offlineLimit: 16,  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.3",
+	num: "0.3.0.1",
 	name: "Hyper Rebirth",
 }
 
-let changelog = `<h1>Changelog:</h1><br><br>
-	check the forum thread Create Incremental at [galaxy.click/forum/thread/255] to see what is coming next<br><br>
-	<h3>I will not make a changelog</h3><br>
-		galaxy gives you the ability to view past updates so look there (if you aren't on galaxy go to [galaxy.click])`
+let changelog = `<h1>""""""Changelog""""""</h1><br><br>
+	Check the forum thread the game is based on at <a href=https://galaxy.click/forum/thread/255>galaxy.click/forum/thread/255</a> to see what is coming next<br><br>
+	Changelog is available at <a href=https://galaxy.click/updates/344>galaxy.click/updates/344</a>
+	
+	<br><br><h2>v0.3</h2>
+	<br>`
 
 let winText = `You are win! Congratulations on wasting your time! (Keep save for future updates)`
 
