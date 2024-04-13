@@ -15,6 +15,7 @@ addLayer('HC', {
         "Paths": {
             content: [
                 ["display-text", "Starting a path doubles the cost of all unstarted paths"],
+                "clickables",
                 "blank",
 				["upgrade-tree", [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41]]]
             ]
@@ -269,8 +270,36 @@ addLayer('HC', {
         player.SR.milestones.push(2, 6, 7)
         if(hasUpgrade('HC', 12)) player.SR.milestones.push(8)
         if(hasUpgrade('HC', 31)) player.SR.points.add(12)
+    },
+    clickables: {
+        11: {
+            title: "Respec Paths",
+            canClick() {
+                return hasUpgrade('HC', 11) || hasUpgrade('HC', 12) || hasUpgrade('HC', 13) || hasUpgrade('HC', 14)
+            },
+            onClick() {
+                player.HC.points = player.HC.total
+                player.HC.upgrades = []
+                player.HC.paths = []
+            }
+        }
     }
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 addLayer('C', {
     name: "hyper-cash",
