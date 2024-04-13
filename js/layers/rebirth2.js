@@ -330,9 +330,6 @@ addLayer("SR", {
             if(hasUpgrade('HC', 12)) player.SR.milestones.push(8)
             if(hasUpgrade('HC', 31)) player.SR.points.add(12)
         }
-        if(resetlayer === 'SR') {
-            completeChallenge('SR')
-        }
     },
     automate() {
         if(hasMilestone('HC', 3)) {
@@ -352,7 +349,14 @@ addLayer("SR", {
             onPress() { if (player.SR.unlocked) doReset("SR") },
             unlocked() {return player.SR.unlocked} // Determines if you can use the hotkey, optional
         }
-    ]
+    ],
+    onPrestige() {
+        if(inChallenge('SR', 11)) {
+            if(player.SR.activeChallenge === 11) {
+                
+            }
+        }
+    }
 })
 
 addLayer("P", {
