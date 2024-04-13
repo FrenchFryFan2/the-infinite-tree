@@ -305,9 +305,6 @@ addLayer("U", {
         },
     },
     layerShown(){return true},
-    automate() {
-
-    },
     clickables: {
         11: {
             title: "Money Mode",
@@ -430,6 +427,13 @@ addLayer("U", {
             }
             if(inChallenge('SR', 21)) player.U.upgrades = []
         };
+        if(resetlayer == 'HC') {
+            player.U.points = new Decimal(0)
+            player.U.upgrades = []
+            setBuyableAmount('U', 11, new Decimal(0))
+            setBuyableAmount('U', 12, new Decimal(0))
+            player.U.upgrades.push[34]
+        }
         if(!hasUpgrade('R', 32)) {
             setClickableState('U', 11, false)
             setClickableState('U', 12, false)
@@ -462,17 +466,29 @@ addLayer("U", {
                 buyUpgrade('U', 33)
                 buyUpgrade('U', 34)
             };
-            if(layers.U.buyables[11].canAfford() && hasMilestone('SR', 7)) {
+            if(layers.U.buyables[11].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
                 player.U.points = player.U.points.sub(layers.U.buyables[11].cost())
-                setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(1))
+                if(!hasMilestone('HC', 1)) setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(1))
+                if(hasMilestone('HC', 1)) setBuyableAmount('U', 11, getBuyableAmount('U', 11).add(10))
             }
-            if(layers.U.buyables[12].canAfford() && hasUpgrade('SR', 14)) {
+            if(layers.U.buyables[12].canAfford() && (hasUpgrade('SR', 14) || hasAchievement('A', 81))) {
                 player.U.points = player.U.points.sub(layers.U.buyables[12].cost())
-                setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(1))
+                if(!hasMilestone('HC', 1)) setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(1))
+                if(hasMilestone('HC', 1)) setBuyableAmount('U', 12, getBuyableAmount('U', 12).add(10))
+            }
+            if(hasMilestone('HC', 3)) {
+                buyUpgrade('U', 41)
+                buyUpgrade('U', 42)
+                buyUpgrade('U', 43)
+                buyUpgrade('U', 44)
+                buyUpgrade('U', 51)
+                buyUpgrade('U', 52)
+                buyUpgrade('U', 53)
+                buyUpgrade('U', 54)
             }
         }
-        
-        if(!hasUpgrade('U', 34)) {
+
+        if(!hasUpgrade('U', 34) && !hasAchievement('A', 81)) {
             setClickableState('U', 11, false)
             setClickableState('U', 12, false)
             setClickableState('U', 13, false)
@@ -727,7 +743,7 @@ addLayer("A", {
             name: "Kilometrerock",
             tooltip: "Obtain all Power Milestones",
             done() {
-                if (hasMilestone('P', 10)) return true
+                if (hasMilestone('P', 12)) return true
             },
         },
         72: {
@@ -752,10 +768,87 @@ addLayer("A", {
             },
         },
         75: {
-            name: "Just getting started (ENDGAME)",
+            name: "Just getting started",
             tooltip: "Purchase Omega",
             done() {
                 if (hasUpgrade('SR', 21)) return true
+            },
+        },
+        83: {
+            name: "Hyper Rebirth?",
+            tooltip: "Go Hyper",
+            done() {
+                if (player.HC.points.gte(1)) return true
+            },
+        },
+        81: {
+            name: "The Basic Path",
+            tooltip: "Start the Basic Path",
+            done() {
+                if (hasUpgrade('HC', 11)) return true
+            },
+        },
+        82: {
+            name: "The Machine's Path",
+            tooltip: "Start the Machine's Path",
+            done() {
+                if (hasUpgrade('HC', 12)) return true
+            },
+        },
+        84: {
+            name: "The Hyper Path",
+            tooltip: "Start the Hyper Path",
+            done() {
+                if (hasUpgrade('HC', 13)) return true
+            },
+        },
+        85: {
+            name: "The Combined Path",
+            tooltip: "Start the Combined Path",
+            done() {
+                if (hasUpgrade('HC', 14)) return true
+            },
+        },
+        91: {
+            name: "Learning the Basics",
+            tooltip: "Complete the Basic Path",
+            done() {
+                if (hasUpgrade('HC', 31)) return true
+            },
+        },
+        92: {
+            name: "Complex Machinery",
+            tooltip: "Complete the Machine's Path",
+            done() {
+                if (hasUpgrade('HC', 32)) return true
+            },
+        },
+        94: {
+            name: "God of Hyperdeath",
+            tooltip: "Complete the Hyper Path",
+            done() {
+                if (hasUpgrade('HC', 33)) return true
+            },
+        },
+        95: {
+            name: "By Our Power Combined",
+            tooltip: "Complete the Combined Path",
+            done() {
+                if (hasUpgrade('HC', 34)) return true
+            },
+        },
+        93: {
+            name: "Master of Reality",
+            tooltip: "Complete all Paths",
+            done() {
+                if (hasUpgrade('HC', 31) && hasUpgrade('HC', 32) && hasUpgrade('HC', 33) && hasUpgrade('HC', 34)) return true
+            },
+        },
+        101: {
+            name: "Material Possesions",
+            tooltip: "Unlock the Matter Combustor",
+            done() {
+                if (hasUpgrade('HC', 41)) return true
             },
         },
     }
@@ -763,23 +856,52 @@ addLayer("A", {
 
 addLayer("R", {
     name: "rebirth",
-    softcap: new Decimal("1e17"),
-    softcapPower: new Decimal(0.25),
+    softcap() {
+        cap = new Decimal("1e17")
+        if(player.points.gte("1e6363.2")) cap = new Decimal("e1686.89")
+        return cap
+    },
+    softcapPower() {
+        let softness = new Decimal(0.25)
+        if(player.points.gte("1e6363.2")) softness = softness.div(5)
+        return softness
+    },
     symbol: "R",
     row: "1",
-    type: "normal",
+    type: "custom",
+    canReset() { return this.baseAmount().gte(this.requires()) },
+    update(diff) {
+        player.R.points = player.R.points.add(this.getResetGain().times(this.passiveGen()).times(diff))
+    },
+    getResetGain() {
+        let baseGain = this.baseAmount().times(this.gainMult()).div(this.requires()).pow(this.exponent())
+        if(baseGain.gte(1e17)) baseGain = baseGain.div(1e17).pow(0.25).times(1e17)
+        if(baseGain.gte("1e2000")) baseGain = baseGain.div("1e2000").pow(0.2).times("1e2000")
+        baseGain = baseGain.times(this.directMult())
+        return baseGain
+    },
+    getNextAt() {
+        let baseGain = this.getResetGain().add(1)
+        baseGain = baseGain.div(this.directMult())
+        if(baseGain.gte("1e2000")) baseGain = baseGain.div("1e2000").pow(5).times("1e2000")
+        if(baseGain.gte(1e17)) baseGain = baseGain.div(1e17).pow(4).times(1e17)
+        baseGain = baseGain.pow(new Decimal(1).div(this.exponent())).div(this.gainMult()).times(this.requires())
+    },
+    prestigeButtonText() {
+        if(!inChallenge('SR', 11)) return "Rebirth for " + formatWhole(this.getResetGain()) + " Rebirth Points"
+        if(inChallenge('SR', 11)) return "A Superior being is stopping you from Rebirthing"
+    },
+    prestigeNotify() { return this.getResetGain().gte(player.R.points.div(5)) && this.passiveGen === 0 },
     baseResource: "$",
     resource: "Rebirth Points",
     baseAmount() { return player.points },
-    onPrestige() {
-
-    },
     requires() {
         let requirement = new Decimal(0)
         if(!inChallenge('SR', 11)) requirement = requirement.add(100000)
         if(inChallenge('SR', 11)) requirement = requirement.add("eeeeeeeee10")
         if(hasChallenge('SR', 12)) requirement = requirement.div(10)
         if(inChallenge('SR', 12)) requirement = requirement.times(10)
+        if(hasUpgrade('HC', 34)) requirement = requirement.div(100000)
         return requirement
     },
     gainMult() {
@@ -795,6 +917,13 @@ addLayer("R", {
         remult = remult.times(layers.U.buyables[11].effect())
         remult = remult.times(layers.P.effect())
         if (hasUpgrade('U', 52)) remult = remult.times(player.P.points.add(3).log(3))
+        return remult
+    },
+    directMult() {
+        let remult = new Decimal(1)
+        if(hasUpgrade('HC', 21)) remult = remult.times(10000)
+        if(hasUpgrade('HC', 14)) remult = remult.times(100)
+        if(hasUpgrade('HC', 33)) remult = remult.times(layers.C.effect()[1])
         return remult
     },
     exponent() {
@@ -978,11 +1107,19 @@ addLayer("R", {
                 if(hasMilestone('SR', 3)) player.R.upgrades.push(22, 23)
                 if(!hasMilestone('SR', 3)) setBuyableAmount('R', 11, new Decimal(0))
                 if(!hasMilestone('SR', 3)) setBuyableAmount('R', 12, new Decimal(0))
+                if(hasAchievement('A', 81)) player.R.upgrades.push(12, 21)
+                if(hasMilestone('HC', 0)) player.R.upgrades.push(12, 21, 13, 22, 23, 24)
             }
             if(inChallenge('SR', 21)) player.R.upgrades = []
         }
+        if(resetlayer == 'HC') {
+            player.R.points = new Decimal(0)
+            player.R.upgrades = [12, 21, 13, 22, 23, 24]
+            setBuyableAmount('R', 11, new Decimal(0))
+            setBuyableAmount('R', 12, new Decimal(0))
+        }
     },
-    passiveGeneration() {
+    passiveGen() {
         let passive = new Decimal(0)
         if(!inChallenge('SR', 21)) {
             if(hasChallenge('SR', 11)) passive = passive.add(0.2)
@@ -992,14 +1129,29 @@ addLayer("R", {
     },
     automate() {
         if(!inChallenge('SR', 21)) {
-            if(layers.R.buyables[11].canAfford() && hasMilestone('SR', 7)) {
+            if(layers.R.buyables[11].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
                 if(!hasMilestone('SR', 0)) player.R.points = player.R.points.sub(layers.R.buyables[11].cost())
-                setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
+                if(!hasMilestone('HC', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(1))
+                if(hasMilestone('HC', 1)) setBuyableAmount('R', 11, getBuyableAmount('R', 11).add(10))
             }
-            if(layers.R.buyables[12].canAfford() && hasMilestone('SR', 7)) {
+            if(layers.R.buyables[12].canAfford() && (hasMilestone('SR', 7) || hasAchievement('A', 81))) {
                 if(!hasMilestone('SR', 0)) player.R.points = player.R.points.sub(layers.R.buyables[12].cost())
-                setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
+                if(!hasMilestone('HC', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(1))
+                if(hasMilestone('HC', 1)) setBuyableAmount('R', 12, getBuyableAmount('R', 12).add(10))
             }
+            if(hasMilestone('HC', 3))
+                buyUpgrade('R', 11)
+                buyUpgrade('R', 12)
+                buyUpgrade('R', 13)
+                buyUpgrade('R', 14)
+                buyUpgrade('R', 21)
+                buyUpgrade('R', 22)
+                buyUpgrade('R', 23)
+                buyUpgrade('R', 24)
+                buyUpgrade('R', 31)
+                buyUpgrade('R', 32)
+                buyUpgrade('R', 33)
+                buyUpgrade('R', 34)
         }
     },
 })
@@ -1016,7 +1168,12 @@ addLayer("SR", {
     },
     color: "#eb1a3d",
     resource: "Super Rebirth Points",
-    requires: new Decimal(1e19),
+    requires() {
+        let req = new Decimal(1e19)
+        if(hasUpgrade('HC', 31)) req = req.div("1e9")
+        if(hasUpgrade('HC', 34)) req = req.div(100000)
+        return req
+    },
     type: "static",
     base: new Decimal(2),
     exponent: new Decimal(1),
@@ -1024,7 +1181,7 @@ addLayer("SR", {
     baseResource: "RP",
     branches: ["R"],
     tabFormat: {
-        "Main": {
+        "Boosts": {
             content: [
                 "main-display",
                 "prestige-button",
@@ -1048,10 +1205,10 @@ addLayer("SR", {
         return hasAchievement('A', 41)
     },
     effect() {
-        let pow = 1
-        if (hasUpgrade('R', 34)) pow = pow + 1
+        let pow = new Decimal(1)
+        if (hasUpgrade('R', 34)) pow = pow.add(1)
         return [player.SR.points.pow(pow).times(1.5).add(1),
-        player.SR.points.pow(0.5).add(1)]
+        player.SR.points.pow(pow.sub(0.5)).add(1)]
     },
     effectDescription() {
         return "multiplying RP gain by " + coolDynamicFormat(this.effect()[1], 2)
@@ -1156,7 +1313,7 @@ addLayer("SR", {
                 if(hasUpgrade('U', 53)) upgs = upgs.times(1.4)
                 if(hasUpgrade('U', 54)) upgs = upgs.times(1.4)
 
-                
+
                 if(hasUpgrade('R', 11)) upgs = upgs.times(1.4)
                 if(hasUpgrade('R', 12)) upgs = upgs.times(1.4)
                 if(hasUpgrade('R', 13)) upgs = upgs.times(1.4)
@@ -1180,7 +1337,7 @@ addLayer("SR", {
         },
         10: {
             requirementDescription: "Unlock the Fourth Challenge",
-            effectDescription: "Keep the fourth challenge unlocked even when $ Upgrade 5:3 is locked or removed",
+            effectDescription: "Keep the fourth challenge unlocked even when $ Upgrade 19 is locked or removed",
             done() {
                 return hasUpgrade('U', 53)
             },
@@ -1235,7 +1392,7 @@ addLayer("SR", {
         },
         31: {
             name: "Tax Evasion Simulator",
-            challengeDescription: "There is rapidly increasing Tax that divides $ gain<br>Can be completed 4 times",
+            challengeDescription() { return "There is rapidly increasing Tax that divides $ gain<br>" + formatWhole(challengeCompletions('SR', 31)) + "/4 Completions" },
             canComplete() { return player.R.points.gte(new Decimal("1e50").times(new Decimal(1000).pow(challengeCompletions('SR', 31)))) },
             unlocked() { return hasMilestone('P', 7) },
             rewardDescription: "Boost each Power Pylon based on the previous Power Pylon<br>On first completion unlock Power Pylon E<br>On final completion unlock Power Pylon F",
@@ -1265,6 +1422,12 @@ addLayer("SR", {
         if(hasUpgrade('SR', 12)) expo = expo.times(1.5)
         return expo
     },
+    directMult() {
+        let mult = new Decimal(1)
+        mult = mult.times(layers.HC.effect()[1])
+        if(hasUpgrade('HC', 33)) mult = mult.times(layers.C.effect()[2])
+        return mult
+    },
     update(diff) {
         if(inChallenge('SR', 31)) {
             player.SR.tax = player.SR.tax.times(new Decimal(0.2).times(new Decimal(2).pow(challengeCompletions('SR', 31))).add(1).pow(diff))
@@ -1281,7 +1444,7 @@ addLayer("SR", {
         },
         12: {
             unlocked() { return hasMilestone('P', 10) },
-            cost: new Decimal("1e265"),
+            cost: new Decimal("1e270"),
             currencyDisplayName: "RP",
             currencyInternalName: "points",
             currencyLayer() { return 'R' },
@@ -1311,10 +1474,32 @@ addLayer("SR", {
             },
             unlocked() { return hasUpgrade('SR', 14) },
             title: "Ω - Omega",
-            description: "Beat the game",
-            cost: new Decimal(6000)
+            description: "Start calculating Hyper Essence<br>Hyper Essence is calculated based on log($), SRP, and log(Power)<br>Unlock another prestige layer...",
+            cost: new Decimal(6000),
         }
-    }
+    },
+    doReset(resetlayer) {
+        if(resetlayer === 'HC') {
+            player.SR.points = new Decimal(0)
+            player.SR.milestones = []
+            player.SR.upgrades = []
+            if(!hasMilestone('HC', 2)) player.SR.challenges = {}
+            player.SR.milestones.push(2, 6, 7)
+            if(hasUpgrade('HC', 12)) player.SR.milestones.push(8)
+            if(hasUpgrade('HC', 31)) player.SR.points.add(12)
+        }
+    },
+    automate() {
+        if(hasMilestone('HC', 3)) {
+            buyUpgrade('SR', 11)
+            buyUpgrade('SR', 12)
+            buyUpgrade('SR', 13)
+            buyUpgrade('SR', 14)
+        }
+    },
+    milestonePopups() { return !hasMilestone('HC', 1) },
+    resetsNothing() { return hasMilestone('HC', 4) },
+    autoPrestige() { return hasMilestone('HC', 5) }
 })
 
 addLayer("SA", {
@@ -1366,7 +1551,7 @@ addLayer("P", {
     prestigeButtonText() {
         return "Unlock Power"
     },
-    branches: [['SR', 2]],
+    branches: [['SR', 1]],
     layerShown() { return hasAchievement('A', 45) },
     startData() {
         return {
@@ -1387,7 +1572,8 @@ addLayer("P", {
         }
     },
     update(diff) {
-        if (player.P.points.gte(1) || player.P.pylobA.gte(1)) player.P.points = player.P.points.add(layers.P.clickables[11].effect().times(diff))
+        if (hasMilestone('SR', 8)) player.P.unlocked = true
+        if (hasMilestone('SR', 8)) player.P.points = player.P.points.add(layers.P.clickables[11].effect().times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonA = player.P.pylonA.add(layers.P.clickables[12].effect().times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonB = player.P.pylonB.add(layers.P.clickables[13].effect().times(diff))
         if (hasMilestone('SR', 8)) player.P.pylonC = player.P.pylonC.add(layers.P.clickables[14].effect().times(diff))
@@ -1495,10 +1681,9 @@ addLayer("P", {
         },
     },
     tabFormat: {
-        "Main": {
+        "Boosts": {
             content: [
                 "main-display",
-                "prestige-button",
                 "blank",
                 "milestones",
                 "upgrades",
@@ -1512,29 +1697,56 @@ addLayer("P", {
         },
     },
     automate() {
-        if(hasMilestone('P', 11)) {
-            if(player.P.points.gte(layers.P.clickables[11].cost())) {
+        if(hasMilestone('P', 11) || hasAchievement('A', 81)) {
+            if(player.P.points.gte(layers.P.clickables[11].cost()) && (hasMilestone('P', 0) || hasUpgrade('HC', 32))) {
                 player.P.pylonA = player.P.pylonA.add(1)
                 player.P.pylobA = player.P.pylobA.add(1)
+                if(hasMilestone('HC', 1)) {
+                    player.P.pylonA = player.P.pylonA.add(9)
+                    player.P.pylobA = player.P.pylobA.add(9)
+                }
             }
-            if(player.P.pylonA.gte(layers.P.clickables[12].cost())) {
+            if(player.P.pylonA.gte(layers.P.clickables[12].cost()) && (hasMilestone('P', 2) || hasUpgrade('HC', 32))) {
                 player.P.pylonB = player.P.pylonB.add(1)
                 player.P.pylobB = player.P.pylobB.add(1)
+                if(hasMilestone('HC', 1)) {
+                    player.P.pylonB = player.P.pylonB.add(9)
+                    player.P.pylobB = player.P.pylobB.add(9)
+                }
             }
-            if(player.P.pylonB.gte(layers.P.clickables[13].cost())) {
+            if(player.P.pylonB.gte(layers.P.clickables[13].cost()) && (hasMilestone('P', 5) || hasUpgrade('HC', 32))) {
                 player.P.pylonC = player.P.pylonC.add(1)
                 player.P.pylobC = player.P.pylobC.add(1)
+                if(hasMilestone('HC', 1)) {
+                    player.P.pylonC = player.P.pylonC.add(9)
+                    player.P.pylobC = player.P.pylobC.add(9)
+                }
             }
         }
-        if(hasMilestone('P', 12)) {
-            if(player.P.pylonC.gte(layers.P.clickables[14].cost())) {
+        if(hasMilestone('P', 12) || hasAchievement('A', 81)) {
+            if(player.P.pylonC.gte(layers.P.clickables[14].cost()) && (hasChallenge('SR', 22) || hasUpgrade('HC', 32))) {
                 player.P.pylonD = player.P.pylonD.add(1)
                 player.P.pylobD = player.P.pylobD.add(1)
+                if(hasMilestone('HC', 1)) {
+                    player.P.pylonD = player.P.pylonD.add(9)
+                    player.P.pylobD = player.P.pylobD.add(9)
+                }
             }
-            if(player.P.pylonD.gte(layers.P.clickables[15].cost())) {
+            if(player.P.pylonD.gte(layers.P.clickables[15].cost()) && (hasChallenge('SR', 31) || hasUpgrade('HC', 32))) {
                 player.P.pylonE = player.P.pylonE.add(1)
                 player.P.pylobE = player.P.pylobE.add(1)
+                if(hasMilestone('HC', 1)) {
+                    player.P.pylonE = player.P.pylonE.add(9)
+                    player.P.pylobE = player.P.pylobE.add(9)
+                }
             }
+        }
+        if(hasUpgrade('HC', 32)) {
+            if(player.P.pylonE.gte(layers.P.clickables[16].cost())) {
+                player.P.pylonF = player.P.pylonF.add(10)
+                player.P.pylobF = player.P.pylobF.add(10)
+            }
+
         }
     },
     clickables: {
@@ -1556,24 +1768,19 @@ addLayer("P", {
                 player.P.pylobA = player.P.pylobA.add(1)
             },
             unlocked() {
-                return hasMilestone('P', 0)
+                return (hasMilestone('P', 0) || hasUpgrade('HC', 33))
             },
             effect() {
-                let effect = player.P.pylonA.div(10)
-                if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobA))
-                if(hasMilestone('P', 4)) effect = effect.times(5)
-                if(hasUpgrade('U', 54)) effect = effect.times(2)
-                if(hasChallenge('SR', 31)) effect = effect.times(player.P.points.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-                effect = effect.times(layers.U.buyables[12].effect())
-                if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
-                return effect
+                return pPylon('A', player.P.pylonA, player.P.pylobA)
             },
             cost() {
                 let expo = new Decimal(1.5)
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
-                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(6))
+                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.add(1).pow(6))
+                if(hasUpgrade('HC', 33)) expo = expo.sub(0.2)
                 if(player.P.pylobA.gte(1001)) expo = expo.add(player.P.pylobA.sub(1000).div(100).pow(2))
+                if(hasUpgrade('HC', 34)) divi = divi.times(100000)
                 return expo.pow(player.P.pylobA).div(divi)
             }
         },
@@ -1595,23 +1802,19 @@ addLayer("P", {
                 player.P.pylobB = player.P.pylobB.add(1)
             },
             unlocked() {
-                return hasMilestone('P', 2)
+                return (hasMilestone('P', 2) || hasUpgrade('HC', 33))
             },
             effect() {
-                let effect = player.P.pylonB.div(10)
-                if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobB))
-                if(hasUpgrade('U', 54)) effect = effect.times(2)
-                if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonA.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-                effect = effect.times(layers.U.buyables[12].effect())
-                if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
-                return effect
+                return pPylon('B', player.P.pylonB, player.P.pylobB)
             },
             cost() {
                 let expo = new Decimal(2)
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
-                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(5))
+                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.add(1).pow(5))
+                if(hasUpgrade('HC', 33)) expo = expo.sub(0.2)
                 if(player.P.pylobB.gte(1001)) expo = expo.add(player.P.pylobB.sub(1000).div(100).pow(2))
+                if(hasUpgrade('HC', 34)) divi = divi.times(100000)
                 return expo.pow(player.P.pylobB).div(divi)
             }
         },
@@ -1633,23 +1836,19 @@ addLayer("P", {
                 player.P.pylobC = player.P.pylobC.add(1)
             },
             unlocked() {
-                return hasMilestone('P', 5)
+                return (hasMilestone('P', 5) || hasUpgrade('HC', 33))
             },
             effect() {
-                let effect = player.P.pylonC.div(10)
-                if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobC))
-                if(hasUpgrade('U', 54)) effect = effect.times(2)
-                if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonB.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-                effect = effect.times(layers.U.buyables[12].effect())
-                if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
-                return effect
+                return pPylon('C', player.P.pylonC, player.P.pylobC)
             },
             cost() {
                 let expo = new Decimal(2.5)
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
-                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(4))
+                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.add(1).pow(4))
+                if(hasUpgrade('HC', 33)) expo = expo.sub(0.2)
                 if(player.P.pylobC.gte(1001)) expo = expo.add(player.P.pylobC.sub(1000).div(100))
+                if(hasUpgrade('HC', 34)) divi = divi.times(100000)
                 return expo.pow(player.P.pylobC).div(divi)
             }
         },
@@ -1671,22 +1870,19 @@ addLayer("P", {
                 player.P.pylobD = player.P.pylobD.add(1)
             },
             unlocked() {
-                return hasChallenge('SR', 22)
+                return (hasChallenge('SR', 22) || hasUpgrade('HC', 33))
             },
             effect() {
-                let effect = player.P.pylonD.div(10)
-                if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobD))
-                if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonC.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-                effect = effect.times(layers.U.buyables[12].effect())
-                if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
-                return effect
+                return pPylon('D', player.P.pylonD, player.P.pylobD)
             },
             cost() {
                 let expo = new Decimal(3)
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
-                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(3))
+                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.add(1).pow(3))
+                if(hasUpgrade('HC', 33)) expo = expo.sub(0.2)
                 if(player.P.pylobD.gte(1001)) expo = expo.add(player.P.pylobD.sub(1000).div(100))
+                if(hasUpgrade('HC', 34)) divi = divi.times(100000)
                 return expo.pow(player.P.pylobD).div(divi)
             }
         },
@@ -1708,22 +1904,19 @@ addLayer("P", {
                 player.P.pylobE = player.P.pylobE.add(1)
             },
             unlocked() {
-                return hasChallenge('SR', 31)
+                return (hasChallenge('SR', 31) || hasUpgrade('HC', 33))
             },
             effect() {
-                let effect = player.P.pylonE.div(10)
-                if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobE))
-                if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonD.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-                effect = effect.times(layers.U.buyables[12].effect())
-                if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
-                return effect
+                return pPylon('E', player.P.pylonE, player.P.pylobE)
             },
             cost() {
                 let expo = new Decimal(3.5)
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
-                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.pow(2))
+                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.add(1).pow(2))
+                if(hasUpgrade('HC', 33)) expo = expo.sub(0.2)
                 if(player.P.pylobE.gte(1001)) expo = expo.add(player.P.pylobE.sub(1000).div(100))
+                if(hasUpgrade('HC', 34)) divi = divi.times(100000)
                 return expo.pow(player.P.pylobE).div(divi)
             }
         },
@@ -1745,24 +1938,344 @@ addLayer("P", {
                 player.P.pylobF = player.P.pylobF.add(1)
             },
             unlocked() {
-                return maxedChallenge('SR', 31)
+                return (maxedChallenge('SR', 31) || hasUpgrade('HC', 33))
             },
             effect() {
-                let effect = player.P.pylonF.div(10)
-                if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(player.P.pylobF))
-                if(hasChallenge('SR', 31)) effect = effect.times(player.P.pylonE.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
-                effect = effect.times(layers.U.buyables[12].effect())
-                if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
-                return effect
+                return pPylon('F', player.P.pylonF, player.P.pylobF)
             },
             cost() {
                 let expo = new Decimal(3.5)
                 let divi = new Decimal(1)
                 if(hasMilestone('P', 6)) expo = expo.sub(0.05)
-                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points)
+                if(hasMilestone('P', 9)) divi = divi.times(player.SR.points.add(1))
+                if(hasUpgrade('HC', 33)) expo = expo.sub(0.2)
                 if(player.P.pylobF.gte(1001)) expo = expo.add(player.P.pylobF.sub(1000).div(100))
+                if(hasUpgrade('HC', 34)) divi = divi.times(100000)
                 return expo.pow(player.P.pylobF).div(divi)
             }
         },
     },
+    doReset(resetlayer) {
+        if(resetlayer == 'HC') {
+            if(!hasUpgrade('HC', 32)) player.P.milestones = [8, 10]
+            player.P.points = new Decimal(0)
+
+            player.P.pylonA = new Decimal(1)
+            player.P.pylonB = new Decimal(0)
+            player.P.pylonC = new Decimal(0)
+            player.P.pylonD = new Decimal(0)
+            player.P.pylonE = new Decimal(0)
+            player.P.pylonF = new Decimal(0)
+
+            player.P.pylobA = new Decimal(0)
+            player.P.pylobB = new Decimal(0)
+            player.P.pylobC = new Decimal(0)
+            player.P.pylobD = new Decimal(0)
+            player.P.pylobE = new Decimal(0)
+            player.P.pylobF = new Decimal(0)
+            if(hasUpgrade('HC', 12)) player.P.points = player.P.points.add(1)
+        }
+    },
+    milestonePopups() { return !hasMilestone('HC', 1) }
+})
+
+addLayer('HC', {
+    name: "hyper-rebirth",
+    tabFormat: {
+        "Hyper": {
+            content: [
+                "main-display",
+                "prestige-button",
+                "resource-display",
+                "blank",
+                ["layer-proxy", ['C', ["main-display"]]],
+                "blank",
+                "milestones",
+            ]
+        },
+        "Paths": {
+            content: [
+                ["display-text", "Starting a path doubles the cost of all unstarted paths"],
+                "blank",
+				["upgrade-tree", [[11, 12, 13, 14], [21, 22, 23, 24], [31, 32, 33, 34], [41]]]
+            ]
+        },
+        // "Matter": {
+        //     content: [
+        //         ["display-text", "You got the 'You Win!' display, what did you expect?"]
+        //     ],
+        //     unlocked() { return hasAchievement('A', 101) }
+        // }
+    },
+    symbol: "HR",
+    row: "3",
+    resource: "Hyper Rebirth Points",
+    color: "#2ed5e8",
+    type: "custom",
+    update(diff) {
+        let hypEss = new Decimal(1)
+        hypEss = hypEss.times(player.points.add(10).log(10).pow(0.6).times(player.SR.points.add(1).pow(0.4)).times(player.P.points.add(10).log(10)).pow(0.25))
+        if(hasUpgrade('HC', 33)) hypEss = hypEss.times(layers.C.effect()[3])
+        player.HC.hyperNumber = hypEss
+    },
+    effect() {
+        return [new Decimal(3).pow(player['HC'].total.add(1)).div(3),
+            player['HC'].total.add(25).div(25).pow(0.5),
+            new Decimal(2).pow(player['HC'].total.add(2).div(2)).div(2)]
+    },
+    effectDescription() {
+        return "multiplying $ gain by " + formatWhole(this.effect()[0]) + ", SRP gain by " + format(this.effect()[1]) + ", and Power Pylon effectiveness by " + format(this.effect()[2]) + "<br>Based on total HRP"
+    },
+    baseAmount() { return player.HC.hyperNumber },
+    baseResource: "Hyper Essence",
+    branches: ['SR', 'P'],
+    layerShown() { return hasAchievement('A', 75) },
+    startData() {
+        return {
+            unlocked: false,
+            points: new Decimal(0),
+            hyperNumber: new Decimal(1),
+            hyperCash: new Decimal(0),
+			total: new Decimal(0),
+            paths: []
+        }
+    },
+    getResetGain() {
+        return player.HC.hyperNumber.add(1).div(25).pow(1.6).floor()
+    },
+    getNextAt() {
+        return this.getResetGain().add(1).pow(0.625).times(25).floor()
+    },
+    requires: new Decimal(25),
+    canReset() {
+        return player.HC.hyperNumber.gte(25) && hasUpgrade('SR', 21)
+    },
+    prestigeNotify() { return this.canReset() },
+    prestigeButtonText() {
+        if(!this.getResetGain().gte(1024)) return "Go Hyper for " + coolDynamicFormat(this.getResetGain(), 0) + " Hyper Rebirth Points"
+        + "<br><br>Next at " + coolDynamicFormat(this.getNextAt(), 0) + " Hyper Essence"
+        if(this.getResetGain().gte(1024)) return "Reset for " + coolDynamicFormat(this.getResetGain(), 2) + " Hyper Rebirth Points"
+    },
+    milestones: {
+        0: {
+            requirementDescription: "1 Total HRP",
+            effectDescription: "The Machine is now permanently unlocked, keep $ Upgrades v2 on Hyper Reset, unlock Hyper Cash, and keep all buyables, upgrades and automation unlocked",
+            done() {
+                return player.HC.total.gte(1)
+            }
+        },
+        1: {
+            requirementDescription: "6 Total HRP",
+            effectDescription: "All Buyables (including Pylons) automation is 10 times as effective",
+            done() {
+                return player.HC.total.gte(6)
+            }
+        },
+        2: {
+            requirementDescription: "18 Total HRP",
+            effectDescription: "Keep challenges on Hyper Reset",
+            done() {
+                return player.HC.total.gte(18)
+            }
+        },
+        3: {
+            requirementDescription: "42 Total HRP",
+            effectDescription: "Automate all pre-Hyper upgrades except Omega",
+            done() {
+                return player.HC.total.gte(42)
+            }
+        },
+        4: {
+            requirementDescription: "90 Total HRP",
+            effectDescription: "Super Rebirth resets nothing",
+            done() {
+                return player.HC.total.gte(90)
+            }
+        },
+        5: {
+            requirementDescription: "130 Total HRP",
+            effectDescription: "Automatically Super Rebirth",
+            done() {
+                return player.HC.total.gte(130)
+            }
+        },
+    },
+    upgrades: {
+        11: {
+            cost() {
+                base = new Decimal(1)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 1)))
+                return base
+            },
+            onPurchase() {
+                player.HC.paths.push(1)
+            },
+            title: "The Basic Path",
+            description: "Multiply $ gain by 10,000"
+        },
+        21: {
+            cost() {
+                base = new Decimal(2)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 1)))
+                return base
+            },
+            description: "Multiply RP gain by 10,000",
+			branches: [11, 31],
+            canAfford() { return hasUpgrade('HC', 11) }
+        },
+        31: {
+            cost() {
+                base = new Decimal(3)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 1)))
+                return base
+            },
+            description: "Start with 12 SRP, and reduce SRP base cost by 1e9",
+            canAfford() { return hasUpgrade('HC', 21) }
+        },
+
+        12: {
+            cost() {
+                base = new Decimal(1)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 2)))
+                return base
+            },
+            onPurchase() {
+                player.HC.paths.push(2)
+            },
+            title: "The Machine's Path",
+            description: "Start with Power unlocked and Power Pylons are twice as effective"
+        },
+        22: {
+            cost() {
+                base = new Decimal(2)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 2)))
+                return base
+            },
+            description: "Power Pylons become 5 times more effective",
+			branches: [12, 32],
+            canAfford() { return hasUpgrade('HC', 12) }
+        },
+        32: {
+            cost() {
+                base = new Decimal(3)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 2)))
+                return base
+            },
+            description: "You start with all Power Pylons unlocked, keep all Power milestones on Hyper reset, and reduce Power Pylon scaling",
+            canAfford() { return hasUpgrade('HC', 22) }
+        },
+
+        13: {
+            cost() {
+                base = new Decimal(1)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 3)))
+                return base
+            },
+            onPurchase() {
+                player.HC.paths.push(3)
+            },
+            title: "The Hyper Path",
+            description: "Multiply Hyper Cash gain based on $",
+			tooltip: "log10($ + 10)^0.4"
+        },
+        23: {
+            cost() {
+                base = new Decimal(2)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 3)))
+                return base
+            },
+            description: "Multiply Hyper Cash gain by 10",
+			branches: [13, 33],
+            canAfford() { return hasUpgrade('HC', 13) }
+        },
+        33: {
+            cost() {
+                base = new Decimal(3)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 3)))
+                return base
+            },
+            description: "Hyper Cash also boosts RP, SRP and Hyper Essence at drastically reduced rates",
+			tooltip: "RP: x(HC + 1)<br>SRP: x(log(log(HC + 10) + 10))<br>HE: x(HC^0.1/3 + 1)",
+            canAfford() { return hasUpgrade('HC', 23) }
+        },
+
+        14: {
+            cost() {
+                base = new Decimal(1)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 4)))
+                return base
+            },
+            onPurchase() {
+                player.HC.paths.push(4)
+            },
+            title: "The Combined Path",
+            description: "Multiply $, Power, and RP gain by 100"
+        },
+        24: {
+            cost() {
+                base = new Decimal(2)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 4)))
+                return base
+            },
+            description: "Multiply $ gain and PPy effect by 200",
+			branches: [14, 34],
+            canAfford() { return hasUpgrade('HC', 14) }
+        },
+        34: {
+            cost() {
+                base = new Decimal(3)
+                base = base.times(new Decimal(2).pow(findIndex(player.HC.paths, 4)))
+                return base
+            },
+            description: "Divide RP, SRP, and PPy cost by 100,000, and increase both of the $ buyables bases",
+            canAfford() { return hasUpgrade('HC', 24) }
+        },
+
+        41: {
+            title: "The Matter Combustor",
+            cost: new Decimal(40),
+            description: "Unlock the Matter Paths",
+            canAfford() { return hasUpgrade('HC', 31) && hasUpgrade('HC', 32) && hasUpgrade('HC', 33) && hasUpgrade('HC', 34) },
+            branches: [31, 32, 33, 34]
+        }
+	// Wow, it's the year (This is definitely going to become outdated)
+    },
+})
+
+addLayer('C', {
+    name: "hyper-cash",
+    resource: "Hyper Cash",
+    startData() {
+        return {
+            unlocked: true,
+            points: new Decimal(0),
+        }
+    },
+    layerShown: false,
+    row: 2,
+    update(diff) {
+        if(hasMilestone('HC', 0)) {
+            player.C.points = player.C.points.add(new Decimal(hyperCashGain()).times(diff))
+        }
+    },
+    effect() {
+        return [
+            player.C.points.times(0.005).add(1).pow(0.15),
+            player.C.points.add(1),
+            player.C.points.add(10).log(10).add(10).log(10),
+            player.C.points.pow(0.1).div(3).add(1)
+        ]
+    },
+    effectDescription() {
+        if(!hasUpgrade('HC', 33)) return "raising $ gain by " + format(layers.C.effect()[0])
+        + "<br>Producing " + format(hyperCashGain()) + "/sec"
+        + "<br>Hyper Cash is reset on Hyper Reset"
+
+        if(hasUpgrade('HC', 33)) return "raising $ gain by " + format(layers.C.effect()[0])
+        + ", multiplying RP gain by  " + format(layers.C.effect()[1])
+        + ", multiplying SRP gain by  " + format(layers.C.effect()[2])
+        + ", multiplying Hyper Essence gain by  " + format(layers.C.effect()[3])
+        + "<br>Producing " + format(hyperCashGain()) + "/sec"
+    },
+    color: "#34eb67"
 })

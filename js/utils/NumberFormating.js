@@ -1,7 +1,5 @@
 function coolDynamicFormat(num, precision) {
-    if(num.lte(10000)) return regularFormat(num, precision);
-    else if(num.lte("1e9")) return commaFormat(num, 0);
-    else return exponentialFormat(num, precision, true)
+    return format(num)
 }
 
 function exponentialFormat(num, precision, mantissa = true) {

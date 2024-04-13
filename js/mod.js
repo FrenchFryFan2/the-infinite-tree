@@ -13,8 +13,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.2.1.3",
-	name: "Power",
+	num: "0.3",
+	name: "Hyper Rebirth",
 }
 
 let changelog = `<h1>Changelog:</h1><br><br>
@@ -94,13 +94,13 @@ function getPointGen() {
 	if(hasMilestone('P', 8)) { if (hasUpgrade('U', 21)) gain = gain.pow(1.3) }
 
 
-	// R Layer
+	// Rebirth Layer
 	gain = gain.times(layers.R.effect())
 	if (hasUpgrade('R', 11)) gain = gain.times(5)
 	if (hasUpgrade('R', 14)) gain = gain.times(2)
 
 
-	// SR Layer
+	// Super Rebrith Layer
 	gain = gain.times(layers.SR.effect()[0])
 	if (hasMilestone('SR', 9)) gain = gain.times(layers.SR.milestones[9].effect())
 	if (hasMilestone('SR', 4)) gain = gain.pow(1.1)
@@ -108,7 +108,16 @@ function getPointGen() {
 	if (inChallenge('SR', 31)) gain = gain.div(player.SR.tax)
 
 
-	// Dunno where else to put this
+	// Hyper Rebirth Layer
+	gain = gain.times(layers.HC.effect()[0])
+	if(hasUpgrade('HC', 11)) gain = gain.times(10000)
+	if(hasUpgrade('HC', 14)) gain = gain.times(100)
+	if(hasUpgrade('HC', 24)) gain = gain.times(200)
+
+	gain = gain.pow(layers.C.effect()[0])
+
+
+	// Dunno were else to put this
 
 	everyTick();
 
@@ -119,27 +128,73 @@ function getPointGen() {
 function addedPlayerData() { return {
 }}
 
+function pPylon(pylon, pylons, pylobs) {
+	let effect = pylons.div(10)
+
+	// Pylob Innate Bonus
+	if(hasMilestone('P', 3)) effect = effect.times(new Decimal(1.15).pow(pylobs))
+
+	// Super Layer
+	if(hasMilestone('P', 4) && pylon == 'A') effect = effect.times(5)
+	if(hasUpgrade('HC', 14) && pylon == 'A') effect = effect.times(100)
+	if(hasUpgrade('U', 54 && (pylon =='A' || pylon == 'B' || pylon == 'C'))) effect = effect.times(2)
+
+	if(hasChallenge('SR', 31) && pylon == 'A') effect = effect.times(player.P.points.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
+	if(hasChallenge('SR', 31) && pylon == 'B') effect = effect.times(player.P.pylonA.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
+	if(hasChallenge('SR', 31) && pylon == 'C') effect = effect.times(player.P.pylonB.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
+	if(hasChallenge('SR', 31) && pylon == 'D') effect = effect.times(player.P.pylonC.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
+	if(hasChallenge('SR', 31) && pylon == 'E') effect = effect.times(player.P.pylonD.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
+	if(hasChallenge('SR', 31) && pylon == 'F') effect = effect.times(player.P.pylonE.add(layers.SR.challenges[31].rewardEffect()).log(layers.SR.challenges[31].rewardEffect()))
+
+	effect = effect.times(layers.U.buyables[12].effect())
+	if(hasUpgrade('SR', 13)) effect = effect.pow(1.2)
+
+	// Hyper Layer
+	effect = effect.times(layers.HC.effect()[2])
+	if(hasUpgrade('HC', 12)) effect = effect.times(2)
+	if(hasUpgrade('HC', 22)) effect = effect.times(5)
+	if(hasUpgrade('HC', 24)) effect = effect.times(200)
+
+	return effect
+}
+
 // Display extra things at the top of the page
 var displayThings = [
 	
 ]
 
-
+function taxDisplay() {
+	if(inChallenge('SR', 31)) return "You have " + format(player.SR.tax) + " tax"; else return ""
+}
 
 // Determines when the game "ends"
 function isEndgame() {
-	return hasUpgrade('SR', 21)
+	return hasUpgrade('HC', 41)
 }
 
 function machineBonuses() {
 	let bonus = new Decimal(1);
 	if(hasUpgrade('R', 32)) bonus = bonus.times(1.3);
 	bonus = bonus.times(layers.P.effect())
+	if(hasUpgrade('U', 34) && hasMilestone('P', 8)) bonus = bonus.pow(1.25)
 	return bonus
 }
 
 function everyTick() {
 	// meh
+}
+
+function findIndex(arr, x) {
+	const index = arr.indexOf(x);
+	return index !== -1 ? index : arr.length;
+}
+
+function hyperCashGain() {
+	let HCgain = new Decimal(0)
+	if(hasMilestone('HC', 0)) HCgain = HCgain.add(0.1)
+	if(hasUpgrade('HC', 13)) HCgain = HCgain.times(player.points.add(10).log(10).pow(0.4))
+	if(hasUpgrade('HC', 23)) HCgain = HCgain.times(10)
+	return HCgain
 }
 
 // Less important things beyond this point!
